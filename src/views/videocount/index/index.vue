@@ -120,8 +120,8 @@
                   <div class="chart_item">
                       <div class="search" v-if="isSearchData"><p>请稍候...</p></div>
                       <div class="column_list">
-                        <div class="column_item" v-for="item,index in userResultData" :key="index">
-                          <ColumnNormal :chartData="item" :title="'chartuser'+index"></ColumnNormal>
+                        <div class="column_item">
+                          <ColumnNormal :chartData="userResultData" title="chartNormal"></ColumnNormal>
                         </div>
                       </div>
                   </div>
@@ -395,9 +395,7 @@
       // 获取工作类型
       getTypeList(){
           var $this = this;
-          var formData = {};
-          formData.type = "manual";
-          $this.$store.dispatch('videocount/getVideoTypeData',formData).then(res=>{
+          $this.$store.dispatch('videocount/getVideoTypeData',null).then(res=>{
               if(res.code == 200){
                   var resData = [];
                   if(res.data && res.data.length > 0){
@@ -628,42 +626,39 @@
         var $this = this;
         var trueData = [];
         var effectData = [];
-        var tname = [];
-        var ename = [];
+        var c_name = [];
         var truelist = JSON.parse(JSON.stringify(data));
-        var effectlist = JSON.parse(JSON.stringify(data));
         truelist = truelist.sort(sortByDesc("actual_score"));
-        effectlist = effectlist.sort(sortByDesc("effective_score"));
         truelist.forEach(item => {
           var trueObj = {};
           trueObj.name = item.name;
-          trueObj.value = item.actual_score;
+          trueObj.all = item.actual_score;
+          trueObj.value = Number(item.actual_score - item.effective_score).toFixed(1);
           trueObj.resdata = item.actual_data;
           trueData.push(trueObj);
-          tname.push(item.name);
-        })
-        effectlist.forEach(item => {
+          c_name.push(item.name);
           var effectObj = {};
           effectObj.name = item.name;
           effectObj.value = item.effective_score;
           effectObj.resdata = item.effective_data;
           effectData.push(effectObj);
-          ename.push(item.name);
         })
         var resData = [];
-        var trueRes = {
-          name: "实际完成",
-          data: trueData,
-          c_name: tname
-        }
-        resData.push(trueRes);
         var effectRes = {
           name: "有效完成",
           data: effectData,
-          c_name: ename
         }
         resData.push(effectRes);
-        $this.userResultData = resData;
+        var trueRes = {
+          name: "实际完成",
+          data: trueData,
+        }
+        resData.push(trueRes);
+        var resObj = {
+          data: resData,
+          c_name: c_name
+        }
+        $this.userResultData = resObj;
       },
       handleTypeSearchData(data){
         var $this = this;
@@ -785,7 +780,7 @@
       color: #1a1a1a;
     }
     .checked_item .el-checkbox, .checked_item .el-radio{
-      min-width: 120px;
+      min-width: 110px;
       margin: 3px;
     }
     .checked_item .el-checkbox-group{

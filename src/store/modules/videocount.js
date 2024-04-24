@@ -9,6 +9,7 @@ import {
     delRecord,
     getCountData,
     getPieCountData,
+    getDayWordList,
 } from '@/api/videocount'
 
 const state = {}
@@ -114,6 +115,16 @@ const actions = {
             })
         })
     },
+    // 获取用户统计数据
+    getDayWordListData({ commit, state }, data) {
+        return new Promise((resolve, reject) => {
+            getDayWordList(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },  
 }
 
 export default {

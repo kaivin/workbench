@@ -90,3 +90,12 @@ export function getPieCountData(data) {
     data
   });
 }
+
+// 工作内容统计
+export function getDayWordList(data) {
+  return request({
+    url: "/hxindex/videocount/daywordlist",
+    method: "POST",
+    data
+  });
+}

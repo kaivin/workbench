@@ -719,6 +719,7 @@
                                     <template slot-scope="scope">
                                       <div class="table-text">
                                         <p>{{scope.row.id}}</p>
+                                        <p v-if="currentKey&&currentKey=='fivexun'">{{scope.row.phonenumber}}</p>
                                       </div>
                                     </template>
                                   </el-table-column>
@@ -2162,14 +2163,24 @@ export default {
     },
     // 导出当前页数据
     handleDownload() {
-      this.downloadLoading = true
+      var $this = this;
+      $this.downloadLoading = true
       import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = ['ID','时段','星期','本地时间','当地时间','域名','渠道','来源类型', '大洲', '国家','IP','设备','产品分类','意向产品','物料','产量','进料','出料','有效','无效原因','初次等级','性质','需求','状态','异常','备注','添加人','分配人','业务员','添加时间','分配时间','修改时间','业务时间','价值分', '备注1','备注2','备注3']
-        const list = this.tableData
+        var tHeader = [];
+        if($this.currentKey&&$this.currentKey=='fivexun'){
+          tHeader = ['ID','组别', '时段','星期','本地时间','当地时间','域名','渠道','来源类型', '大洲', '国家','IP','设备','产品分类','意向产品','物料','产量','进料','出料','有效','无效原因','初次等级','性质','需求','状态','异常','备注','添加人','分配人','业务员','添加时间','分配时间','修改时间','业务时间','价值分', '备注1','备注2','备注3'];
+        }else{
+          tHeader = ['ID','时段','星期','本地时间','当地时间','域名','渠道','来源类型', '大洲', '国家','IP','设备','产品分类','意向产品','物料','产量','进料','出料','有效','无效原因','初次等级','性质','需求','状态','异常','备注','添加人','分配人','业务员','添加时间','分配时间','修改时间','业务时间','价值分', '备注1','备注2','备注3'];
+        }
+         
+        const list = $this.tableData
         const data = [];
         list.forEach(function(item,index){
           var itemData = [];
           itemData.push(item.id);
+          if($this.currentKey&&$this.currentKey=='fivexun'){
+            itemData.push(item.phonenumber)
+          }
           itemData.push(item.timeing);
           itemData.push(item.weekday);
           itemData.push(item.xuntime);

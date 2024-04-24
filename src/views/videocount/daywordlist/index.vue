@@ -30,246 +30,50 @@
 								</el-date-picker>
 							</div>
 							<div class="item-search">
-								<el-input
-									class="input-panel"
-									size="small"
-									placeholder="请输入姓名"
-									v-model="searchData.name"
-									@keyup.enter.native="searchResult"
-									@clear="searchResult"
-									clearable>
-								</el-input>
-							</div>
-							<div class="item-search">
 								<el-button class="item-input" :class="isSearchResult?'isDisabled':''" :disabled="isSearchResult" type="primary" size="small" icon="el-icon-search" @click="searchResult">查询</el-button>
 								<el-button type="info" :disabled="isSearchResult" class="resetBtn" size="small" @click="resetData">重置</el-button>
-								<el-button type="success" v-if="menuButtonPermit.includes('videocount_saveword')" :disabled="isSearchResult" size="small" icon="el-icon-plus" @click="addTableRow" >添加工作汇报</el-button>
 								<el-button type="warning" size="small" :disabled="isSearchResult" class="exportBtn derived" @click="showExportDialog"><i class="svg-i"><svg-icon icon-class="derived" /></i>导出数据</el-button>
-								<el-button type="danger" v-if="menuButtonPermit.includes('videocount_distribution')" :disabled="isSearchResult" size="small" icon="el-icon-thumb" class="exportBtn derived"  @click="addScore">分配积分</el-button>
 							</div>
 						</div>
-					</div>
-					<div class="clues_info">
-						<p><span>当前结果共有<strong class="color3">{{infoData.totalNumber}}</strong>条数据，完成积分<strong class="color2">{{infoData.allScore}}</strong>分，有效积分<strong class="color1">{{infoData.trueScore}}</strong>分。</span></p>
 					</div>
 					<div class="card-content" ref="tableContent">
 						<div class="table-wrapper" v-bind:class="scrollPosition.isFixed?'fixed-table':''">
 							<div class="table-mask"></div>
-								<el-table
-									ref="simpleTable"
-									:data="tableData"
-									tooltip-effect="dark"
-									class="SiteTable"
-									style="width: 100%"
-									stripe
-									:style="'min-height:'+tableHeight+'px;'"
-									>
-									<el-table-column align="center" width="60" type="expand">
-										<template slot-scope="props">
-											<div class="table_detail">
-												<el-table
-													ref="childTable"
-													:data="props.row.detail"
-													style="width:100%"
-													>
-													<el-table-column
-														prop="post_name"
-														label="岗位"
-														align="center"
-														min-width="100"
-														>
-														<template slot-scope="scopes">
-															{{scopes.row.extend.post_name}}
-														</template>
-													</el-table-column>
-													<el-table-column
-														prop="type_name"
-														label="类型/单个积分"
-														align="center"
-														min-width="130"
-														>
-														<template slot-scope="scopes">
-															{{scopes.row.extend.type_name}}（{{scopes.row.extend.score}}）
-														</template>
-													</el-table-column>
-													<el-table-column
-														prop="number"
-														label="完成数量"
-														align="center"
-														min-width="100"
-														>
-														<template slot-scope="scopes">
-															{{scopes.row.extend.number}}
-														</template>
-													</el-table-column>
-													<el-table-column
-														prop="invalid_number"
-														label="未通过审核数量"
-														align="center"
-														min-width="100"
-														>
-														<template slot-scope="scopes">
-															{{scopes.row.extend.invalid_number}}
-														</template>
-													</el-table-column>
-													<el-table-column
-														prop="score"
-														label="完成积分"
-														min-width="100"
-														align="center"
-														>
-													</el-table-column>
-													<el-table-column
-														prop="valid_score"
-														label="有效积分"
-														min-width="100"
-														align="center"
-														>
-													</el-table-column>
-													<el-table-column
-														prop="remark"
-														label="备注"
-														align="center"
-														min-width="150"
-														>
-													</el-table-column>
-													<el-table-column
-														v-if="props.row.detail && props.row.detail.length > 0 && props.row.detail[0].user_id == userInfo.id && (menuButtonPermit.includes('videocount_saveword') || menuButtonPermit.includes('videocount_delword') || menuButtonPermit.includes('videocount_distribution'))"
-														:width="operationsWidth"
-														align="center"
-														prop="operations"
-														label="操作" >
-														<template slot-scope="scopes">
-															<div class="table-button" >
-																<el-button v-if="menuButtonPermit.includes('videocount_saveword')&&scopes.row.type_type == 'manual'" size="mini" @click="editTableRow(scopes.row, scopes.$index)" plain type="primary" >编辑</el-button>
-																<el-button v-if="menuButtonPermit.includes('videocount_delword')&&scopes.row.type_type == 'manual'" size="mini" @click="deleteTableRow(scopes.row, scopes.$index)" type="info" plain >删除</el-button>
-																<el-button v-if="menuButtonPermit.includes('videocount_distribution')&&scopes.row.type_type == 'specify'" size="mini" @click="editScoreRow(scopes.row, scopes.$index)" plain type="primary" >编辑</el-button>
-																<el-button v-if="menuButtonPermit.includes('videocount_distribution')&&scopes.row.type_type == 'specify'" size="mini" @click="deleteScoreRow(scopes.row, scopes.$index)" type="info" plain >删除</el-button>
-															</div>
-														</template>
-													</el-table-column>
-												</el-table>
-											</div>
-										</template>
-									</el-table-column>
-									<el-table-column
-										prop="user_name"
-										label="姓名"
-										align="center"
-										min-width="100"
-										>
-									</el-table-column>
-									<el-table-column
-										prop="day"
-										label="日期"
-										align="center"
-										min-width="100"
-										>
-									</el-table-column>
-									<el-table-column
-										prop="promotional_video"
-										label="公司宣传片"
-										align="center"
-										sortable
-										min-width="130"
-										>
-									</el-table-column>
-									<el-table-column
-										prop="character_on_camera"
-										label="人物上镜短视频"
-										align="center"
-										sortable
-										min-width="150"
-										>
-									</el-table-column>
-									<el-table-column
-										prop="wechat_moments"
-										label="朋友圈视频"
-										align="center"
-										sortable
-										min-width="130"
-										>
-									</el-table-column>
-									<el-table-column
-										prop="pure_shear_video"
-										label="纯剪视频"
-										align="center"
-										sortable
-										min-width="120"
-										>
-									</el-table-column>
-									<el-table-column
-										prop="other"
-										label="其他（素材处理）"
-										align="center"
-										sortable
-										min-width="160"
-										>
-									</el-table-column>
-									<el-table-column
-										prop="specify"
-										align="center"
-										sortable
-										label="分配的积分"
-										min-width="120"
-										>
-									</el-table-column>
-									<el-table-column
-										prop="inquiry"
-										align="center"
-										sortable
-										label="询盘成交"
-										min-width="120"
-										>
-									</el-table-column>
-									<el-table-column
-										prop="score"
-										align="center"
-										sortable
-										label="完成积分"
-										min-width="120"
-										>
-									</el-table-column>
-									<el-table-column
-										prop="valid_score"
-										align="center"
-										sortable
-										label="有效积分"
-										min-width="120"
-										>
-									</el-table-column>
-								</el-table>
+                            <el-table
+                                ref="simpleTable"
+                                :data="tableData"
+                                tooltip-effect="dark"
+                                class="SiteTable"
+                                style="width: 100%"
+                                :style="'min-height:'+tableHeight+'px;'"
+                                row-key="id"
+                                >
+                                    <el-table-column
+                                    v-for="item,index in tableHeader" 
+                                    :prop="item.prop"
+                                    :key="item.prop"
+                                    align="center"
+                                    :fixed="item.fixed"
+                                    :min-width="item.width"
+                                    :sortable = "item.sortable"
+                                    :label="item.label">
+                                    </el-table-column>
+                                </el-table>
 							</div>
 							<div class="out_box fixed" v-if="scrollPosition.maxScrollWidth>0&&scrollPosition.isPC" :style="'left:'+scrollPosition.left+'px;width:'+scrollPosition.width+'px;bottom:'+scrollPosition.fixedBottom+'px;'" ref="out_box">
 								<div class="in_box" @mousedown="mouseDownHandler" :style="'left:'+scrollPosition.insetLeft+'px;width:'+scrollPosition.insetWidth+'px;'" ref="in_box" ></div>
 							</div>
 						</div>
-					<div class="pagination-panel" v-if="totalDataNum>50" ref="pagePane">
-						<el-pagination
-							@size-change="handleSizeChange"
-							@current-change="handleCurrentChange"
-							:current-page="searchData.page"
-							:page-sizes="pageSizeList"
-							:page-size="searchData.limit"
-							:pager-count="pagerCount"
-							:layout="'total, sizes, prev, pager, next, jumper'"
-							:total="totalDataNum">
-						</el-pagination>
-					</div>
 				</el-card>
 			</div>
 		</div>
 	  </div>
 	  <el-backtop target=".scroll-panel"></el-backtop>
-	  <AddWork ref="AddWorkRef" @saveSuccess="searchResult"></AddWork>
-	  <AddScore ref="AddScoreRef" @saveSuccess="searchResult"></AddScore>
 	  <ExportModal ref="ExportModalRef" @exportSuccess="exportDone"></ExportModal>
 	</div>
 </template>
 <script>
 import { mapGetters } from 'vuex';
-import AddScore from '../component/addScore.vue';
-import AddWork from '../component/addWork.vue';
 import {sortByDesc, sortByAsc} from "@/utils/index";
 import * as echarts from 'echarts';
 import {parseTime}  from "@/utils";
@@ -278,24 +82,16 @@ import { jsonToSheetXlsx } from '@/components/Excel/Export2Excel'
 export default {
 	name: 'Douyin_index',
 	components: {
-		AddScore,
-		AddWork,
 		ExportModal
 	},
 	data() {
 		return {
 			breadcrumbList:[],
 			menuButtonPermit:[],
-			pagerCount:5,
-			pageSizeList:[20, 50, 100, 150, 200],
-			totalDataNum: 0,
 			tableData:[],
 			tableHeight:200,
 			searchData:{
 				time: [],
-				name: "",
-				page: 1,
-				limit: 20,
 			},
 			scrollPosition:{
 				width:0,
@@ -323,27 +119,22 @@ export default {
 				tableBottom:0,
 				clientHeight:0,
 			},
-			operationsWidth: "",
 			isSearchResult:false,
-			selectedData: [],
-			fieldList: [
-				{ key: 'user_name', value: '姓名' },
-				{ key: 'day', value: '日期' },
-				{ key: 'promotional_video', value: '公司宣传片积分' },
-				{ key: 'character_on_camera', value: '人物上镜短视频积分' },
-				{ key: 'wechat_moments', value: '朋友圈视频积分' },
-				{ key: 'pure_shear_video', value: '纯剪视频积分' },
-				{ key: 'other', value: '其他（素材处理）积分' },
-				{ key: 'specify', value: '分配的积分' },
-				{ key: 'inquiry', value: '询盘成交积分' },
-				{ key: 'score', value: '积分总计' },
-			],
 			infoData:{
 				totalNumber: 0,
 				allScore: 0,
 				trueScore: 0
 			},
 			pickerRangeOptions: this.$pickerRangeOptions,
+            tableHeader: [
+                {
+                    label: "姓名",
+                    prop: 'name',
+                    width: 80,
+                    fixed: "left",
+					sortable: false,
+                }
+            ],
 		}
 	},
 	computed: {
@@ -359,17 +150,17 @@ export default {
 	mounted(){
 		const $this = this;
 		if(!$this.sidebar.opened){
-		$this.$store.dispatch('app/toggleSideBar');
+		    $this.$store.dispatch('app/toggleSideBar');
 		}
 		// 监听竖向滚动条滚动事件
 		window.addEventListener('scroll',$this.handleScroll,true);
 		$this.$nextTick(function () {
-		$this.setTableHeight();
+		    $this.setTableHeight();
 		});
 		window.onresize = () => {
-		return (() => {
-			$this.setTableHeight();
-		})()
+            return (() => {
+                $this.setTableHeight();
+            })()
 		}
 	},
 	watch: {
@@ -392,7 +183,7 @@ export default {
 	updated(){
 		var $this = this;
 		$this.$nextTick(() => {
-		$this.$refs.simpleTable.doLayout();
+		    $this.$refs.simpleTable.doLayout();
 		});
 	},
 	destroyed(){
@@ -491,7 +282,6 @@ export default {
 			var $this = this;
 			if(!$this.isSearchResult){
 				$this.isSearchResult=true;
-				$this.searchData.page = 1;
 				$this.getWorkList();
 			}
 		},
@@ -501,7 +291,6 @@ export default {
 			const end = parseTime(new Date(), '{y}-{m}-{d}');
 			const start = parseTime(new Date()-3600 * 1000 * 24 * 6, '{y}-{m}-{d}');
 			$this.searchData.time = [start, end];
-			$this.searchData.name = "";
 			$this.searchResult();
 		},
 		// 初始化数据
@@ -516,20 +305,18 @@ export default {
 				if(res.status){
 				if(res.data.length>0){
 					res.data.forEach(function(item,index){
-					$this.menuButtonPermit.push(item.action_route);
+						$this.menuButtonPermit.push(item.action_route);
 					});
-					if($this.menuButtonPermit.includes('videocount_wordlist')){
-					$this.initPage();
-					var operationsWidth = 154;
-					$this.operationsWidth = "" + operationsWidth;
+					if($this.menuButtonPermit.includes('videocount_daywordlist')){
+						$this.initPage();
 					}else{
-					$this.$message({
-						showClose: true,
-						message: "未被分配该页面的访问权限",
-						type: 'error',
-						duration:6000
-					});
-					$this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
+						$this.$message({
+							showClose: true,
+							message: "未被分配该页面的访问权限",
+							type: 'error',
+							duration:6000
+						});
+						$this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
 					}
 				}else{
 					$this.$message({
@@ -560,22 +347,82 @@ export default {
 		getWorkList(){
 			var $this = this;
 			var formData = {}
-			formData.page = $this.searchData.page;
-			formData.limit = $this.searchData.limit;
 			formData.time = $this.searchData.time.join(" - ");
-			formData.name = $this.searchData.name;
 			document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
-			$this.$store.dispatch('videocount/getRecordData', formData).then(response=>{
+			$this.$store.dispatch('videocount/getDayWordListData', formData).then(response=>{
 				if(response){
 					if(response.code == 200){
 						if(response.data){
-							if(response.data.length > 0){
-								$this.tableData = response.data;
-								$this.infoData.totalNumber = response.extend.count;
-								$this.infoData.allScore = response.extend.all_score;
-								$this.infoData.trueScore = response.extend.all_valid_score;
+							var days = [];
+							var tableHeader = [
+								{
+									label: "姓名",
+									prop: 'name',
+									width: 90,
+									fixed: "left",
+								}
+							];
+							if(response.extend.days && response.extend.days.length > 0){
+								response.extend.days.forEach((item,index) => {
+									var obj = {};
+									obj.value = item;
+									obj.name = 'score'+index;
+									days.push(obj);
+									var headobj = {};
+									headobj.label = item;
+									headobj.prop = 'score'+index;
+									headobj.width = 120;
+									headobj.sortable = true;
+									tableHeader.push(headobj);
+								})
 							}
-							
+							tableHeader.push({
+								label: "视频工作积分",
+								prop: 'video_score',
+								width: 130,
+								sortable: true,
+							})
+							tableHeader.push({
+								label: "询盘个数",
+								prop: 'inquiry_number',
+								width: 120,
+								sortable: true,
+							})
+							tableHeader.push({
+								label: "询盘积分",
+								prop: 'inquiry_score',
+								width: 120,
+								sortable: true,
+							})
+							tableHeader.push({
+								label: "成交积分",
+								prop: 'transaction_score',
+								width: 120,
+								sortable: true,
+							})
+							tableHeader.push({
+								label: "总积分",
+								prop: 'score',
+								width: 120,
+								sortable: true,
+							})
+							$this.tableHeader = tableHeader;
+							if(response.data.length > 0){
+								var resData = response.data;
+								resData.forEach(item => {
+									if(item.day && item.day.length > 0){
+										item.day.forEach(sitem => {
+											var name = $this.getPropName(sitem.day, days);
+											if(name){
+												item[name] = sitem.score;
+											}
+										})
+									}
+								})
+								$this.tableData = resData;
+							}else{
+								$this.tableData = [];
+							}
 							setTimeout(()=>{
 								$this.isSearchResult=false;
 							},1000);
@@ -583,6 +430,8 @@ export default {
 								$this.setTableHeight();
 							})
 						}
+						console.log($this.tableData);
+						console.log($this.tableHeader);
 					}else{
 						if(response.permitstatus&&response.permitstatus==2){
 							$this.$message({
@@ -606,112 +455,14 @@ export default {
 				}
 			});
 		},
-		addTableRow() {
-			var $this = this;
-			$this.$refs.AddWorkRef.showDialog({type: "add"})
-		},
-		editTableRow(data) {
-			var $this = this;
-			var dataObj = {};
-			var resData = [];
-			var obj = {};
-			obj.type_id = data.type_id;
-			obj.number = data.extend.number;
-			obj.remark = data.remark;
-			obj.invalid_number = data.extend.invalid_number;
-			resData.push(obj);
-			dataObj.uid = data.user_id;
-			dataObj.id = data.id;
-			dataObj.record_time = data.record_time;
-			dataObj.data = obj;
-			dataObj.post_id = data.post_id;
-			$this.$refs.AddWorkRef.showDialog({type: "edit", data: dataObj})
-		},
-		// 删除表格行
-		deleteTableRow(row, index) {
-			var $this = this;
-			$this.$confirm('确认删除该数据?', '提示', {
-					confirmButtonText: '确定',
-					cancelButtonText: '取消',
-					type: 'warning'
-				}).then(() => {
-					var formData = {};
-					formData.uid = row.user_id;
-					formData.record_time = row.record_time;
-					formData.post_id = row.post_id;
-					formData.type_id = row.type_id;
-					$this.$store.dispatch('videocount/delRecordData',formData).then(response=>{
-						if (response.code == 200) {
-							$this.$message({
-								showClose: true,
-								message: response.msg,
-								type: "success",
-							});
-							$this.initPage();
-						} else {
-							$this.$message({
-								showClose: true,
-								message: response.msg,
-								type: "error",
-							});
-						}
-					});
-			});
-		},
-		addScore(){
-			var $this = this;
-			$this.$refs.AddScoreRef.showDialog({type: "add"})
-		},
-		editScoreRow(data) {
-			var $this = this;
-			var dataObj = {};
-			dataObj.type_id = data.type_id;
-			dataObj.uid = [data.user_id];
-			dataObj.remark = data.remark;
-			dataObj.score = data.score;
-			$this.$refs.AddScoreRef.showDialog({type: "edit", data: dataObj})
-		},
-		// 删除表格行
-		deleteScoreRow(row, index) {
-			var $this = this;
-			$this.$confirm('确认删除该数据?', '提示', {
-					confirmButtonText: '确定',
-					cancelButtonText: '取消',
-					type: 'warning'
-				}).then(() => {
-					var formData = {};
-					formData.uid = row.user_id;
-					formData.record_time = row.record_time;
-					formData.post_id = 0;
-					formData.type_id = row.type_id;
-					$this.$store.dispatch('videocount/delRecordData',formData).then(response=>{
-						if (response.code == 200) {
-							$this.$message({
-								showClose: true,
-								message: response.msg,
-								type: "success",
-							});
-							$this.initPage();
-						} else {
-							$this.$message({
-								showClose: true,
-								message: response.msg,
-								type: "error",
-							});
-						}
-					});
-			});
-		},
-		// 每页显示条数改变事件
-		handleSizeChange(val) {
-			this.searchData.limit = val;
-			this.searchData.page = 1;
-			this.getWorkList();
-		},
-		// 当前页改变事件
-		handleCurrentChange(val) {
-			this.searchData.page = val;
-			this.getWorkList();
+		getPropName(val, arr){
+			var str = "";
+			arr.forEach(item => {
+				if(item.value == val){
+					str = item.name;
+				}
+			})
+			return str;
 		},
 		// 设置横向滚动条相关DOM数据
 		setScrollDom(){
@@ -883,7 +634,14 @@ export default {
 		},
 		showExportDialog() {
 			var $this = this;
-			$this.$refs.ExportModalRef.showDialog({ fieldList: $this.fieldList, hasSelected: false, hasData: false })
+			var fieldList = [];
+			$this.tableHeader.forEach(item => {
+				var obj = {};
+				obj.value = item.label;
+				obj.key = item.prop;
+				fieldList.push(obj);
+			})
+			$this.$refs.ExportModalRef.showDialog({ fieldList: fieldList, hasSelected: false, hasData: false })
 		},
 		exportDone(obj) {
 			var $this = this;
@@ -916,6 +674,115 @@ export default {
 				}
 			})
 		},
+        objectSpanMethod({ row, column, rowIndex, columnIndex }) {
+            // 如果是第一行
+            var $this = this;
+            if (columnIndex === 0) {
+                const _row = $this.filterSpan($this.scorelist, 'uname')[rowIndex] // 这里需要修改
+                const _col = _row > 0 ? 1 : 0
+                return {
+                    rowspan: _row,
+                    colspan: _col
+                }
+            }
+        },
+        // 处理数据
+        filterSpan(arr, condition) {
+            const spanOneArr = []
+            let concatOne = 0
+            arr.map((item, index) => {
+                if (index === 0) {
+                spanOneArr.push(1)
+                } else {
+                // 第一列需合并相同内容的判断条件
+                if (item[condition] === arr[index - 1][condition]) {
+                    spanOneArr[concatOne] += 1
+                    spanOneArr.push(0)
+                } else {
+                    spanOneArr.push(1)
+                    concatOne = index
+                }
+                }
+            })
+            return spanOneArr
+        },
+        tableRowClass(val){
+            var $this = this;
+            var totalObj = [];
+            var newlist = $this.scorelist;
+            newlist.forEach((item,index) => {
+                if(totalObj.indexOf(item.uname) < 0){
+                totalObj.push(item.uname)
+                }
+            })
+            // if(val.row.name == '总计'){
+            if(totalObj.indexOf(val.row.uname)%2 === 0){
+                if(val.row.name == '总计'){
+                return 'row-total row-bg';
+                }else{
+                return 'row-bg';
+                }
+            }else{
+                if(val.row.name == '总计'){
+                return 'row-total';
+                }else{
+                return '';
+                }
+            }
+        },
+        sortByGroup(scorelist){
+            var $this = this;
+            var totalObj = [];
+            var newlist = scorelist;
+            newlist.forEach((item,index) => {
+                if(item.name === "总计"){
+                totalObj.push(item.uname)
+                }
+            })
+            var needArr = [];
+            newlist.forEach(item => {
+                if(totalObj.indexOf(item.uname) > -1 && item.name !== "总计"){
+                needArr.push(item);
+                }
+            })
+            var aimRes = [];
+            newlist.forEach(item => {
+                if(totalObj.indexOf(item.uname) < 0){
+                aimRes.push(item);
+                }
+                if(totalObj.indexOf(item.uname) > -1 && item.name === "总计"){
+                needArr.forEach(nitem => {
+                    if(nitem.uname === item.uname){
+                    aimRes.push(nitem)
+                    }
+                })
+                aimRes.push(item);
+                }
+            })
+            return aimRes;
+        },
+        tableSort(column){
+            var $this = this;
+            var col = column.prop;
+            var way = column.order;
+            var scorelist = $this.scorelist;
+            if(way === 'ascending'){
+                scorelist.sort((a,b) =>{
+                return a[col]- b[col]
+                });
+                var aimres = $this.sortByGroup(scorelist);
+                $this.scorelist = aimres;
+            }else if(way === 'descending'){
+                scorelist.sort((a,b) =>{
+                return b[col]- a[col]
+                });
+                var aimres = $this.sortByGroup(scorelist);
+                $this.scorelist = aimres;
+            }else{
+                $this.scorelist = [...$this.scorelist2];
+            }
+            $this.$refs.simpleTable.doLayout();
+        },
 	}
 }
 </script>

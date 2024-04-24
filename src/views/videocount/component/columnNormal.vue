@@ -1,7 +1,6 @@
 <template>
   <div class="col_item">
     <div class="chart-column" :id="title" style="width: 100%; height: calc(100vh - 470px);"></div>
-    <p class="col_tit" v-if="showTitle">{{chartData.name}}</p>
   </div>
 </template>
 <script>
@@ -47,7 +46,6 @@ export default {
   methods: {
     drawColumnChart(){
         var $this = this;
-        $this.showTitle = true;
         if($this.myChart){
             $this.myChart.dispose();
         }
@@ -57,22 +55,39 @@ export default {
         var option;
         var xData = [];
         var series = [];
-        var itemObj={};
-        itemObj.name = $this.chartData.name;
-        itemObj.data = $this.chartData.data;
-        itemObj.type='bar';
-        itemObj.barMaxWidth = 30;
-        itemObj.label={
-          show: true,
-          position: 'top',
-          distance: 5,
-          color: "#666"
-        };
-        itemObj.itemStyle={
-          color: "#2259e5",
-          borderColor: "#2259e5",
-        };
-        series.push(itemObj);
+        if($this.chartData.data.length > 0){
+          $this.chartData.data.forEach((item,index) => {
+            var itemObj={};
+            itemObj.name = item.name;
+            itemObj.data = item.data;
+            itemObj.type='bar';
+            itemObj.barMaxWidth = 30;
+            if(index == 0){
+              itemObj.label={
+                show: true,
+                position: 'insideTop',
+                distance: 10,
+                color: "#fff"
+              };
+            }else if(index == 1){
+              itemObj.label={
+                show: true,
+                position: 'top',
+                distance: 5,
+                formatter:function(params){
+                  return params.data.all
+                },
+              };
+            }
+            
+            itemObj.itemStyle={
+              color: colorArr[index],
+              borderColor: colorArr[index],
+            };
+            itemObj.stack = "data";
+            series.push(itemObj);
+          })
+        }
         option = {
           tooltip: {
               backgroundColor:'rgba(255,255,255,0.95)',
@@ -85,19 +100,27 @@ export default {
                 console.log(params)
                 let returnData = `<div class="toolDiv">
                     <div class="tooltitle">${params[0].name}</div>`;
-                params.forEach((item,index) => {
                     returnData += `<div class="bar clearfix" style="margin-top:5px">
-                      <span style="display:inline-block;vertical-align:middle;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:${params[index].borderColor};"></span><span>
+                      <span style="display:inline-block;vertical-align:middle;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:${params[1].borderColor};"></span><span>
                       <p class="short_name">`;
-                    returnData += `实际完成</span></p><p class="right_some"><span>${item.data.value}积分</span>`;
-                    if(item.data.resdata && item.data.resdata.length > 0){
-                      item.data.resdata.forEach((sitem,sindex)=> {
+                    returnData += `${params[1].seriesName}</span></p><p class="right_some"><span>${params[1].data.all}积分</span>`;
+                    if(params[1].data.resdata && params[1].data.resdata.length > 0){
+                      params[1].data.resdata.forEach((sitem,sindex)=> {
                         returnData += `，${sitem.type_name}${sitem.number}个`;
                       })
                     }
                     returnData += `</p></div>`;
-                })
-                returnData +=`</div>`;
+                    returnData += `<div class="bar clearfix" style="margin-top:5px">
+                      <span style="display:inline-block;vertical-align:middle;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:${params[0].borderColor};"></span><span>
+                      <p class="short_name">`;
+                    returnData += `${params[0].seriesName}</span></p><p class="right_some"><span>${params[0].data.value}积分</span>`;
+                    if(params[0].data.resdata && params[0].data.resdata.length > 0){
+                      params[0].data.resdata.forEach((sitem,sindex)=> {
+                        returnData += `，${sitem.type_name}${sitem.number}个`;
+                      })
+                    }
+                    returnData += `</p></div>`;
+                    returnData +=`</div>`;
                 return returnData;
             }
           },
