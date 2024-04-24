@@ -76,7 +76,16 @@ export function getUserList(data) {
 // 统计数据
 export function getCountData(data) {
   return request({
-    url: "hxindex/videocount/index",
+    url: "/hxindex/videocount/index",
+    method: "POST",
+    data
+  });
+}
+
+// 统计个人占比数据
+export function getPieCountData(data) {
+  return request({
+    url: "/hxindex/videocount/index_2",
     method: "POST",
     data
   });

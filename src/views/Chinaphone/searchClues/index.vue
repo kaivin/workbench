@@ -164,6 +164,23 @@
                         </el-option>
                       </el-select>
                     </div>
+                    <div class="item-search">
+                        <span style="line-height:32px;font-size:12px;">质量分：</span>
+                        <el-input
+                            size="mini"
+                            style="width:56px;"
+                            v-model="searchData.startscore"
+                            clearable>
+                        </el-input>
+                        ~
+                        <el-input
+                            size="mini"
+                            style="width:56px;"
+                            v-model="searchData.endscore"
+                            clearable
+                            >
+                        </el-input>
+                    </div>
                     <div class="item-search" style="width: 120px;">
                       <el-select v-model="searchData.hasquality" size="small" clearable placeholder="质量判定情况"
                         :class="searchData.effective != '' ? 'el-xzstate' : ''">
@@ -535,7 +552,9 @@ export default {
         idlist: '',
         groupurlproduct: 1,
         hasquality: '',
-        qualityscore: ''
+        qualityscore: '',
+        startscore: '',
+        endscore: ''
       },
       hasQualityList: [
         { label: "待判定", value: 1 },
@@ -892,6 +911,8 @@ export default {
       searchData.idlist = $this.searchData.idlist;
       searchData.hasquality = $this.searchData.hasquality;
       searchData.qualityscore = $this.searchData.qualityscore;
+      searchData.startscore = $this.searchData.startscore;
+      searchData.endscore = $this.searchData.endscore;
       if ($this.searchData.date && $this.searchData.date.length > 0) {
         searchData.starttime = $this.searchData.date[0];
         searchData.endtime = $this.searchData.date[1];
@@ -1026,6 +1047,8 @@ export default {
       $this.searchData.groupurlproduct = 1;
       $this.searchData.hasquality = "";
       $this.searchData.qualityscore = "";
+      $this.searchData.startscore = "";
+      $this.searchData.endscore = "";
       $this.searchResult();
     },
     // 初始化数据
@@ -1066,6 +1089,8 @@ export default {
       searchData.idlist = $this.searchData.idlist;
       searchData.hasquality = $this.searchData.hasquality;
       searchData.qualityscore = $this.searchData.qualityscore;
+      searchData.startscore = $this.searchData.startscore;
+      searchData.endscore = $this.searchData.endscore;
       if ($this.searchData.date && $this.searchData.date.length > 0) {
         searchData.starttime = $this.searchData.date[0];
         searchData.endtime = $this.searchData.date[1];

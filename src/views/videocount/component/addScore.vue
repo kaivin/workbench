@@ -115,6 +115,7 @@
                             message: res.msg,
                             type: 'success'
                         });
+                        $this.resetForm();
                         $this.isSaveData = false;
                         $this.$emit("saveSuccess");
                         $this.isDialogShow = false;

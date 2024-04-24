@@ -7,7 +7,8 @@ import {
     seprateScore,
     getUserList,
     delRecord,
-    getCountData
+    getCountData,
+    getPieCountData,
 } from '@/api/videocount'
 
 const state = {}
@@ -97,6 +98,16 @@ const actions = {
     getVideoCountData({ commit, state }, data) {
         return new Promise((resolve, reject) => {
             getCountData(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 获取用户占比数据
+    getVideoPieCount({ commit, state }, data) {
+        return new Promise((resolve, reject) => {
+            getPieCountData(data).then(response => {
                 resolve(response)
             }).catch(error => {
                 reject(error)

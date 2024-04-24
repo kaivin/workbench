@@ -52,7 +52,7 @@
 						</div>
 					</div>
 					<div class="clues_info">
-						<p><span>共有<strong class="color3">{{infoData.totalNumber}}</strong>条数据，完成积分<strong class="color2">{{infoData.allScore}}</strong>分，有效积分<strong class="color1">{{infoData.trueScore}}</strong>分</span></p>
+						<p><span>当前结果共有<strong class="color3">{{infoData.totalNumber}}</strong>条数据，完成积分<strong class="color2">{{infoData.allScore}}</strong>分，有效积分<strong class="color1">{{infoData.trueScore}}</strong>分。</span></p>
 					</div>
 					<div class="card-content" ref="tableContent">
 						<div class="table-wrapper" v-bind:class="scrollPosition.isFixed?'fixed-table':''">
@@ -565,7 +565,7 @@ export default {
 		initPage(){
 			var $this = this;
 			const end = parseTime(new Date(), '{y}-{m}-{d}');
-			const start = parseTime(new Date()-3600 * 1000 * 24 * 7, '{y}-{m}-{d}');
+			const start = parseTime(new Date()-3600 * 1000 * 24 * 6, '{y}-{m}-{d}');
 			$this.searchData.time = [start, end];
 			$this.getWorkList();
 		},
@@ -585,14 +585,8 @@ export default {
 							if(response.data.length > 0){
 								$this.tableData = response.data;
 								$this.infoData.totalNumber = response.extend.count;
-								var score = 0;
-								var truescore = 0;
-								response.data.forEach(item => {
-									score += parseFloat(item.score);
-									truescore += parseFloat(item.valid_score);
-								})
-								$this.infoData.allScore = score;
-								$this.infoData.trueScore = truescore;
+								$this.infoData.allScore = response.extend.all_score;
+								$this.infoData.trueScore = response.extend.all_valid_score;
 							}
 							
 							setTimeout(()=>{

@@ -69,7 +69,7 @@ export default {
             isSaveData: false,
             addTemplate: {
                 type_id: '',
-                number: 0,
+                number: 1,
                 remark: '',
                 invalid_number: 0
             },
@@ -184,9 +184,8 @@ export default {
             formData.record_time = $this.form.record_time;
             formData.data = $this.form.data;
             formData.post_id = $this.form.post_id;
-            formData.invalid_number = $this.form.invalid_number;
             if($this.editType == 'edit'){
-                formData.id = $this.form.id;
+                formData.data[0].id = $this.form.id;
             }
             $this.$store.dispatch('videocount/saveRecordData',formData).then(res=>{
                 if(res.code == 200){

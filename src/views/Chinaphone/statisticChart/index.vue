@@ -152,6 +152,12 @@
                           </el-checkbox-group>
                         </div>
                       </div>
+                      <div class="team-panel">
+                        <div class="team-header">
+                          <span class="require">有效：</span>                          
+                          <el-checkbox class="item-checkbox" v-model="searchData.effective" size="mini" border>只显示有效</el-checkbox>
+                        </div>
+                      </div>
                     </div>
                   </div>
                   <div class="ChinaphoneTwo buttonTwo">
@@ -209,6 +215,20 @@
                           </el-checkbox-group>
                         </div>
                       </div>
+                    </div>
+                  </div>
+                  <div class="ChinaphoneTwo buttonTwo">
+                    <div class="group-header">
+                      <el-checkbox class="all-select" :indeterminate="isAllItem" border size="mini" v-model="checkAllItem" @change="handleCheckAllItemChange">分析项全选</el-checkbox>
+                    </div>
+                    <div class="group-body">
+                        <div class="team-panel">
+                          <div class="team-header">
+                            <el-checkbox-group class="team-list" v-model="checkedItem" @change="handleCheckedItemChange" size="mini">
+                              <el-checkbox class="item-checkbox" v-for="item in resaultShowList" :label="item.value" :key="item.id" border>{{item.label}}</el-checkbox>
+                            </el-checkbox-group>
+                          </div>
+                        </div>
                     </div>
                   </div>
                   <div class="card-header WebServerAddEditBtn ChinaphoneTwoBtn">
@@ -456,6 +476,21 @@
                       </div>
                     </el-col>
                   </el-row>
+                  <el-row :gutter="15">
+                    <el-col :xs="24" v-if="checkedItem.includes(1)">
+                      <div class="chart-wrapper" style="margin-bottom:15px">
+                        <div class="chart-header"><span>询盘月趋势</span></div>
+                        <div class="chart-body" style="height:400px;">
+                            <div class="abs-canvas" v-if="searchResult.monthxun.length>0">
+                              <div id="cluesChart12" class="chart-canvas"></div>
+                            </div>
+                            <div class="nocount" v-else>
+                              暂无数据
+                            </div>
+                        </div>
+                      </div>
+                    </el-col>
+                  </el-row>
                 </div>
               </div>
           </el-card>
@@ -486,6 +521,7 @@ export default {
         province:"",
         domain:'',
         name:'',
+        effective: false
       },
       pickerRangeOptions: pickerDayRangeOptions,
       deviceList:[],
@@ -547,6 +583,7 @@ export default {
         regionMap:[],
         searchWordCount:[],
         weekCount:[],
+        monthxun:[],
       },
       maxWeek:[],
       minWeek:[],
@@ -571,8 +608,15 @@ export default {
         lineDayPlot:'',
         columnHoursPlot:'',
         columnProductPlot:'',
-        chart:''
-      }
+        chart:'',
+        monthxunPlot: ''
+      },
+      resaultShowList:[
+        {id:1,value:1,label:"询盘月趋势"},
+      ],
+      isAllItem:false,
+      checkAllItem:false,
+      checkedItem:[],
     }
   },
   computed: {
@@ -719,6 +763,7 @@ export default {
       $this.searchData.province="";
       $this.searchData.domain='';
       $this.searchData.name='';
+      $this.searchData.effective = false;
       $this.searchResult.hoursCount=[];
       $this.searchResult.deviceCount=[];
       $this.searchResult.dayCount=[];
@@ -733,6 +778,10 @@ export default {
       $this.searchResult.regionMap=[];
       $this.searchResult.searchWordCount=[];
       $this.searchResult.weekCount=[];
+      $this.searchResult.monthxun=[];
+      $this.isAllItem=false;
+      $this.checkAllItem=false;
+      $this.checkedItem=[];
       if($this.chart&&!$this.chart.destroyed){
         $this.chart.destroy();
       }
@@ -775,6 +824,8 @@ export default {
       var checkedA6Product = $this.checkedA6Product;
       var checkedA7Product = $this.checkedA7Product;
       searchData.productid=checkedA1Product.concat(checkedA2Product).concat(checkedA3Product).concat(checkedA4Product).concat(checkedA5Product).concat(checkedA6Product).concat(checkedA7Product)
+      searchData.type = $this.checkedItem;
+      searchData.effective = $this.searchData.effective?1:0;
       return searchData;
     },
     // 获取当前登陆用户在该页面的操作权限
@@ -1015,6 +1066,7 @@ export default {
               $this.searchResult.regionCount = response.provincecoun;
               $this.searchResult.regionMap = response.provincecountmap;
               $this.searchResult.searchWordCount = response.searchwordcount;
+              $this.searchResult.monthxun = response.monthxun ? response.monthxun : [];
               var numArr = [];
               response.weekdaycount.forEach(function(item,index){
                 numArr.push(item.number);
@@ -1134,6 +1186,12 @@ export default {
                    $this.drawChart10();
                 }else{
                   $this.drawChart10();
+                }
+                if($this.chartlist.monthxunPlot){
+                  $this.chartlist.monthxunPlot.dispose();
+                }
+                if($this.checkedItem.includes(1)){
+                  $this.drawChart12();
                 }
               });
               setTimeout(()=>{
@@ -1730,6 +1788,36 @@ export default {
           $this.isAllDevice = true;
         }else{
           $this.isAllDevice = false;
+        }
+    },
+    // 分析项筛选
+    handleCheckAllItemChange(e){
+      var $this = this;
+      if(e){
+        var checkedItem = [];
+        $this.resaultShowList.forEach(function(item,index){
+          checkedItem.push(item.value);
+        });
+        $this.checkedItem = checkedItem;
+        $this.checkAllItem= true;
+      }else{
+        $this.checkedItem = [];
+        $this.checkAllItem = false;
+      }
+      $this.isAllItem = false;
+    },
+    handleCheckedItemChange(e){
+      var $this = this;
+      var checkedCount = e.length;
+       if(checkedCount === $this.resaultShowList.length){
+          $this.checkAllItem = true;
+        }else{
+          $this.checkAllItem = false;
+        }
+        if(checkedCount>0&&checkedCount<$this.resaultShowList.length){
+          $this.isAllItem = true;
+        }else{
+          $this.isAllItem = false;
         }
     },
     // 图表功能
@@ -2745,7 +2833,117 @@ export default {
       if($this.chartlist.chart){
         $this.chartlist.chart.resize();
       }
-    }
+      if($this.chartlist.monthxunPlot){
+        $this.chartlist.monthxunPlot.resize();
+      }
+    },
+    drawChart12(){
+      var $this = this;
+      if($this.searchResult.monthxun.length>0){
+        var chartDom = document.getElementById('cluesChart12');
+        var myChart = echarts.init(chartDom);
+        var option;
+
+        option = {
+          grid:{
+            left: '35',
+            top:'25',
+            right:'15',
+            bottom: '25'
+          },
+          tooltip:{
+            show: true,
+            trigger: "axis",
+            axisPointer: {
+              type: "line", 
+              lineStyle:{
+                color: "#5b8ff9"
+              }
+            },
+            formatter(params){
+              return `<div class="toolDiv">
+                    <div class="tooltitle">${params[0].name}</div>
+                    <div class="bar clearfix">
+                      <span style="display:inline-block;vertical-align:middle;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:#0970ff;"></span>
+                      <span>${params[0].seriesName}：</span>
+                      <span>${params[0].data.number}</span>
+                    </div>
+                  </div>`;
+            }
+          },
+          xAxis: {
+            type: 'category',
+            name: "日期",
+            axisLine:{
+              lineStyle:{
+                color: "#dedede"
+              }
+            },
+            axisLabel:{
+              color: "#888"
+            }
+          },
+          yAxis: {
+            type: 'value',
+            axisLabel:{
+              color: "#888"
+            }
+          },
+          dataset:{
+            source: $this.searchResult.monthxun,  
+          },
+          animation: false,
+          series: [
+            {
+              name: "询盘个数",
+              type: 'line',
+              symbol:'circle',
+              symbolSize: '5',
+              label:{
+                show: true,
+                position: 'top',
+                distance: '5',
+              },
+              itemStyle:{
+                color: '#fff',
+                borderColor: "#0970ff",
+                borderWidth: 1
+              },
+              lineStyle:{
+                color: "#0970ff",
+                width: 1
+              },
+              areaStyle:{
+                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                    {
+                    offset: 0,
+                    color:'#0970ff',
+                    opacity:1
+                    },
+                    {
+                    offset: 1,
+                    color: "rgba(255, 255, 255, 0)",
+                    }
+                ]),
+                opacity:0.3
+              },
+              emphasis:{
+                lineStyle: {
+                  width: 2,
+                },
+                itemStyle:{
+                  borderWidth: 2
+                }
+              }
+            }
+          ]
+        };
+
+        option && myChart.setOption(option);
+        $this.chartlist.monthxunPlot = myChart;
+      }
+    },
+
   },
   destroyed(){
     window.removeEventListener('resize',this.echartsSize);

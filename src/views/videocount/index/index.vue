@@ -9,7 +9,7 @@
         </p>
         <div class="chart_main">
           <el-tabs v-model="nowChart" type="card" @tab-click="tabChange">
-            <el-tab-pane label="详细" name="1">
+            <el-tab-pane label="积分趋势" name="1">
               <div class="filter-panel" ref="filterbox">
                   <div class="filter-list">
                       <div class="item-search flex-box">
@@ -25,6 +25,7 @@
                                 class="date-range"
                                 start-placeholder="开始日期"
                                 end-placeholder="结束日期"
+                                :picker-options="pickerRangeOptions"
                                 >
                             </el-date-picker>
                           </div>
@@ -33,15 +34,8 @@
                           <div class="filter-title"><span class="txt-title">人员：</span></div>
                           <div class="filter-content flex-content">
                               <div class="checked_item">
-                                  <el-checkbox
-                                  v-model="checkAll"
-                                  :indeterminate="isIndeterminate"
-                                  @change="handleCheckAllChange"
-                                  ><span class="c_tit">全选</span>
-                                  </el-checkbox>
                                   <el-checkbox-group
                                   v-model="searchData.name"
-                                  @change="handleCheckedChange"
                                   >
                                       <el-checkbox
                                       v-for="item in userList"
@@ -63,24 +57,20 @@
                   </div>
               </div>
               <div class="chartShow result-panel">
-                  <!-- <div class="item-change">
-                      <div class="item-font" :class="nowChart == 1?'active':''" @click="tabChange(1)">详细</div>
-                      <div class="item-font" :class="nowChart == 2?'active':''" @click="tabChange(2)">占比</div>
-                  </div> -->
                   <div class="chart_item">
                       <div class="search" v-if="isSearchData"><p>请稍候...</p></div>
                       <ColumnChart :chartData="chartData"></ColumnChart>
                   </div>
               </div>
             </el-tab-pane>
-            <el-tab-pane label="占比" name="2">
+            <el-tab-pane label="积分排行" name="2">
               <div class="filter-panel" ref="filterbox">
                   <div class="filter-list">
                       <div class="item-search flex-box">
                           <div class="filter-title"><span class="txt-title">日期：</span></div>
                           <div class="item-list">
                             <el-date-picker
-                                v-model="searchData.time"
+                                v-model="userSearch.time"
                                 type="daterange"
                                 format="yyyy-MM-dd"
                                 value-format="yyyy-MM-dd"
@@ -89,13 +79,14 @@
                                 class="date-range"
                                 start-placeholder="开始日期"
                                 end-placeholder="结束日期"
+                                :picker-options="pickerRangeOptions"
                                 >
                             </el-date-picker>
                           </div>
-                          <div class="filter-title" style="margin-left: 50px"><span class="txt-title">岗位：</span></div>
+                          <div class="filter-title" style="margin-left: 50px"><span class="txt-title">工作类型：</span></div>
                           <div class="item-list">
-                            <el-select v-model="pieSearch.post_id" placeholder="请选择">
-                                <el-option v-for="item in isGetPost" :disabled="item.disabled" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                            <el-select v-model="userSearch.type_id" placeholder="请选择" size="small" clearable>
+                                <el-option v-for="item in typeList" :key="item.value" :label="item.label" :value="item.value"></el-option>
                             </el-select>
                           </div>
                       </div>
@@ -103,25 +94,83 @@
                           <div class="filter-title"><span class="txt-title">人员：</span></div>
                           <div class="filter-content flex-content">
                               <div class="checked_item">
-                                  <el-radio-group
-                                  v-model="pieSearch.name"
+                                  <el-checkbox-group
+                                  v-model="userSearch.name"
                                   >
-                                      <el-radio
+                                      <el-checkbox
                                       v-for="item in userList"
                                       :key="item.id"
                                       :label="item.name"
                                       :value="item.name"
                                       >
                                       <span class="c_tit">{{item.name}}</span>
-                                      </el-radio>
-                                  </el-radio-group>
+                                      </el-checkbox>
+                                  </el-checkbox-group>
                               </div>
                           </div>
                       </div>
                       <div class="item-search item-btn">
                           <div class="filter-title" style="opacity: 0; visibility: hidden;"><span class="txt-title">人员：</span></div>
-                          <el-button class="search_btn" type="primary" :disabled="isSearchData" @click="getPieData">查询</el-button>
-                          <el-button type="info" class="reset_btn" v-on:click="resetPieData()">重置</el-button>
+                          <el-button class="search_btn" type="primary" :disabled="isSearchData" @click="getUserSearchData">查询</el-button>
+                          <el-button type="info" class="reset_btn" v-on:click="resetUserData()">重置</el-button>
+                      </div>
+                  </div>
+              </div>
+              <div class="chartShow result-panel">
+                  <div class="chart_item">
+                      <div class="search" v-if="isSearchData"><p>请稍候...</p></div>
+                      <div class="column_list">
+                        <div class="column_item" v-for="item,index in userResultData" :key="index">
+                          <ColumnNormal :chartData="item" :title="'chartuser'+index"></ColumnNormal>
+                        </div>
+                      </div>
+                  </div>
+              </div>
+            </el-tab-pane>
+            <el-tab-pane label="工作类型占比" name="3">
+              <div class="filter-panel" ref="filterbox">
+                  <div class="filter-list">
+                      <div class="item-search flex-box">
+                          <div class="filter-title"><span class="txt-title">日期：</span></div>
+                          <div class="item-list">
+                            <el-date-picker
+                                v-model="typeSearch.time"
+                                type="daterange"
+                                format="yyyy-MM-dd"
+                                value-format="yyyy-MM-dd"
+                                key="a"
+                                size="small"
+                                class="date-range"
+                                start-placeholder="开始日期"
+                                end-placeholder="结束日期"
+                                :picker-options="pickerRangeOptions"
+                                >
+                            </el-date-picker>
+                          </div>
+                      </div>
+                      <div class="item-filter flex-box group">
+                          <div class="filter-title"><span class="txt-title">人员：</span></div>
+                          <div class="filter-content flex-content">
+                              <div class="checked_item">
+                                  <el-checkbox-group
+                                  v-model="typeSearch.name"
+                                  >
+                                      <el-checkbox
+                                      v-for="item in userList"
+                                      :key="item.id"
+                                      :label="item.name"
+                                      :value="item.name"
+                                      >
+                                      <span class="c_tit">{{item.name}}</span>
+                                      </el-checkbox>
+                                  </el-checkbox-group>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="item-search item-btn">
+                          <div class="filter-title" style="opacity: 0; visibility: hidden;"><span class="txt-title">人员：</span></div>
+                          <el-button class="search_btn" type="primary" :disabled="isSearchData" @click="getTypeSearchData">查询</el-button>
+                          <el-button type="info" class="reset_btn" v-on:click="resetTypeData()">重置</el-button>
                       </div>
                   </div>
               </div>
@@ -129,8 +178,8 @@
                   <div class="chart_item">
                       <div class="search" v-if="isSearchData"><p>请稍候...</p></div>
                       <div class="pie_list">
-                        <div class="pie_item">
-                          <div id="pieChart"></div>
+                        <div class="pie_item" v-for="item,index in typeResultData" :key="index">
+                          <PieChart :chartData="item" :title="'pietype'+index"></PieChart>
                         </div>
                       </div>
                   </div>
@@ -138,11 +187,15 @@
             </el-tab-pane>
           </el-tabs>
         </div>
+        <el-backtop target=".scroll-panel"></el-backtop>
     </div>
   </template>
   <script>
   import {mapGetters} from 'vuex';
   import ColumnChart from '../component/columnChart.vue';
+  import ColumnNormal from '../component/columnNormal.vue';
+  import PieChart from '../component/pieChart.vue';
+  import {parseTime, sortByDesc}  from "@/utils";
   export default {
     name: 'videocount_index',
     data() {
@@ -152,28 +205,36 @@
             name:[],
             time: []
           },
-          pieSearch:{
+          userSearch:{
             time: [],
-            name: "",
-            post_id: ""
+            name: [],
+            type_id: ""
+          },
+          typeSearch:{
+            time: [],
+            name: [],
           },
           showChart: false,
           isIndeterminate: false,
           checkAll: false,
           isSearchData: false,
-          pickerDateRangeOptions: this.$pickerRangeOptions,
+          pickerRangeOptions: this.$pickerRangeOptions,
           userList: [],
           typeList: [],
           nowChart: "1",
           chartData: {},
           isSearchColumn: false,
-          isSearchPie: false,
-          isGetPost: false,
+          isSearchUser: false,
+          isSearchType: false,
+          userResultData: [],
+          typeResultData: [],
+          isGetType: false
       };
     },
     components: {
       ColumnChart,
-      
+      PieChart,
+      ColumnNormal
     },
     computed: {
       ...mapGetters([
@@ -283,7 +344,8 @@
             });
             if(permitData.includes('videocount_index')){
               $this.searchData.time = $this.getDefaultTime();
-              $this.pieSearch.time = $this.getDefaultTime();
+              $this.userSearch.time = $this.getDefaultTime();
+              $this.typeSearch.time = $this.getDefaultTime();
               $this.getUserList();
             }else{
               $this.$message({
@@ -330,60 +392,33 @@
             }
         });
       },
-      getPostList(){
-        var $this = this;
-        $this.$store.dispatch('videocount/getVideoPostData',null).then(res=>{
-          if(res.code == 200){
-            var resData = [];
-            if(res.data && res.data.length > 0){
-                res.data.forEach(item => {
-                    var obj = {};
-                    obj.label = item.name;
-                    obj.value = item.id;
-                    obj.disabled = false;
-                    resData.push(obj);
-                })
-            }
-            $this.isGetPost = true;
-				  }else{
-            $this.$message({
-                showClose: true,
-                message: res.msg,
-                type: 'error'
-            });
-          }
-			  });
-		  },
-      // 点击选中
-      handleCheckedChange(e){
-        var $this = this;
-        var checkedCount = e.length;
-        if(checkedCount === $this.userList.length){
-          $this.checkAll = true;
-        }else{
-          $this.checkAll = false;
-        }
-        if(checkedCount>0&&checkedCount<$this.userList.length){
-          $this.isIndeterminate = true;
-        }else{
-          $this.isIndeterminate = false;
-        }
-      },
-      // 全选
-      handleCheckAllChange(e){
-        var $this = this;
-        var checkedList = [];
-        if(e){
-          $this.userList.forEach((item) =>{
-            checkedList.push(item.name);
-          })
-          $this.searchData.name = checkedList;
-          $this.checkAll= true;
-        }else{
-          $this.searchData.name = [];
-          $this.checkAll= false;
-        }
-        $this.isIndeterminate = false;
+      // 获取工作类型
+      getTypeList(){
+          var $this = this;
+          var formData = {};
+          formData.type = "manual";
+          $this.$store.dispatch('videocount/getVideoTypeData',formData).then(res=>{
+              if(res.code == 200){
+                  var resData = [];
+                  if(res.data && res.data.length > 0){
+                      res.data.forEach(item => {
+                          var obj = {};
+                          obj.label = item.name;
+                          obj.value = item.id;
+                          obj.disabled = false;
+                          resData.push(obj);
+                      })
+                  }
+                  $this.typeList = resData;
+                  $this.isGetType = true;
+              }else{
+                  $this.$message({
+                      showClose: true,
+                      message: res.msg,
+                      type: 'error'
+                  });
+              }
+          });
       },
       // 获取统计数据
       getCountData(){
@@ -401,10 +436,11 @@
                 if(response.data){
                   if(response.data.day_word_data.length > 0){
                     var resList = response.data.day_word_data;
-                    resList = resList.sort($this.sortByAsc("day"));
+                    resList = resList.sort($this.sortByAscTime("day"));
                     $this.handleChartData(resList);
                   }
                 }
+                $this.isSearchColumn = true
               }else{
                 if(response.permitstatus&&response.permitstatus==2){
                   $this.$message({
@@ -430,27 +466,77 @@
           });
         }
       },
-      // 获取饼图数据
-      getPieData(){
+      // 获取员工占比数据
+      getUserSearchData(){
         var $this = this;
         if(!$this.isSearchData){
           var formData = {};
-          formData.name = $this.pieSearch.name;
-          formData.time = $this.pieSearch.time.join(" - ");
-          formData.post_id = $this.pieSearch.post_id;
+          formData.name = $this.userSearch.name;
+          formData.time = $this.userSearch.time.join(" - ");
+          formData.type_id = $this.userSearch.type_id;
           $this.isSearchData = true;
-          $this.$store.dispatch('videocount/getVideoCountData', formData).then(response=>{
+          $this.userResultData = [{name: "实际完成"}, {name: "有效完成"}];
+          $this.$store.dispatch('videocount/getVideoPieCount', formData).then(response=>{
             if(response){
               $this.isSearchData = false;
-              $this.chartData = {}
               if(response.code == 200){
                 if(response.data){
-                  if(response.data.day_word_data.length > 0){
-                    var resList = response.data.day_word_data;
-                    resList = resList.sort($this.sortByAsc("day"));
-                    $this.handlePieData(resList);
+                  if(response.data.length > 0){
+                    $this.handleUserSearchData(response.data);
                   }
                 }
+                $this.isSearchUser = true;
+              }else{
+                if(response.permitstatus&&response.permitstatus==2){
+                  $this.$message({
+                    showClose: true,
+                    message: "未被分配该页面访问权限",
+                    type: 'error',
+                    duration:6000
+                  });
+                  $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
+                }else{
+                  $this.$message({
+                    showClose: true,
+                    message: response.msg,
+                    type: 'error'
+                  });
+                  setTimeout(()=>{
+                    $this.isSearchResult=false;
+                    $this.isSaveData=false;
+                  },1000);
+                }
+              }
+            }
+          });
+        }
+      },
+      // 获取员工占比数据
+      getTypeSearchData(){
+        var $this = this;
+        if(!$this.isSearchData){
+          var formData = {};
+          formData.name = $this.typeSearch.name;
+          formData.time = $this.typeSearch.time.join(" - ");
+          $this.isSearchData = true;
+          var resArr = [];
+          $this.userList.forEach(item => {
+            var trueObj = {name: item.name, title: "实际完成"};
+            var effectObj = {name: item.name, title: "有效完成"};
+            resArr.push(trueObj);
+            resArr.push(effectObj);
+          })
+          $this.typeResultData = resArr;
+          $this.$store.dispatch('videocount/getVideoPieCount', formData).then(response=>{
+            if(response){
+              $this.isSearchData = false;
+              if(response.code == 200){
+                if(response.data){
+                  if(response.data.length > 0){
+                    $this.handleTypeSearchData(response.data);
+                  }
+                }
+                $this.isSearchType = true;
               }else{
                 if(response.permitstatus&&response.permitstatus==2){
                   $this.$message({
@@ -496,20 +582,17 @@
                 for(var i = 0; i < data.length;i++){
                   var trueobj = {};
                   var result = data[i].user_data[sindex];
-                  trueobj.value = result.data.user_effective_score;
-                  trueobj.all = result.data.user_actual_score;
+                  trueobj.value = $this.handleFloatNumber(result.data.user_effective_score);
+                  trueobj.all = $this.handleFloatNumber(result.data.user_actual_score);
                   trueobj.actual_data = result.data.user_actual_data;
                   trueobj.effective_data = result.data.user_effective_data;
                   truescore.push(trueobj);
                   var obj = {};
-                  obj.value = result.data.user_actual_score-result.data.user_effective_score;
-                  obj.all = result.data.user_actual_score;
+                  obj.value = $this.handleFloatNumber(result.data.user_actual_score-result.data.user_effective_score);
+                  obj.all = $this.handleFloatNumber(result.data.user_actual_score);
                   sepscore.push(obj);
-                  if(result.data.user_effective_score > 0 && result.data.user_actual_score > 0){
-                    percent.push(Number(result.data.user_effective_score*100/result.data.user_actual_score).toFixed(1));
-                  }else{
-                    percent.push(0);
-                  }
+                  var percent_num = result.data.completion_rate;
+                  percent.push(percent_num)
                 }
                 c_data.push(truescore);
                 c_data.push(sepscore);
@@ -519,20 +602,17 @@
             
           }else{
             var trueobj = {};
-            trueobj.value = item.all_user_effective_score;
-            trueobj.all = item.all_user_actual_score;
+            trueobj.value = $this.handleFloatNumber(item.all_user_effective_score);
+            trueobj.all = $this.handleFloatNumber(item.all_user_actual_score);
             trueobj.actual_data = item.all_user_actual_data;
             trueobj.effective_data = item.all_user_effective_data;
             all_truescore.push(trueobj);
             var obj = {};
-            obj.value = item.all_user_actual_score-item.all_user_effective_score;
-            obj.all = item.all_user_actual_score;
+            obj.value = $this.handleFloatNumber(item.all_user_actual_score-item.all_user_effective_score);
+            obj.all = $this.handleFloatNumber(item.all_user_actual_score);
             all_sepscore.push(obj);
-            if(item.all_user_effective_score > 0 && item.all_user_actual_score > 0){
-              all_percent.push(Number(item.all_user_effective_score*100/item.all_user_actual_score).toFixed(1));
-            }else{
-              all_percent.push(0);
-            }
+            var percent_num = item.completion_rate;
+            all_percent.push(percent_num)
           }
         });
         if($this.searchData.name.length == 0){
@@ -544,26 +624,105 @@
         $this.chartData.c_data = c_data;
         $this.chartData.c_user = c_user;
       },
+      handleUserSearchData(data){
+        var $this = this;
+        var trueData = [];
+        var effectData = [];
+        var tname = [];
+        var ename = [];
+        var truelist = JSON.parse(JSON.stringify(data));
+        var effectlist = JSON.parse(JSON.stringify(data));
+        truelist = truelist.sort(sortByDesc("actual_score"));
+        effectlist = effectlist.sort(sortByDesc("effective_score"));
+        truelist.forEach(item => {
+          var trueObj = {};
+          trueObj.name = item.name;
+          trueObj.value = item.actual_score;
+          trueObj.resdata = item.actual_data;
+          trueData.push(trueObj);
+          tname.push(item.name);
+        })
+        effectlist.forEach(item => {
+          var effectObj = {};
+          effectObj.name = item.name;
+          effectObj.value = item.effective_score;
+          effectObj.resdata = item.effective_data;
+          effectData.push(effectObj);
+          ename.push(item.name);
+        })
+        var resData = [];
+        var trueRes = {
+          name: "实际完成",
+          data: trueData,
+          c_name: tname
+        }
+        resData.push(trueRes);
+        var effectRes = {
+          name: "有效完成",
+          data: effectData,
+          c_name: ename
+        }
+        resData.push(effectRes);
+        $this.userResultData = resData;
+      },
+      handleTypeSearchData(data){
+        var $this = this;
+        var dataList = [];
+        data.forEach(item => {
+          var trueObj = {};
+          var effectObj = {};
+          trueObj.title = item.name;
+          trueObj.name = "实际完成";
+          trueObj.score = item.actual_score;
+          if(item.actual_data && item.actual_data.length > 0){
+            item.actual_data.forEach(sitem => {
+              sitem.name = sitem.type_name;
+              sitem.value = sitem.score;
+            })
+            trueObj.data = item.actual_data;
+          }else{
+            trueObj.data = [];
+          }
+          dataList.push(trueObj);
+          effectObj.title = item.name;
+          effectObj.name = "有效完成";
+          effectObj.score = item.effective_score;
+          if(item.effective_data && item.effective_data.length > 0){
+            item.effective_data.forEach(sitem => {
+              sitem.name = sitem.type_name;
+              sitem.value = sitem.score;
+            })
+            effectObj.data = item.effective_data;
+          }else{
+            effectObj.data = [];
+          }
+          dataList.push(effectObj);
+        })
+        $this.typeResultData = dataList;
+      },
       resetColumnData(){
         var $this = this;
         $this.searchData.name = [];
         $this.searchData.time = [];
-        $this.checkAll = false;
+        $this.chartData = {};
       },
-      resetPieData(){
+      resetUserData(){
         var $this = this;
-        $this.pieSearch.name = "";
-        $this.pieSearch.time = [];
-        $this.pieSearch.post_id = "";
-        $this.checkAll = false;
+        $this.userSearch.name = [];
+        $this.userSearch.time = [];
+        $this.userSearch.type_id = "";
+        $this.userResultData = [];
+      },
+      resetTypeData(){
+        var $this = this;
+        $this.typeSearch.name = [];
+        $this.typeSearch.time = [];
+        $this.typeResultData = [];
       },
       getDefaultTime(){
-        var $this = this;
-        const end = new Date();
-        const start = new Date();
-        start.setTime(start.getTime());
-        end.setTime(end.getTime() - 3600 * 1000 * 24 * 6);
-        let timeArr = [end.toISOString().slice(0, 10), start.toISOString().slice(0, 10)];
+        const end = parseTime(new Date(), '{y}-{m}-{d}');
+			  const start = parseTime(new Date()-3600 * 1000 * 24 * 6, '{y}-{m}-{d}');
+        let timeArr = [start, end];
         return timeArr;
       },
       tabChange(item){
@@ -574,23 +733,34 @@
         }
         $this.pieChart = null;
         if(item.name == "1"){
-          if(!isSearchColumn){
+          if(!$this.isSearchColumn){
             $this.getCountData();
           }
         }else if(item.name == "2"){
-          if(!$this.isGetPost){
-            $this.getPostList();
+          if(!$this.isGetType){
+            $this.getTypeList();
+            $this.getUserSearchData();
           }else{
-            if(!isSearchPie){
-              $this.getPieData();
+            if(!$this.isSearchUser){
+              $this.getUserSearchData();
             }
           }
-          
+        }else if(item.name == "3"){
+          if(!$this.isSearchType){
+              $this.getTypeSearchData();
+            }
         }
       },
-      sortByAsc(i){
+      sortByAscTime(i){
         return function(a,b){
           return new Date(a[i]).getTime() - new Date(b[i]).getTime()
+        }
+      },
+      handleFloatNumber(data){
+        if(data > 0){
+          return Number(data).toFixed(1);
+        }else{
+          return data;
         }
       }
     }
@@ -598,13 +768,13 @@
   </script>
   <style lang="scss" scoped>
     .chartShow{
-      margin-top: 20px;
+      margin-top: 10px;
       padding: 20px;
       background-color: #fff;
-      min-height: calc(100vh - 417px);
+      min-height: calc(100vh - 407px);
       #columnChart{
         width: 100%;
-        height: calc(100vh - 460px);
+        height: calc(100vh - 470px);
       }
     }
     .checked_item .c_tit, .checked_item .c_name{
@@ -614,7 +784,7 @@
       line-height: 28px;
       color: #1a1a1a;
     }
-    .checked_item .el-checkbox{
+    .checked_item .el-checkbox, .checked_item .el-radio{
       min-width: 120px;
       margin: 3px;
     }
@@ -717,6 +887,21 @@
     }
     .group-index .filter-panel{
       margin-top: 5px;
+    }
+    .pie_list{
+      .pie_item{
+        width: 50%;
+        height: 470px;
+        float: left;
+      }
+      &:after{
+        content: "";
+        display: block;
+        clear: both;
+      }
+    }
+    .column_item+.column_item{
+      margin-top: 20px;
     }
   </style>
   <style>
