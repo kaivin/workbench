@@ -6,7 +6,7 @@
 <script>
 import * as echarts from 'echarts';
 export default {
-  name: "columnChart",
+  name: "columnNormal",
   props: {
     chartData:{
       type: Object,
@@ -55,129 +55,183 @@ export default {
         var option;
         var xData = [];
         var series = [];
-        if($this.chartData.data.length > 0){
+        if($this.chartData.data && $this.chartData.data.length > 0){
           $this.chartData.data.forEach((item,index) => {
             var itemObj={};
             itemObj.name = item.name;
             itemObj.data = item.data;
-            itemObj.type='bar';
-            itemObj.barMaxWidth = 30;
-            if(index == 0){
-              itemObj.label={
-                show: true,
-                position: 'insideTop',
-                distance: 10,
-                color: "#fff"
-              };
-            }else if(index == 1){
-              itemObj.label={
-                show: true,
-                position: 'top',
-                distance: 5,
-                formatter:function(params){
-                  return params.data.all
-                },
-              };
-            }
-            
-            itemObj.itemStyle={
-              color: colorArr[index],
-              borderColor: colorArr[index],
-            };
-            itemObj.stack = "data";
-            series.push(itemObj);
-          })
-        }
-        option = {
-          tooltip: {
-              backgroundColor:'rgba(255,255,255,0.95)',
-              trigger: "axis",
-              textStyle:{
-                fontSize:'12',
-                color: '#666'
-              },
-              formatter(params){
-                console.log(params)
-                let returnData = `<div class="toolDiv">
-                    <div class="tooltitle">${params[0].name}</div>`;
-                    returnData += `<div class="bar clearfix" style="margin-top:5px">
-                      <span style="display:inline-block;vertical-align:middle;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:${params[1].borderColor};"></span><span>
-                      <p class="short_name">`;
-                    returnData += `${params[1].seriesName}</span></p><p class="right_some"><span>${params[1].data.all}积分</span>`;
-                    if(params[1].data.resdata && params[1].data.resdata.length > 0){
-                      params[1].data.resdata.forEach((sitem,sindex)=> {
-                        returnData += `，${sitem.type_name}${sitem.number}个`;
-                      })
-                    }
-                    returnData += `</p></div>`;
-                    returnData += `<div class="bar clearfix" style="margin-top:5px">
-                      <span style="display:inline-block;vertical-align:middle;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:${params[0].borderColor};"></span><span>
-                      <p class="short_name">`;
-                    returnData += `${params[0].seriesName}</span></p><p class="right_some"><span>${params[0].data.value}积分</span>`;
-                    if(params[0].data.resdata && params[0].data.resdata.length > 0){
-                      params[0].data.resdata.forEach((sitem,sindex)=> {
-                        returnData += `，${sitem.type_name}${sitem.number}个`;
-                      })
-                    }
-                    returnData += `</p></div>`;
-                    returnData +=`</div>`;
-                return returnData;
-            }
-          },
-          grid: {
-              top:50,
-              right:22,
-              bottom:50,
-              left:52,
-          },
-          xAxis: {
-              type: 'category',
-              data: $this.chartData.c_name,
-              axisLine: {
-                  show: false,
-              },
-              axisTick: {
-                  show: false,
-              },
-              axisLine:{
+            if(index == 0 || index == 1){
+              itemObj.type='bar';
+              itemObj.barMaxWidth = 30;
+              if(index == 0){
+                itemObj.label={
                   show: true,
-                  lineStyle:{
-                      type: [4, 0],
-                      dashOffset: 3,
-                      color: '#e5e5e5',
-                      opacity: 1,
-                      shadowColor: null,
-                      shadowBlur: 0,
-                      shadowOffsetX: 0,
-                      shadowOffsetY: 0,
-                  }
-              },
-              axisLabel: {
-                  interval:0,
-                  color: "#555",
-                  fontSize: "12",
-                  lineHeight: 18,
-              },
-          },
-          yAxis: {
-              type: 'value',
-              name: "单位（分）",
-              nameTextStyle: {
-                color: "#b4b4b4",
-                nameLocation: "start",
-              },
-              alignTicks: true,
-              axisLabel:{
-                color: "#888"
-              },
-              
-          },
-          animation: false,
-          series:series,
-        };
-        option && myChart.setOption(option);
-        $this.myChart = myChart;
+                  position: 'insideTop',
+                  distance: 10,
+                  color: "#fff",
+                  formatter:function(params){
+                    if(params.value > 0.5){
+                      return params.value
+                    }else{
+                      return ""
+                    }
+                  },
+                };
+              }else if(index == 1){
+                itemObj.label={
+                  show: true,
+                  position: 'top',
+                  distance: 5,
+                  formatter:function(params){
+                    return params.data.all
+                  },
+                };
+              }
+              itemObj.itemStyle={
+                color: colorArr[index],
+                borderColor: colorArr[index],
+              };
+              itemObj.stack = "data";
+              series.push(itemObj);
+            }else if(index == 2 || index == 3){
+              // 折线图
+              itemObj.smooth=false;
+              itemObj.type='line';
+              itemObj.lineStyle={
+                  width: 1,
+                  color: colorArr[index], // 线条颜色
+              };
+              itemObj.itemStyle={
+                  color: '#fff',
+                  borderColor: colorArr[index], // 折点颜色
+                  borderWidth: 1
+              };
+              itemObj.emphasis={
+                lineStyle: {
+                  width: 2,	// hover时的折线宽度
+                },
+                itemStyle:{
+                  borderWidth: 2
+                }
+              };
+              itemObj.symbolSize=5;
+              itemObj.symbol='circle';
+              itemObj.yAxisIndex = 1;
+              itemObj.animationDuration=2800;
+              itemObj.animationEasing='quadraticOut';
+              series.push(itemObj);
+            }
+          })
         
+          option = {
+            tooltip: {
+                backgroundColor:'rgba(255,255,255,0.95)',
+                trigger: "axis",
+                textStyle:{
+                  fontSize:'12',
+                  color: '#666'
+                },
+                formatter(params){
+                  let returnData = `<div class="toolDiv">
+                      <div class="tooltitle">${params[0].name}</div>`;
+                      returnData += `<div class="bar clearfix" style="margin-top:5px">
+                        <span style="display:inline-block;vertical-align:middle;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:${params[1].borderColor};"></span><span>`;
+                      returnData += `<p class="long_name2">${params[1].seriesName}</span></p><p class="right_some"><span>${params[1].data.all}积分</span>`;
+                      if(params[1].data.resdata && params[1].data.resdata.length > 0){
+                        params[1].data.resdata.forEach((sitem,sindex)=> {
+                          returnData += `，${sitem.type_name}${sitem.number}个`;
+                        })
+                      }
+                      returnData += `</p></div>`;
+                      returnData += `<div class="bar clearfix" style="margin-top:5px">
+                        <span style="display:inline-block;vertical-align:middle;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:${params[3].borderColor};"></span><span>`;
+                        returnData += `<p class="long_name2">${params[3].seriesName}</span></p><p class="right_some"><span>${params[3].value}%</span><p></div>`;
+                      returnData += `<div class="bar clearfix" style="margin-top:5px">
+                        <span style="display:inline-block;vertical-align:middle;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:${params[0].borderColor};"></span><span>`;
+                      returnData += `<p class="long_name2">${params[0].seriesName}</span></p><p class="right_some"><span>${params[0].data.value}积分</span>`;
+                      if(params[0].data.resdata && params[0].data.resdata.length > 0){
+                        params[0].data.resdata.forEach((sitem,sindex)=> {
+                          returnData += `，${sitem.type_name}${sitem.number}个`;
+                        })
+                      }
+                      returnData += `</p></div>`;
+                      
+                      returnData += `<div class="bar clearfix" style="margin-top:5px">
+                        <span style="display:inline-block;vertical-align:middle;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:${params[2].borderColor};"></span><span>`;
+                        returnData += `<p class="long_name2">${params[2].seriesName}</span></p><p class="right_some"><span>${params[2].value}%</span><p></div>`;
+                      returnData +=`</div>`;
+                          
+                  return returnData;
+              }
+            },
+            grid: {
+                top:50,
+                right:22,
+                bottom:50,
+                left:52,
+            },
+            xAxis: {
+                type: 'category',
+                data: $this.chartData.c_name,
+                axisLine: {
+                    show: false,
+                },
+                axisTick: {
+                    show: false,
+                },
+                axisLine:{
+                    show: true,
+                    lineStyle:{
+                        type: [4, 0],
+                        dashOffset: 3,
+                        color: '#e5e5e5',
+                        opacity: 1,
+                        shadowColor: null,
+                        shadowBlur: 0,
+                        shadowOffsetX: 0,
+                        shadowOffsetY: 0,
+                    }
+                },
+                axisLabel: {
+                    interval:0,
+                    color: "#555",
+                    fontSize: "12",
+                    lineHeight: 18,
+                },
+            },
+            yAxis: [{
+                type: 'value',
+                name: "单位（分）",
+                nameTextStyle: {
+                  color: "#b4b4b4",
+                  nameLocation: "start",
+                },
+                min: 0,
+                alignTicks: true,
+                axisLabel:{
+                  color: "#888"
+                }, 
+              },
+              {
+                  type: 'value',
+                  name: "单位（%）",
+                  nameTextStyle: {
+                    color: "#b4b4b4",
+                    nameLocation: "end",
+                  },
+                  min: 0,
+                  alignTicks: true,
+                  axisLabel:{
+                    color: "#888"
+                  },
+                },
+            ],
+            animation: false,
+            series:series,
+          };
+          option && myChart.setOption(option);
+          $this.myChart = myChart;
+        }
     },
     echartsSize(){
         if(this.myChart){
@@ -192,12 +246,15 @@ export default {
     font-size: 14px;
     font-weight: bold;
 }
-.long_name, .short_name, .right_some{
+.long_name, .long_name2, .short_name, .right_some{
   display:inline-block;
   vertical-align:top;
 }
 .long_name{
   width: 100px;
+}
+.long_name2{
+  width: 80px;
 }
 .short_name{
   width: 60px;

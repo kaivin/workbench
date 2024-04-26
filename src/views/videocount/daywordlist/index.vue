@@ -430,8 +430,6 @@ export default {
 								$this.setTableHeight();
 							})
 						}
-						console.log($this.tableData);
-						console.log($this.tableHeader);
 					}else{
 						if(response.permitstatus&&response.permitstatus==2){
 							$this.$message({

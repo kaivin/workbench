@@ -67,7 +67,14 @@ export default {
                   show: true,
                   position: 'insideTop',
                   distance: 10,
-                  color: "#fff"
+                  color: "#fff",
+                  formatter:function(params){
+                    if(params.value > 1){
+                      return params.value
+                    }else{
+                      return ""
+                    }
+                  },
                 };
                 itemObj.itemStyle={
                   color: colorArr[nameindex*2],
@@ -227,7 +234,7 @@ export default {
                 axisLabel:{
                   color: "#888"
                 },
-                
+                min: 0,
               },
               {
                 type: 'value',
@@ -236,6 +243,7 @@ export default {
                   color: "#b4b4b4",
                   nameLocation: "end",
                 },
+                min: 0,
                 alignTicks: true,
                 axisLabel:{
                   color: "#888"

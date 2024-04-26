@@ -141,6 +141,13 @@ export default {
             }else{
                 if(v.type == "edit"){
                     $this.form.data.push(v.data.data);
+                }else{
+                    $this.form.data.push({
+                        type_id: '',
+                        number: 1,
+                        remark: '',
+                        invalid_number: 0
+                    })
                 }
             }
             if(!$this.isGetPost){
@@ -325,6 +332,13 @@ export default {
                     $this.isGetType = true;
                     if(data){
                         $this.form.data.push(data);
+                    }else{
+                        $this.form.data.push({
+                            type_id: '',
+                            number: 1,
+                            remark: '',
+                            invalid_number: 0
+                        })
                     }
 				}else{
 					$this.$message({

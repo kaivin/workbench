@@ -226,7 +226,7 @@
           isSearchColumn: false,
           isSearchUser: false,
           isSearchType: false,
-          userResultData: [],
+          userResultData: {},
           typeResultData: [],
           isGetType: false
       };
@@ -473,7 +473,7 @@
           formData.time = $this.userSearch.time.join(" - ");
           formData.type_id = $this.userSearch.type_id;
           $this.isSearchData = true;
-          $this.userResultData = [{name: "实际完成"}, {name: "有效完成"}];
+          $this.userResultData = {data: [{name: "实际完成"}, {name: "有效完成"}], c_name: []};
           $this.$store.dispatch('videocount/getVideoPieCount', formData).then(response=>{
             if(response){
               $this.isSearchData = false;
@@ -618,30 +618,37 @@
           c_data.push(all_sepscore);
           c_data.push(all_percent);
         }
-        $this.chartData.c_name = c_name;
-        $this.chartData.c_data = c_data;
-        $this.chartData.c_user = c_user;
+        var newObj = {
+          c_name: c_name,
+          c_data: c_data,
+          c_user: c_user
+        };
+        $this.chartData = newObj;
       },
       handleUserSearchData(data){
         var $this = this;
         var trueData = [];
         var effectData = [];
         var c_name = [];
+        var truePercent = [];
+        var effectPercent = [];
         var truelist = JSON.parse(JSON.stringify(data));
         truelist = truelist.sort(sortByDesc("actual_score"));
         truelist.forEach(item => {
-          var trueObj = {};
+          var trueObj = {}; 
           trueObj.name = item.name;
           trueObj.all = item.actual_score;
           trueObj.value = Number(item.actual_score - item.effective_score).toFixed(1);
           trueObj.resdata = item.actual_data;
           trueData.push(trueObj);
-          c_name.push(item.name);
           var effectObj = {};
           effectObj.name = item.name;
           effectObj.value = item.effective_score;
           effectObj.resdata = item.effective_data;
           effectData.push(effectObj);
+          c_name.push(item.name);
+          truePercent.push(item.actual_completion_rate);
+          effectPercent.push(item.effective_completion_rate);
         })
         var resData = [];
         var effectRes = {
@@ -654,6 +661,16 @@
           data: trueData,
         }
         resData.push(trueRes);
+        var effPer = {
+          name: "有效完成占比",
+          data: effectPercent
+        }
+        resData.push(effPer);
+        var truePer = {
+          name: "实际完成占比",
+          data: truePercent
+        }
+        resData.push(truePer);
         var resObj = {
           data: resData,
           c_name: c_name
@@ -698,20 +715,20 @@
       resetColumnData(){
         var $this = this;
         $this.searchData.name = [];
-        $this.searchData.time = [];
+        $this.searchData.time = $this.getDefaultTime();
         $this.chartData = {};
       },
       resetUserData(){
         var $this = this;
         $this.userSearch.name = [];
-        $this.userSearch.time = [];
+        $this.userSearch.time = $this.getDefaultTime();
         $this.userSearch.type_id = "";
-        $this.userResultData = [];
+        $this.userResultData = {};
       },
       resetTypeData(){
         var $this = this;
         $this.typeSearch.name = [];
-        $this.typeSearch.time = [];
+        $this.typeSearch.time = $this.getDefaultTime();
         $this.typeResultData = [];
       },
       getDefaultTime(){
