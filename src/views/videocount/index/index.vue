@@ -733,7 +733,10 @@
       },
       getDefaultTime(){
         const end = parseTime(new Date(), '{y}-{m}-{d}');
-			  const start = parseTime(new Date()-3600 * 1000 * 24 * 6, '{y}-{m}-{d}');
+        var date = new Date();
+        var year = date.getFullYear().toString();
+        var month = date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1).toString():(date.getMonth()+1).toString();
+			  const start = year + '-' + month + '-01';
         let timeArr = [start, end];
         return timeArr;
       },
@@ -914,6 +917,16 @@
     }
     .column_item+.column_item{
       margin-top: 20px;
+    }
+    @media screen and (min-width: 2400px){
+      .pie_list{
+        text-align: center;
+      }
+      .pie_list .pie_item{
+        width: 35%;
+        float: none;
+        display: inline-block;
+      }
     }
   </style>
   <style>

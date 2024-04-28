@@ -250,6 +250,9 @@ export default {
                 },
               },
             ],
+            legend: {
+              show: true
+            },
             animation: false,
             series:series,
           };

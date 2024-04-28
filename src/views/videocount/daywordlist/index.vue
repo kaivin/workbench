@@ -289,7 +289,7 @@ export default {
 		resetData(){
 			var $this = this;
 			const end = parseTime(new Date(), '{y}-{m}-{d}');
-			const start = parseTime(new Date()-3600 * 1000 * 24 * 6, '{y}-{m}-{d}');
+			const start = $this.getEndDay();
 			$this.searchData.time = [start, end];
 			$this.searchResult();
 		},
@@ -339,7 +339,7 @@ export default {
 		initPage(){
 			var $this = this;
 			const end = parseTime(new Date(), '{y}-{m}-{d}');
-			const start = parseTime(new Date()-3600 * 1000 * 24 * 6, '{y}-{m}-{d}');
+			const start = $this.getEndDay();
 			$this.searchData.time = [start, end];
 			$this.getWorkList();
 		},
@@ -405,6 +405,7 @@ export default {
 								prop: 'score',
 								width: 120,
 								sortable: true,
+								fixed: 'right'
 							})
 							$this.tableHeader = tableHeader;
 							if(response.data.length > 0){
@@ -781,6 +782,20 @@ export default {
             }
             $this.$refs.simpleTable.doLayout();
         },
+		getEndDay(){
+			var date = new Date();
+            var year = date.getFullYear().toString();
+            //获取月份，由于月份从0开始，此处要加1，判断是否小于10，如果是在字符串前面拼接'0'
+            var month = date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1).toString():(date.getMonth()+1).toString();
+            var end = '';
+            var endmonth = date.getMonth() + 1 == 12 ? 1 : date.getMonth()+2;
+            endmonth = parseInt(endmonth) > 9 ? endmonth : '0' + endmonth;
+            var endday = new Date(year + '-' + endmonth + '-01').getTime() - 1000*60*60*24;
+            endday = new Date(endday).getDate();
+            var start = year + '-' + month + '-01';
+            end = parseInt(endday) < 10 ? year + '-' + month  + '-0' + endday : year + '-' + month  + '-' + endday;
+			return start;
+		}
 	}
 }
 </script>

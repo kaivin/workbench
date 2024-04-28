@@ -329,14 +329,15 @@ export default {
 			fieldList: [
 				{ key: 'user_name', value: '姓名' },
 				{ key: 'day', value: '日期' },
-				{ key: 'promotional_video', value: '公司宣传片积分' },
-				{ key: 'character_on_camera', value: '人物上镜短视频积分' },
-				{ key: 'wechat_moments', value: '朋友圈视频积分' },
-				{ key: 'pure_shear_video', value: '纯剪视频积分' },
-				{ key: 'other', value: '其他（素材处理）积分' },
+				{ key: 'promotional_video', value: '公司宣传片' },
+				{ key: 'character_on_camera', value: '人物上镜短视频' },
+				{ key: 'wechat_moments', value: '朋友圈视频' },
+				{ key: 'pure_shear_video', value: '纯剪视频' },
+				{ key: 'other', value: '其他（素材处理）' },
 				{ key: 'specify', value: '分配的积分' },
-				{ key: 'inquiry', value: '询盘成交积分' },
-				{ key: 'score', value: '积分总计' },
+				{ key: 'inquiry', value: '询盘成交' },
+				{ key: 'score', value: '完成积分' },
+				{ key: 'valid_score', value: '有效积分'}
 			],
 			infoData:{
 				totalNumber: 0,
@@ -499,7 +500,7 @@ export default {
 		resetData(){
 			var $this = this;
 			const end = parseTime(new Date(), '{y}-{m}-{d}');
-			const start = parseTime(new Date()-3600 * 1000 * 24 * 6, '{y}-{m}-{d}');
+			const start = $this.getEndDay();
 			$this.searchData.time = [start, end];
 			$this.searchData.name = "";
 			$this.searchResult();
@@ -552,7 +553,7 @@ export default {
 		initPage(){
 			var $this = this;
 			const end = parseTime(new Date(), '{y}-{m}-{d}');
-			const start = parseTime(new Date()-3600 * 1000 * 24 * 6, '{y}-{m}-{d}');
+			const start = $this.getEndDay();
 			$this.searchData.time = [start, end];
 			$this.getWorkList();
 		},
@@ -916,6 +917,20 @@ export default {
 				}
 			})
 		},
+		getEndDay(){
+			var date = new Date();
+            var year = date.getFullYear().toString();
+            //获取月份，由于月份从0开始，此处要加1，判断是否小于10，如果是在字符串前面拼接'0'
+            var month = date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1).toString():(date.getMonth()+1).toString();
+            var end = '';
+            var endmonth = date.getMonth() + 1 == 12 ? 1 : date.getMonth()+2;
+            endmonth = parseInt(endmonth) > 9 ? endmonth : '0' + endmonth;
+            var endday = new Date(year + '-' + endmonth + '-01').getTime() - 1000*60*60*24;
+            endday = new Date(endday).getDate();
+            var start = year + '-' + month + '-01';
+            end = parseInt(endday) < 10 ? year + '-' + month  + '-0' + endday : year + '-' + month  + '-' + endday;
+			return start;
+		}
 	}
 }
 </script>

@@ -132,35 +132,30 @@ export default {
                   color: '#666'
                 },
                 formatter(params){
+                  var resParams = $this.getRaramsRank(params);
                   let returnData = `<div class="toolDiv">
                       <div class="tooltitle">${params[0].name}</div>`;
-                      returnData += `<div class="bar clearfix" style="margin-top:5px">
-                        <span style="display:inline-block;vertical-align:middle;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:${params[1].borderColor};"></span><span>`;
-                      returnData += `<p class="long_name2">${params[1].seriesName}</span></p><p class="right_some"><span>${params[1].data.all}积分</span>`;
-                      if(params[1].data.resdata && params[1].data.resdata.length > 0){
-                        params[1].data.resdata.forEach((sitem,sindex)=> {
-                          returnData += `，${sitem.type_name}${sitem.number}个`;
-                        })
-                      }
-                      returnData += `</p></div>`;
-                      returnData += `<div class="bar clearfix" style="margin-top:5px">
-                        <span style="display:inline-block;vertical-align:middle;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:${params[3].borderColor};"></span><span>`;
-                        returnData += `<p class="long_name2">${params[3].seriesName}</span></p><p class="right_some"><span>${params[3].value}%</span><p></div>`;
-                      returnData += `<div class="bar clearfix" style="margin-top:5px">
-                        <span style="display:inline-block;vertical-align:middle;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:${params[0].borderColor};"></span><span>`;
-                      returnData += `<p class="long_name2">${params[0].seriesName}</span></p><p class="right_some"><span>${params[0].data.value}积分</span>`;
-                      if(params[0].data.resdata && params[0].data.resdata.length > 0){
-                        params[0].data.resdata.forEach((sitem,sindex)=> {
-                          returnData += `，${sitem.type_name}${sitem.number}个`;
-                        })
-                      }
-                      returnData += `</p></div>`;
-                      
-                      returnData += `<div class="bar clearfix" style="margin-top:5px">
-                        <span style="display:inline-block;vertical-align:middle;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:${params[2].borderColor};"></span><span>`;
-                        returnData += `<p class="long_name2">${params[2].seriesName}</span></p><p class="right_some"><span>${params[2].value}%</span><p></div>`;
-                      returnData +=`</div>`;
-                          
+                      resParams.forEach(item => {
+                        returnData += `<div class="bar clearfix" style="margin-top:5px">
+                        <span style="display:inline-block;vertical-align:middle;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:${item.borderColor};"></span><span>`;
+                          returnData += `<p class="long_name2">${item.seriesName}</span></p>`;
+                          if(item.seriesName == '实际完成' || item.seriesName == '有效完成' ){
+                            if(item.seriesName == '实际完成'){
+                              returnData += `<p class="right_some"><span>${item.data.all}积分</span>`;
+                            }else{
+                              returnData += `<p class="right_some"><span>${item.value}积分</span>`;
+                            }
+                          }else{
+                            returnData += `<p class="right_some"><span>${item.value}%</span>`;
+                          }
+
+                          if(item.data.resdata && item.data.resdata.length > 0){
+                            item.data.resdata.forEach((sitem,sindex)=> {
+                              returnData += `，${sitem.type_name}${sitem.number}个`;
+                            })
+                          }
+                        returnData += `</p></div>`;
+                      })
                   return returnData;
               }
             },
@@ -226,6 +221,9 @@ export default {
                   },
                 },
             ],
+            // legend: {
+            //   show: true
+            // },
             animation: false,
             series:series,
           };
@@ -237,6 +235,31 @@ export default {
         if(this.myChart){
             this.myChart.resize();
         }
+    },
+    getRaramsRank(params){
+      var $this = this;
+      var resArr = [];
+      var resTitle = ['实际完成', '实际完成占比', '有效完成', '有效完成占比'];
+      resTitle.forEach(item => {
+        var paramObj = $this.getAimParam(params, item);
+        if(paramObj.isIn){
+          resArr.push(paramObj.data);
+        }
+      })
+      return resArr;
+    },
+    getAimParam(param, aim){
+      var resObj = {
+        data: {},
+        isIn: false
+      }
+      param.forEach(item => {
+        if(item.seriesName == aim){
+          resObj.isIn = true;
+          resObj.data = item;
+        }
+      })
+      return resObj;
     }
   }
 }

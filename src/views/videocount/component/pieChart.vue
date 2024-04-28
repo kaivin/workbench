@@ -1,6 +1,6 @@
 <template>
     <div class="pie_main">
-      <div class="chart-pie" :id="title" style="width: 100%; height: calc(100vh - 470px);"></div>
+      <div class="chart-pie" :id="title" style="width: 100%; height: 450px;"></div>
       <div class="chart_tit" v-if="showTitle">
         <p class="imp" v-if="chartData.title">{{chartData.title}}</p>
         <p>{{chartData.name}}<span class="imp">{{chartData.score}}</span>分</p>
