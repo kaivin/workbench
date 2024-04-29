@@ -12,7 +12,7 @@
                         :picker-options="pickerOptions">
                     </el-date-picker>
                 </el-form-item>
-                <el-form-item label="岗位" prop="post_id">
+                <el-form-item label="岗位" prop="post_id" v-if="postList.length > 0">
                     <el-radio-group v-model="form.post_id">
                         <el-radio v-for="item in postList" :key="item.value" :label="item.value">{{item.label}}</el-radio>
                     </el-radio-group>
@@ -368,12 +368,13 @@ export default {
                     $this.form.post_id = resData.length > 0 ? resData[0].value : "";
                     $this.isGetPost = true;
 				}else{
-                    $this.$message({
-                        showClose: true,
-                        message: res.msg,
-                        type: 'error'
-                    });
-                    }
+                    // $this.$message({
+                    //     showClose: true,
+                    //     message: res.msg,
+                    //     type: 'error'
+                    // });
+                    $this.isSaveData = true;
+                }
 			});
 		},
     }

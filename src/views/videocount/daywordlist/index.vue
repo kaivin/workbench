@@ -271,11 +271,11 @@ export default {
 			var headerHeight = $this.$refs.headerPane.offsetHeight;
 			var breadcrumbHeight = $this.$refs.breadcrumbPane.offsetHeight;
 			var screenHeight = $this.$refs.boxPane.offsetHeight;
-			$this.tableHeight = screenHeight-headerHeight-breadcrumbHeight-40-35;
+			$this.tableHeight = screenHeight-headerHeight-breadcrumbHeight-40;
 			$this.getBrowserType();
-				setTimeout(function() {
-				$this.setScrollDom();
-			}, 400);
+			// 	setTimeout(function() {
+			// 	$this.setScrollDom();
+			// }, 400);
 		},
 		// 搜索点击事件
 		searchResult(){
