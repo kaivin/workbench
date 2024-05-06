@@ -444,54 +444,97 @@
                                     :style="'min-height:'+tableHeight+'px;'"
                                     >
                                     <el-table-column
-                                        prop="id"
-                                        label="业务员ID"
-                                        min-width="65"
+                                        prop="departname"
+                                        label="部门"
+                                        align="center"
+                                        min-width="70"
                                         text-align='center'
                                         >
                                     </el-table-column>
                                     <el-table-column
                                         prop="name"
                                         label="姓名"
-                                        min-width="80"
-                                        >
-                                    </el-table-column>
-                                    <el-table-column
-                                        prop="five_number"
-                                        label="五天未回复询盘数"
-                                        min-width="80"
-                                        align="center"
-                                        sortable
-                                        >
-                                        <template slot-scope="scope">
-                                            <div class="table-text">
-                                                <p><b style="color:#379bff">{{scope.row.five_number}}</b></p>
-                                            </div>
-                                        </template>
-                                    </el-table-column>
-                                    <el-table-column
-                                        prop="more_number"
-                                        label="多次提交未回复询盘数"
                                         min-width="70"
                                         align="center"
+                                        >
+                                    </el-table-column>
+                                    <el-table-column
+                                        prop="first_number"
+                                        label="一次分配询盘总数"
+                                        align="center"
+                                        min-width="100"
                                         sortable
                                         >
                                         <template slot-scope="scope">
                                             <div class="table-text">
-                                                <p><b style="color:#ed475e">{{scope.row.more_number}}</b></p>
+                                                <p><b style="color:#379bff">{{scope.row.first_number}}</b></p>
                                             </div>
                                         </template>
                                     </el-table-column>
+                                    
                                     <el-table-column
-                                        prop="use_number"
-                                        label="分给其他人后回复的询盘数"
+                                        prop="first_five_number"
+                                        label="一次分配询盘五天未回复数"
                                         min-width="100"
                                         align="center"
                                         sortable
                                         >
                                         <template slot-scope="scope">
                                             <div class="table-text">
-                                                <p><b style="color:#f37220">{{scope.row.use_number}}</b></p>
+                                                <p><b style="color:#ed475e">{{scope.row.first_five_number}}</b></p>
+                                            </div>
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column
+                                        prop="first_reply_number"
+                                        label="一次分配询盘已回复数"
+                                        min-width="100"
+                                        align="center"
+                                        sortable
+                                        >
+                                        <template slot-scope="scope">
+                                            <div class="table-text">
+                                                <p><b style="color:#f37220">{{scope.row.first_reply_number}}</b></p>
+                                            </div>
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column
+                                        prop="secoden_number"
+                                        label="二次分配询盘总数"
+                                        align="center"
+                                        min-width="100"
+                                        sortable
+                                        >
+                                        <template slot-scope="scope">
+                                            <div class="table-text">
+                                                <p><b style="color:#379bff">{{scope.row.secoden_number}}</b></p>
+                                            </div>
+                                        </template>
+                                    </el-table-column>
+                                    
+                                    <el-table-column
+                                        prop="secoden_five_number"
+                                        label="二次分配询盘五天未回复数"
+                                        min-width="100"
+                                        align="center"
+                                        sortable
+                                        >
+                                        <template slot-scope="scope">
+                                            <div class="table-text">
+                                                <p><b style="color:#ed475e">{{scope.row.secoden_five_number}}</b></p>
+                                            </div>
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column
+                                        prop="secoden_reply_number"
+                                        label="二次分配询盘已回复数"
+                                        min-width="100"
+                                        align="center"
+                                        sortable
+                                        >
+                                        <template slot-scope="scope">
+                                            <div class="table-text">
+                                                <p><b style="color:#f37220">{{scope.row.secoden_reply_number}}</b></p>
                                             </div>
                                         </template>
                                     </el-table-column>
@@ -1934,11 +1977,16 @@ export default {
                   var useData = [];
                   var moreData = [];
                   response.ulist.forEach(item => {
-                    if(!(item.five_number == 0 && item.use_number == 0 && item.more_number == 0)){
+                    if(!(item.first_number == 0 && item.first_five_number == 0 && item.first_reply_number == 0)){
                       userData.push(item.name);
-                      fiveData.push(item.five_number);
-                      useData.push(item.use_number);
-                      moreData.push(item.more_number);
+                      fiveData.push(item.first_five_number);
+                      useData.push(item.first_number);
+                      var moreobj = {};
+                      moreobj.value = item.first_reply_number;
+                      moreobj.secoden_number = item.secoden_number;
+                      moreobj.secoden_five_number = item.secoden_five_number;
+                      moreobj.secoden_reply_number = item.secoden_reply_number;
+                      moreData.push(moreobj);
                     }
                   })
                   resObj.userData = userData;
@@ -2651,10 +2699,22 @@ export default {
         var option;
         var series=[];
         var color = ["#2259e5","#3ebea7","#eca12d","#ee4747","#73c0de","#91cb74","#ff8d61","#9a60b4","#e522db","#e5d822","#5470c6","#fc8452","#fac858","#ee6666"];
-        series=[{
+        series=[
+        {
+            type: 'bar',
+            data: $this.columnData.useData,
+            name: "一次分配询盘总数",
+            itemStyle:{
+              color: '#fe4c46',
+            },
+            label: {
+                show: true,
+                position: 'top',
+            },
+        },{
             type: 'bar',
             data: $this.columnData.fiveData,
-            name: "五天未回复询盘数",
+            name: "一次分配询盘五天未回复数",
             itemStyle: {
               color: "#2259e5"
             },
@@ -2665,20 +2725,9 @@ export default {
         },{
             type: 'bar',
             data: $this.columnData.moreData,
-            name: "多次提交未回复询盘数",
+            name: "一次分配询盘已回复数",
             itemStyle: {
               color: "#eca12d"
-            },
-            label: {
-                show: true,
-                position: 'top',
-            },
-        },{
-            type: 'bar',
-            data: $this.columnData.useData,
-            name: "分给其他人后回复的询盘数",
-            itemStyle:{
-              color: '#fe4c46',
             },
             label: {
                 show: true,
@@ -2710,6 +2759,24 @@ export default {
                           <span>：${params[i].value}</span>
                           </div>
                           `;
+                        if(i == 2){
+                          returnData += `<div class="bar clearfix" style="margin-top:5px">
+                          <span style="display:inline-block;vertical-align:middle;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:${color[i+2]};"></span>
+                          <span>二次分配询盘总数</span>
+                          <span>：${params[i].data.secoden_number}</span>
+                          </div>
+                          <div class="bar clearfix" style="margin-top:5px">
+                          <span style="display:inline-block;vertical-align:middle;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:${color[i+3]};"></span>
+                          <span>二次分配询盘五天未回复数</span>
+                          <span>：${params[i].data.secoden_five_number}</span>
+                          </div>
+                          <div class="bar clearfix" style="margin-top:5px">
+                          <span style="display:inline-block;vertical-align:middle;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:${color[i+4]};"></span>
+                          <span>二次分配询盘已回复数</span>
+                          <span>：${params[i].data.secoden_reply_number}</span>
+                          </div>
+                          `;
+                        }
                       }
                   returnData +=`</div>`;
                   return returnData;
