@@ -120,7 +120,8 @@ const state = {
     ischAimScoreAdd:false,
     isenAimScoreAdd:false,
     isselectuserAdd:false,
-    isChinaQualityAdd:false
+    isChinaQualityAdd:false,
+    isEnPushCostAdd:false,
 }
 const mutations = {
   SET_PERMIT: (state, data) => {
@@ -363,7 +364,11 @@ const mutations = {
     }else{
       state.isChinaQualityAdd = false;
     }
-    
+    if(permitData.includes("Ownpush_enpushcostadd")&&data.page==""){
+      state.isEnPushCostAdd = true;
+    }else{
+      state.isEnPushCostAdd = false;
+    }
   },
 }
 

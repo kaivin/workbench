@@ -453,21 +453,41 @@
     </div>
     <el-backtop target=".scroll-panel"></el-backtop>
     <div :class="popClass">
-      <div class="n_head">
-        <div class="title">分配超过五天 待标记询盘提醒</div>
-        <div class="del" v-if="isShow" @click="hideNotice"><i class="el-icon-arrow-down"></i></div>
-        <div class="show" v-if="isCollapse" @click="showNotice"><i class="el-icon-arrow-up"></i></div>
+      <div class="two_warn" v-if="defaultData.two_xun && defaultData.two_xun.length > 0" :class="twoClass">
+        <div class="n_head"  @click="toggleTwoNotice">
+          <div class="title">新询盘提醒</div>
+          <div class="del" v-if="isTwoShow"><i class="el-icon-arrow-down"></i></div>
+          <div class="show" v-if="isTwoCollapse"><i class="el-icon-arrow-up"></i></div>
+        </div>
+        <div class="n_body">
+          <ul class="n_ul tips-list">
+            <li class="item-tips type-1" v-for="(item,index) in defaultData.two_xun" v-bind:key="index">
+                <router-link :to="{path:'/Sales/phoneinfosub',query:{ID:item.id, status: '1'}}">
+                  <i>{{index+1}}</i>
+                  <strong>ID：{{item.id}}</strong>
+                  <span></span>
+                </router-link>
+            </li>
+          </ul>
+        </div>
       </div>
-      <div class="n_body">
-        <ul class="n_ul tips-list">
-          <li class="item-tips type-1" v-for="(item,index) in defaultData.rely_warn" v-bind:key="index">
-              <router-link :to="{path:'/Sales/phoneinfosub',query:{ID:item.id, status: '1'}}">
-                <i>{{index+1}}</i>
-                <strong>ID：{{item.id}}</strong>
-                <span>分配超过五天待标记询盘</span>
-              </router-link>
-          </li>
-        </ul>
+      <div class="five_warn" v-if="defaultData.rely_warn && defaultData.rely_warn.length > 0" :class="fiveClass">
+        <div class="n_head" @click="toggleFiveNotice">
+          <div class="title">分配超过五天 待标记询盘提醒</div>
+          <div class="del" v-if="isFiveShow"><i class="el-icon-arrow-down"></i></div>
+          <div class="show" v-if="isFiveCollapse"><i class="el-icon-arrow-up"></i></div>
+        </div>
+        <div class="n_body">
+          <ul class="n_ul tips-list">
+            <li class="item-tips type-1" v-for="(item,index) in defaultData.rely_warn" v-bind:key="index">
+                <router-link :to="{path:'/Sales/phoneinfosub',query:{ID:item.id, status: '1'}}">
+                  <i>{{index+1}}</i>
+                  <strong>ID：{{item.id}}</strong>
+                  <span></span>
+                </router-link>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
@@ -599,8 +619,10 @@ export default {
       isDisabled:false,
       activeNames:"1",
       noticeShow: true,
-      isShow: false,
-      isCollapse: false,
+      isFiveShow: false,
+      isFiveCollapse: false,
+      isTwoShow: false,
+      isTwoCollapse: false,
     }
   },
   computed: {
@@ -618,10 +640,23 @@ export default {
       if($this.isOpen){
         resclass += " notice_left";
       }
-      if($this.isShow){
+      if($this.defaultData.rely_warn && $this.defaultData.rely_warn.length > 0 || $this.defaultData.two_xun && $this.defaultData.two_xun.length > 0){
         resclass += " notice_active";
       }
-      if($this.isCollapse){
+      return resclass;
+    },
+    fiveClass(){
+      var $this = this;
+      var resclass = "";     
+      if($this.isFiveCollapse){
+        resclass += " notice_coll";
+      }
+      return resclass;
+    },
+    twoClass(){
+      var $this = this;
+      var resclass = "";
+      if($this.isTwoCollapse){
         resclass += " notice_coll";
       }
       return resclass;
@@ -948,11 +983,17 @@ export default {
           defaultData.warning=response.warning;
           defaultData.warningcount=response.warningcount;
           defaultData.rely_warn=response.rely_warn;
+          defaultData.two_xun = response.two_xun;
           $this.defaultData = defaultData;         
           $this.searchInit();
           if(response.rely_warn && response.rely_warn.length > 0){
             setTimeout(() => {
-              $this.isShow = true;
+              $this.isFiveShow = true;
+            }, 1000);
+          }
+          if(response.two_xun && response.two_xun.length > 0){
+            setTimeout(() => {
+              $this.isTwoShow = true;
             }, 1000);
           }
         }
@@ -1597,15 +1638,15 @@ export default {
       $this.scrollPosition.startPageX = 0;
       $this.scrollPosition.oldInsetLeft = $this.scrollPosition.insetLeft;
     },
-    hideNotice(){
+    toggleFiveNotice(){
       var $this = this;
-      $this.isShow = false;
-      $this.isCollapse = true;
+      $this.isFiveShow = !$this.isFiveShow;
+      $this.isFiveCollapse = !$this.isFiveCollapse;
     },
-    showNotice(){
+    toggleTwoNotice(){
       var $this = this;
-      $this.isShow = true;
-      $this.isCollapse = false;
+      $this.isTwoShow = !$this.isTwoShow;
+      $this.isTwoCollapse = !$this.isTwoCollapse;
     },
     getWebsocketMsg(){
         var $this = this;
@@ -1665,12 +1706,15 @@ export default {
   position:fixed;
   bottom: -600px;
   left: 66px;
-  border-radius: 10px;
-  box-shadow: 0 0 10px #9f9f9f;
   z-index: 333;
   width: 340px;
   overflow: hidden;
   transition: all 0.6s ease;
+  .five_warn, .two_warn{
+    border-radius: 10px 10px 0 0;
+    border: 1px solid #ebeff1;
+    overflow: hidden;
+  }
   .n_head{
     color: #fff;
     background-color: #0970ff;
@@ -1700,8 +1744,11 @@ export default {
     color: #333333;
     font-size: 13px;
     cursor: pointer;
+    display: inline-block;
+    vertical-align: top;
+    width: 49%;
   }
-  .tips-list .item-tips+.item-tips{
+  .tips-list .item-tips+.item-tips+.item-tips{
     margin-top: 16px;
   }
   .tips-list .item-tips i {
@@ -1721,9 +1768,9 @@ export default {
   }
   .tips-list .item-tips strong {
     display: inline-block;
-    border-right: 1px solid #fdac32;
-    padding-right: 10px;
-    margin-right: 10px;
+    // border-right: 1px solid #fdac32;
+    // padding-right: 10px;
+    // margin-right: 10px;
     padding-left: 10px;
   }
 }
@@ -1733,9 +1780,16 @@ export default {
 .notice_left{
   left: 226px;
 }
-.notice_coll{
-  bottom: auto;
-  top: calc(100vh - 40px);
+.notice_pop{
+  .notice_coll{
+    border-radius: 10px;
+    .n_body{
+      display: none;
+    }
+  }
+}
+.two_warn+.five_warn{
+  margin-top: 20px;
 }
 </style>
 <style>

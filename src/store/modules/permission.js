@@ -333,6 +333,12 @@ function setRoutes(routers){
         component: () => import(/* webpackChunkName: "Douyin_keywordcount" */ "@/views/Douyin/keywordcount/index.vue"),
         meta: {id:'Douyin_keywordcount-159',title: '关键词统计', icon: null, keepAlive:false},
       },
+      {
+        path: "/Ownpush/enpushcount",
+        name:'Ownpush_enpushcount',
+        component: () => import(/* webpackChunkName: "Ownpush_enpushcount" */ "@/views/Ownpush/enpushcount/index.vue"),
+        meta: {id:'Ownpush_enpushcount-176',title: '关键词统计', icon: null, keepAlive:false},
+      },
     ]
   }]
   accessedRouters.forEach(function(item,index){

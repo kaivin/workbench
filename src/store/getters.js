@@ -95,7 +95,9 @@
     isselectuserAdd:state => state.api.isselectuserAdd,
     addSelectuser:state => state.app.addSelectuser,
     isChinaQualityAdd:state => state.api.isChinaQualityAdd,
-    addChinaQuality:state => state.app.addChinaQuality
+    addChinaQuality:state => state.app.addChinaQuality,
+    isEnPushCostAdd:state => state.api.isEnPushCostAdd,
+    addEnPushCost:state => state.app.addEnPushCost,
 }
 export default getters
   
