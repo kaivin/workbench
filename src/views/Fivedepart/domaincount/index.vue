@@ -51,7 +51,10 @@
                     </el-checkbox-group>
                 </div>
               </div>
-              
+              <div class="bind_items flex-box">
+                <span class="choosetit">url：</span>
+                <el-input v-model="searchData.url" size="small" clearable placeholder="请输入url" style="width:280px;" clearable></el-input>
+              </div>
               <div class="bind_items flex-box">
                 <span class="choosetit">分析项：</span>
                 <div class="departchoose">
@@ -337,7 +340,8 @@ export default {
       searchData:{
         date:[],
         typekey: "",
-        productid: ""
+        productid: "",
+        url: "",
       },
       searchResult: {
         word_count:[],
@@ -427,6 +431,7 @@ export default {
       $this.searchData.date=[];
       $this.searchData.typekey = "";
       $this.searchData.productid = "";
+      $this,searchData.url = "";
       $this.searchResult.word_count=[];
       $this.searchResult.url_count=[];
       $this.searchResult.ads_count=[];
@@ -457,6 +462,7 @@ export default {
       searchData.domain = $this.checkedDomain;
       searchData.typekey = $this.searchData.typekey;
       searchData.productid = $this.searchData.productid;
+      searchData.url = $this.searchData.url;
       return searchData;
     },
     // 获取当前登陆用户在该页面的操作权限
