@@ -77,7 +77,13 @@
                 </td>
               </tr>
               <tr v-if="userList.length>0">
-                <td class="type-title"><span>内容：</span></td>
+                <td class="type-title">
+                  <span>内容：</span>
+                  <p class="type-tips">
+                    附件最大限制150M，超限请压缩:
+                    <el-link :underline="false" class="link-item" href="https://abg.baidu.com/convert/doccompress?fr=launch_ad&SS-bdtg33&utm_source=bdss-WD&utm_medium=cpc&utm_account=SS-bdtg33&utm_brand=abg&e_creative=67538130096&e_keywordid=526047084548&bd_vid=7151630919366208071" target="_blank"><i class="el-icon-link"></i></el-link>
+                  </p>
+                </td>
                 <td>
                   <div class="item-form editor-panel">
                     <div class="ueditor-button" v-if="activeTab=='textarea'"><el-checkbox v-model="formData.is_center" @change="changeCenterHandler" style="margin-right: 5px;"  label="表格文字水平居中" size="mini" border></el-checkbox><span class="btn" v-on:click="removeSpace">清除空格</span><span class="btn" v-on:click="removeTableStyle">清除表格默认样式</span><span class="btn" v-on:click="removeHtmlStyle">清除所有默认样式</span></div>
@@ -1101,4 +1107,27 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.type-tips{
+  color: red; 
+  
+  font-size: 14px;
+  line-height:1.4; 
+  padding-right: 10px;
+  width: 116px;
+  .link-item{
+    display:inline;
+    color: #0970ff;
+  }
+  :deep(.el-link--inner){
+    display: inline;
+    padding-right: 0;
+    color: #0970ff;
+    &:hover{
+      color: red;
+    }
+  }
+}
+.ArticleFour tr td p.type-title span{
+  width: 126px;
+}
 </style>
