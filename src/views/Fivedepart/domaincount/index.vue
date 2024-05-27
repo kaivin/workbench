@@ -72,17 +72,19 @@
             </div>
         </div>
         <div class="card-content" ref="tableContent">
-          <div class="exportDiv" v-if="checkedItem.length > 0 && (searchResult.word_count.length > 0 || searchResult.device_count.length > 0 || searchResult.ads_count.length > 0 || searchResult.url_count.length > 0)">
+          <div class="exportDiv" :style="'left:'+ (checkedItem.length*70+40) + 'px' " v-if="checkedItem.length > 0 && (searchResult.word_count.length > 0 || searchResult.device_count.length > 0 || searchResult.ads_count.length > 0 || searchResult.url_count.length > 0 || searchResult.continent_count.length > 0 || searchResult.country_count.length > 0)">
             <p class="total_num">{{exportTitle}}询盘共计
               <span v-if="activeNames == '1'">{{searchResult.word_total}}</span>
               <span v-if="activeNames == '2'">{{searchResult.device_total}}</span>
               <span v-if="activeNames == '3'">{{searchResult.ads_total}}</span>
               <span v-if="activeNames == '4'">{{searchResult.url_total}}</span>
+              <span v-if="activeNames == '5'">{{searchResult.continent_total}}</span>
+              <span v-if="activeNames == '6'">{{searchResult.country_total}}</span>
               个
             </p>
             <el-button type="warning" size="small" class="exportBtn" :disabled="isExportDisabled"  @click="showExportDialog"><i class="svg-i" ><svg-icon icon-class="derived" /></i>导出{{exportTitle}}数据</el-button>
           </div>
-          <el-tabs v-model="activeNames" type="card" @tab-click="tabClick" v-if="checkedItem.length > 0 && (searchResult.word_count.length > 0 || searchResult.device_count.length > 0 || searchResult.ads_count.length > 0 || searchResult.url_count.length > 0)">
+          <el-tabs v-model="activeNames" type="card" @tab-click="tabClick" v-if="checkedItem.length > 0 && (searchResult.word_count.length > 0 || searchResult.device_count.length > 0 || searchResult.ads_count.length > 0 || searchResult.url_count.length > 0 || searchResult.continent_count.length > 0 || searchResult.country_count.length > 0)">
             <el-tab-pane label="搜索词" name="1" v-if="checkedItem.includes(1)">
               <div class="table-wrapper">
                   <el-table
@@ -93,7 +95,7 @@
                     style="width: 100%"
                     row-key="id"
                     key="a"
-                    height="calc(100vh - 355px)"
+                    height="calc(100vh - 408px)"
                     stripe
                     >
                       <el-table-column
@@ -151,7 +153,7 @@
                     row-key="id"
                     key="b"
                     stripe
-                    height="calc(100vh - 355px)"
+                    height="calc(100vh - 408px)"
                     >
                     <el-table-column
                       label="设备"
@@ -208,7 +210,7 @@
                     row-key="id"
                     key="c"
                     stripe
-                    height="calc(100vh - 355px)"
+                    height="calc(100vh - 408px)"
                     >
                       <el-table-column
                         label="广告"
@@ -265,7 +267,7 @@
                     row-key="id"
                     key="d"
                     stripe
-                    height="calc(100vh - 355px)"
+                    height="calc(100vh - 408px)"
                     > 
                       <el-table-column
                         label="网址"
@@ -314,6 +316,66 @@
                   </el-table>
               </div>
             </el-tab-pane>
+            <el-tab-pane label="大洲" name="5" v-if="checkedItem.includes(5)">
+              <div class="table-wrapper">
+                  <el-table
+                    ref="simpleTable05"
+                    :data="searchResult.continent_count"
+                    tooltip-effect="dark"
+                    class="SiteTable EntableColor"
+                    style="width: 100%"
+                    row-key="id"
+                    key="d"
+                    stripe
+                    height="calc(100vh - 408px)"
+                    > 
+                      <el-table-column
+                        label="大洲"
+                        prop="continent"
+                        :min-width="240"
+                        >
+                      </el-table-column>
+                      <el-table-column
+                        label="询盘"
+                        sortable
+                        prop="number"
+                        align="center"
+                        :min-width="100"
+                        >
+                      </el-table-column>
+                  </el-table>
+              </div>
+            </el-tab-pane>
+            <el-tab-pane label="国家" name="6" v-if="checkedItem.includes(6)">
+              <div class="table-wrapper">
+                  <el-table
+                    ref="simpleTable06"
+                    :data="searchResult.country_count"
+                    tooltip-effect="dark"
+                    class="SiteTable EntableColor"
+                    style="width: 100%"
+                    row-key="id"
+                    key="d"
+                    stripe
+                    height="calc(100vh - 408px)"
+                    > 
+                      <el-table-column
+                        label="国家"
+                        prop="country"
+                        :min-width="240"
+                        >
+                      </el-table-column>
+                      <el-table-column
+                        label="询盘"
+                        sortable
+                        prop="number"
+                        align="center"
+                        :min-width="100"
+                        >
+                      </el-table-column>
+                  </el-table>
+              </div>
+            </el-tab-pane>
           </el-tabs>
       </div>
       <el-backtop target=".scroll-panel"></el-backtop>
@@ -348,10 +410,14 @@ export default {
         device_count: [],
         ads_count: [],
         url_count: [],
+        country_count: [],
+        continent_count: [],
         word_total: 0,
         device_total: 0,
         ads_total: 0,
         url_total: 0,
+        country_total: 0,
+        continent_total: 0,
       },
       isDisabled:false,
       isExportDisabled: true,
@@ -359,7 +425,9 @@ export default {
         {id:1,value:1,label:"搜索词"},
         {id:2,value:2,label:"设备"},
         {id:3,value:3,label:"广告"},
-        {id:4,value:4,label:"网址"}
+        {id:4,value:4,label:"网址"},
+        {id:5,value:5,label:"大洲"},
+        {id:6,value:6,label:"国家"},
       ],
       domainList: [
         {id:1,value:"ftmmachinery.com", label: "ftmmachinery.com"},
@@ -431,11 +499,13 @@ export default {
       $this.searchData.date=[];
       $this.searchData.typekey = "";
       $this.searchData.productid = "";
-      $this,searchData.url = "";
+      $this.searchData.url = "";
       $this.searchResult.word_count=[];
       $this.searchResult.url_count=[];
       $this.searchResult.ads_count=[];
       $this.searchResult.device_count=[];
+      $this.searchResult.country_count=[];
+      $this.searchResult.continent_count=[];
       $this.isAllItem = false;
       $this.checkAllItem = false;
       $this.checkedItem = [];
@@ -610,10 +680,14 @@ export default {
               $this.searchResult.device_count = [];
               $this.searchResult.ads_count = [];
               $this.searchResult.url_count = [];
+              $this.searchResult.country_count = [];
+              $this.searchResult.continent_count = [];
               $this.searchResult.word_total = 0;
               $this.searchResult.device_total = 0;
               $this.searchResult.ads_total = 0;
               $this.searchResult.url_total = 0;
+              $this.searchResult.country_total = 0;
+              $this.searchResult.continent_total = 0;
               if(response.word_count && response.word_count.length > 0){
                 $this.searchResult.word_count = response.word_count;
                 var totalcount = 0;
@@ -646,6 +720,22 @@ export default {
                 });
                 $this.searchResult.url_total = totalcount;
               }
+              if(response.country_count && response.country_count.length > 0){
+                $this.searchResult.country_count = response.country_count;
+                var totalcount = 0;
+                response.country_count.forEach(item => {
+                  totalcount += Number(item.number);
+                });
+                $this.searchResult.country_total = totalcount;
+              }
+              if(response.continent_count && response.continent_count.length > 0){
+                $this.searchResult.continent_count = response.continent_count;
+                var totalcount = 0;
+                response.continent_count.forEach(item => {
+                  totalcount += Number(item.number);
+                });
+                $this.searchResult.continent_total = totalcount;
+              }
               $this.activeNames = ''+$this.checkedItem[0];
               if(''+$this.checkedItem[0] == "1"){
                 $this.exportTitle = "搜索词";
@@ -655,6 +745,10 @@ export default {
                 $this.exportTitle = "广告";
               }else if(''+$this.checkedItem[0] == "4"){
                 $this.exportTitle = "网址";
+              }else if(''+$this.checkedItem[0] == "5"){
+                $this.exportTitle = "国家";
+              }else if(''+$this.checkedItem[0] == "6"){
+                $this.exportTitle = "大洲";
               }
               setTimeout(()=>{
                 $this.isDisabled=false;
@@ -739,14 +833,23 @@ export default {
       var fieldList = [];
       if($this.activeNames == "1"){
         fieldList.push({ key: 'word', value: '搜索词'})
+        fieldList.push({ key: 'xunnumber', value: '询盘'})
       }else if($this.activeNames == "2"){
         fieldList.push({ key: 'word', value: '设备'})
+        fieldList.push({ key: 'xunnumber', value: '询盘'})
       }else if($this.activeNames == "3"){
         fieldList.push({ key: 'word_ads', value: '广告'})
+        fieldList.push({ key: 'xunnumber', value: '询盘'})
       }else if($this.activeNames == "4"){
         fieldList.push({ key: 'word_filename', value: '网址'})
+        fieldList.push({ key: 'xunnumber', value: '询盘'})
+      }else if($this.activeNames == "5"){
+        fieldList.push({ key: 'continent', value: '大洲'})
+        fieldList.push({ key: 'number', value: '询盘'})
+      }else if($this.activeNames == "6"){
+        fieldList.push({ key: 'country', value: '国家'})
+        fieldList.push({ key: 'number', value: '询盘'})
       }
-      fieldList.push({ key: 'xunnumber', value: '询盘'})
 			$this.$refs.ExportModalRef.showDialog({ fieldList: fieldList, hasSelected: false, hasData: false })
 		},
 		exportDone(obj) {
@@ -768,6 +871,10 @@ export default {
         resData = $this.searchResult.ads_count;
       }else if($this.activeNames == "4"){
         resData = $this.searchResult.url_count;
+      }else if($this.activeNames == "5"){
+        resData = $this.searchResult.continent_count;
+      }else if($this.activeNames == "6"){
+        resData = $this.searchResult.country_count;
       }
 			resData.forEach((item) => {
 				const itemObj = {}
@@ -810,6 +917,16 @@ export default {
         $this.exportTitle = "网址";
         $this.$nextTick(() => {
           $this.$refs.simpleTable04.doLayout();
+        })
+      }else if(e.name == "5"){
+        $this.exportTitle = "大洲";
+        $this.$nextTick(() => {
+          $this.$refs.simpleTable05.doLayout();
+        })
+      }else if(e.name == "6"){
+        $this.exportTitle = "国家";
+        $this.$nextTick(() => {
+          $this.$refs.simpleTable06.doLayout();
         })
       }
     },
@@ -873,10 +990,9 @@ export default {
 .card-content{
   padding: 20px;
   background-color: #fff;
-  height: calc(100vh - 257px);
+  height: calc(100vh - 312px);
   position: relative;
   .exportDiv{
-    left: 330px;
     position: absolute;
     z-index: 33;
     right: 20px;
