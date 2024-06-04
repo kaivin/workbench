@@ -7,7 +7,7 @@
             <span v-else class="breadcrumb-link" v-bind:key="'last-' + item.id"><b>-</b><span>{{item.title}}</span></span>
             </template>
         </p>
-        <div class="chart_main">
+        <div class="chart_main deptwo_chart">
           <el-tabs v-model="nowChart" type="card" @tab-click="tabChange">
             <el-tab-pane label="积分趋势" name="1">
               <div class="filter-panel" ref="filterbox">
@@ -930,13 +930,13 @@
     }
   </style>
   <style>
-  .el-tabs__item{
+  .deptwo_chart .el-tabs__item{
     background-color: #fff;
   }
-  .el-tabs--card > .el-tabs__header{
+  .deptwo_chart .el-tabs--card > .el-tabs__header{
     border-bottom: 1px solid #fff;
   }
-  .el-tabs__item.is-active{
+  .deptwo_chart .el-tabs__item.is-active{
     color: #fff;
     background-color: #0970ff;
   }
