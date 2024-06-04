@@ -8,7 +8,7 @@
                       <p v-else><span><img src="@/assets/default_pic.jpg" alt="" /></span><i v-if='historyDate.length>0' @click="handlediogHistory"></i></p>                       
                   </div> 
                   <h3 class="personName">{{userBasicInfo.name}}</h3>
-                  <p class="workTime" v-if='userBasicInfo.comday'>在河南红星机器有限公司工作了{{userBasicInfo.comday}}天</p>
+                  <!-- <p class="workTime" v-if='userBasicInfo.comday'>在河南红星机器有限公司工作了{{userBasicInfo.comday}}天</p> -->
                   <div class="rate_num" v-if='userBasicInfo.postionname'>
                       <span class="num02">{{userBasicInfo.postionname}}</span>
                   </div>
