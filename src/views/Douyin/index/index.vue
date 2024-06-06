@@ -402,12 +402,12 @@ export default {
           value: "B2"
         },
         {
-          label: "C2",
-          value: "C2"
+          label: "C1",
+          value: "C1"
         },
         {
-          label: "C3",
-          value: "C3"
+          label: "C2",
+          value: "C2"
         },
         {
           label: "D",
@@ -464,11 +464,11 @@ export default {
             desc: "非拳头产品长尾词"
           },
           {
-            stage: "C2",
+            stage: "C1",
             desc: "口碑词"
           },
           {
-            stage: "C3",
+            stage: "C2",
             desc: "品牌词"
           },
           {

@@ -24,6 +24,7 @@ import {
   webMsgPromoteProcessed,
   webMsgSyncPlatMsg,
   webMsgSyncPlatMsgTwo,
+  webMsgSyncPlatMsgThree,
   webMsgPermitFieldList,
   webMsgPermitFieldAllotedRoleList,
   webMsgPermitFieldAllotRole,
@@ -40,6 +41,7 @@ import {
 const state = {
   msgPage: Cookies.get('msgPage') ? Cookies.get('msgPage') : 0,
   msgPage2: Cookies.get('msgPage2') ? Cookies.get('msgPage2') : 0,
+  msgPage3: Cookies.get('msgPage3') ? Cookies.get('msgPage3') : 0,
 }
 const mutations = {
   SYNC_PLATMSG: (state, page) => {
@@ -51,6 +53,11 @@ const mutations = {
     var pageIndex = parseInt(page) + 1;
     state.msgPage2 = pageIndex;
     Cookies.set('msgPage2', pageIndex);
+  },
+  SYNC_PLATMSG3: (state, page) => {
+    var pageIndex = parseInt(page) + 1;
+    state.msgPage3 = pageIndex;
+    Cookies.set('msgPage3', pageIndex);
   },
 }
 
@@ -312,8 +319,20 @@ const actions = {
     })
   },
 
-
-
+  
+  // 留言系统同步hxjq.com.cn的信息
+  webMsgSyncPlatMsgThreeAction({ commit, state },data) {
+    return new Promise((resolve, reject) => {
+      webMsgSyncPlatMsgThree(data).then(response => {
+        if(response.success!=0){
+          commit('SYNC_PLATMSG3',data.number)
+        }
+          resolve(response)
+      }).catch(error => {
+            reject(error)
+      })
+    })
+  },
   // 留言表系统权限字段列表数据
   webMsgPermitFieldListAction({ commit, state },data) {
     return new Promise((resolve, reject) => {

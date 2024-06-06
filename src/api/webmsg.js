@@ -198,6 +198,15 @@ export function webMsgSyncPlatMsgTwo(data) {
   });
 }
 
+// 留言系统同步1部特殊站留言信息
+export function webMsgSyncPlatMsgThree(data) {
+  return request({
+    url: "/hxindex/Webmsg/getmsgthree",
+    method: "POST",
+    data
+  });
+}
+
 // 留言表系统权限字段列表数据
 export function webMsgPermitFieldList() {
   return request({

@@ -58,6 +58,7 @@
     addWebMsgIp:state => state.app.addWebMsgIp,
     msgPage:state => state.webmsg.msgPage,
     msgPage2:state => state.webmsg.msgPage2,
+    msgPage3:state => state.webmsg.msgPage3,
     iscompareListAdd: state => state.api.iscompareListAdd,
     iscompareGroupListAdd: state => state.api.iscompareGroupListAdd,
     addCompareList: state => state.app.addCompareList,

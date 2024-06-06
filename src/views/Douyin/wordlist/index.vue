@@ -202,12 +202,12 @@ export default {
           value: "B2"
         },
         {
-          label: "C2",
-          value: "C2"
+          label: "C1",
+          value: "C1"
         },
         {
-          label: "C3",
-          value: "C3"
+          label: "C2",
+          value: "C2"
         },
         {
           label: "D",

@@ -386,11 +386,11 @@
               desc: "非拳头产品长尾词"
             },
             {
-              stage: "C2",
+              stage: "C1",
               desc: "口碑词"
             },
             {
-              stage: "C3",
+              stage: "C2",
               desc: "品牌词"
             },
             {
@@ -956,7 +956,7 @@
                 var countb1 = 0;
                 var countb2 = 0;
                 var countc2 = 0;
-                var countc3 = 0;
+                var countc1 = 0;
                 var countd = 0;
                 var addArr = [];
                 // 统计每个等级积分
@@ -965,7 +965,7 @@
                 var scoreb1 = 0;
                 var scoreb2 = 0;
                 var scorec2 = 0;
-                var scorec3 = 0;
+                var scorec1 = 0;
                 var scored = 0;
                 var addScoreArr = [];
                 var pieAddScore = [];
@@ -988,9 +988,9 @@
                     }else if(item.my_level == "C2"){
                       countc2 += 1;
                       scorec2 += item.addscore;
-                    }else if(item.my_level == "C3"){
-                      countc3 += 1;
-                      scorec3 += item.addscore;
+                    }else if(item.my_level == "C1"){
+                      countc1 += 1;
+                      scorec1 += item.addscore;
                     }else if(item.my_level == "D"){
                       countd += 1;
                       scored += item.addscore;
@@ -1001,25 +1001,25 @@
                 addArr.push({label: "A2", value: counta2});
                 addArr.push({label: "B1", value: countb1});
                 addArr.push({label: "B2", value: countb2});
+                addArr.push({label: "C1", value: countc1});
                 addArr.push({label: "C2", value: countc2});
-                addArr.push({label: "C3", value: countc3});
                 addArr.push({label: "D", value: countd});
                 addScoreArr.push(scorea1.toFixed(1));
                 addScoreArr.push(scorea2.toFixed(1));
                 addScoreArr.push(scoreb1.toFixed(1));
                 addScoreArr.push(scoreb2.toFixed(1));
+                addScoreArr.push(scorec1.toFixed(1));
                 addScoreArr.push(scorec2.toFixed(1));
-                addScoreArr.push(scorec3.toFixed(1));
                 addScoreArr.push(scored.toFixed(1));
                 pieAddScore.push({name: "A1", value: scorea1.toFixed(1)});
                 pieAddScore.push({name: "A2", value: scorea2.toFixed(1)});
                 pieAddScore.push({name: "B1", value: scoreb1.toFixed(1)});
                 pieAddScore.push({name: "B2", value: scoreb2.toFixed(1)});
+                pieAddScore.push({name: "C1", value: scorec1.toFixed(1)});
                 pieAddScore.push({name: "C2", value: scorec2.toFixed(1)});
-                pieAddScore.push({name: "C3", value: scorec3.toFixed(1)});
                 pieAddScore.push({name: "D", value: scored.toFixed(1)});
                 data_addCount = addArr;
-                data_add_num = counta1+counta2+countb1+countb2+countc2+countc3+countd;
+                data_add_num = counta1+counta2+countb1+countb2+countc2+countc1+countd;
                 data_addList = addScoreArr;
                 pie_addList = pieAddScore;
                 $this.add_list = filterAddList;
@@ -1032,7 +1032,7 @@
                 var countb1 = 0;
                 var countb2 = 0;
                 var countc2 = 0;
-                var countc3 = 0;
+                var countc1 = 0;
                 var countd = 0;
                 var descArr = [];
                 // 统计减少的每个等级积分
@@ -1041,7 +1041,7 @@
                 var scoreb1 = 0;
                 var scoreb2 = 0;
                 var scorec2 = 0;
-                var scorec3 = 0;
+                var scorec1 = 0;
                 var scored = 0;
                 var descScoreArr = [];
                 var pieDescScore = [];
@@ -1064,9 +1064,9 @@
                     }else if(item.my_level == "C2"){
                       countc2 += 1;
                       scorec2 += item.descscore;
-                    }else if(item.my_level == "C3"){
-                      countc3 += 1;
-                      scorec3 += item.descscore;
+                    }else if(item.my_level == "C1"){
+                      countc1 += 1;
+                      scorec1 += item.descscore;
                     }else if(item.my_level == "D"){
                       countd += 1;
                       scored += item.descscore;
@@ -1077,30 +1077,30 @@
                 descArr.push({label: "A2", value: counta2});
                 descArr.push({label: "B1", value: countb1});
                 descArr.push({label: "B2", value: countb2});
+                descArr.push({label: "C1", value: countc1});
                 descArr.push({label: "C2", value: countc2});
-                descArr.push({label: "C3", value: countc3});
                 descArr.push({label: "D", value: countd});
                 descScoreArr.push(-scorea1.toFixed(1));
                 descScoreArr.push(-scorea2.toFixed(1));
                 descScoreArr.push(-scoreb1.toFixed(1));
                 descScoreArr.push(-scoreb2.toFixed(1));
+                descScoreArr.push(-scorec1.toFixed(1));
                 descScoreArr.push(-scorec2.toFixed(1));
-                descScoreArr.push(-scorec3.toFixed(1));
                 descScoreArr.push(-scored.toFixed(1));
                 pieDescScore.push({name: "A1", value: scorea1.toFixed(1)});
                 pieDescScore.push({name: "A2", value: scorea2.toFixed(1)});
                 pieDescScore.push({name: "B1", value: scoreb1.toFixed(1)});
                 pieDescScore.push({name: "B2", value: scoreb2.toFixed(1)});
+                pieDescScore.push({name: "C1", value: scorec1.toFixed(1)});
                 pieDescScore.push({name: "C2", value: scorec2.toFixed(1)});
-                pieDescScore.push({name: "C3", value: scorec3.toFixed(1)});
                 pieDescScore.push({name: "D", value: scored.toFixed(1)});
                 data_descCount = descArr;
-                data_desc_num = counta1+counta2+countb1+countb2+countc2+countc3+countd;
+                data_desc_num = counta1+counta2+countb1+countb2+countc2+countc1+countd;
                 data_descList = descScoreArr;
                 pie_descList = pieDescScore;
                 $this.desc_list = filterDescList;
               }
-              var stage = ["A1","A2","B1","B2","C2","C3","D"];
+              var stage = ["A1","A2","B1","B2","C1","C2","D"];
               // 计算总数
               data_addList.forEach((item,index) => {
                 var res = Number(item)+Number(data_descList[index]);

@@ -125,7 +125,9 @@
                                     <!-- <div class="item-search" v-if="menuButtonPermit.includes('Webmsg_getmsgtwo')">
                                         <el-button class="item-input" size="small" type="primary" :disabled="!isReady2" :icon="isReady2?'':'el-icon-loading'" @click="getCnMsgDataTwo">同步hxjq.com.cn留言</el-button>
                                     </div> -->
-                                    
+                                    <div class="item-search" v-if="menuButtonPermit.includes('Webmsg_getmsgthree')">
+                                        <el-button class="item-input" size="small" type="primary" :disabled="!isReady3" :icon="isReady3?'':'el-icon-loading'" @click="getCnMsgDataThree">同步一部特殊站留言</el-button>
+                                    </div>
                                     <div class="item-search" v-if="currentStatus==='Untreated'&&menuButtonPermit.includes('Webmsg_addpersondeal')">
                                         <el-button class="item-input" size="small" type="primary" :disabled="isDisabled" @click="allotToPending">添加到个人待处理</el-button>
                                     </div>
@@ -375,6 +377,7 @@ export default {
         permitStatus:[],
         isReady:true,
         isReady2: true,
+        isReady3: true,
         scrollPosition:{
           width:0,
           left:0,
@@ -411,6 +414,7 @@ export default {
       'userInfo',
       'msgPage',
       'msgPage2',
+      'msgPage3',
       'sidebar',
       'menuData'
     ]),
@@ -473,7 +477,8 @@ export default {
   methods:{
     ...mapMutations({
       SYNC_PLATMSG:"webmsg/SYNC_PLATMSG",
-      SYNC_PLATMSG2:"webmsg/SYNC_PLATMSG2"
+      SYNC_PLATMSG2:"webmsg/SYNC_PLATMSG2",
+      SYNC_PLATMSG2:"webmsg/SYNC_PLATMSG3"
     }),
     // 获取面包屑路径
     getBreadcrumbList(){
@@ -979,6 +984,39 @@ export default {
         if(response){
           if(response.status){
             $this.isReady2 = true;
+            if(response.success!=0){
+              $this.$message({
+                  showClose: true,
+                  message: response.info,
+                  type: 'success'
+              });
+              $this.initPage();
+            }else{
+              $this.$message({
+                showClose: true,
+                message: "请求失败",
+                type: 'error'
+              });
+            }
+          }else{
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'error'
+            });
+          }
+        }
+      });
+    },
+
+    // 获取1部特殊站留言信息
+    getCnMsgDataThree(){
+      var $this = this;
+      $this.isReady3 = false;
+      $this.$store.dispatch('webmsg/webMsgSyncPlatMsgThreeAction', {number:$this.msgPage3}).then(response=>{
+        if(response){
+          if(response.status){
+            $this.isReady3 = true;
             if(response.success!=0){
               $this.$message({
                   showClose: true,
