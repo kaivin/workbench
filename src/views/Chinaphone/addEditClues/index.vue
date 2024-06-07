@@ -121,6 +121,31 @@
                               </el-input>
                             </dd>
                           </dl>
+                          <dl style="width: 150px;">
+                            <dt>来源媒体：</dt>
+                            <dd>
+                              <el-select v-model="formData.media" size="small" clearable placeholder="来源媒体">
+                                  <el-option
+                                  v-for="item in mediaList"
+                                  :key="item.value"
+                                  :label="item.label"
+                                  :value="item.value">
+                                  </el-option>
+                              </el-select>
+                            </dd>
+                          </dl>
+                          <dl style="width: 250px;">
+                            <dt>媒体标识：</dt>
+                            <dd>
+                              <el-input
+                                  placeholder="媒体标识"
+                                  size="small"
+                                  v-model="formData.sign"
+                                  @blur="signChangePhone"
+                                  clearable>
+                              </el-input>
+                            </dd>
+                          </dl>
                       </div>
                       <div class="EnphoneAddEditMainItem CnIntentionEquipment">
                         <dl>
@@ -323,9 +348,16 @@ export default {
         phoneid:"",
         level_id:"",
         price_id:"",
+        media:"抖音",
+        sign: ""
       },
       defaultInfo:{},
       isDisabled:false,
+      mediaList: [
+        { value:"抖音", label: '抖音' },
+        { value: '快手', label: '快手' },
+        { value: '视频号' , label: '视频号' }
+      ]
     }
   },
   computed: {
@@ -712,8 +744,40 @@ export default {
     // 来源页面变化切换电话
     urlChangePhone(e){
       var $this = this;
-      if($this.formData.url!=""){
+      if($this.formData.url!="" && !($this.formData.sign)){
         $this.$store.dispatch("chinaphone/cluesUrlGetPhoneAction", {url:$this.formData.url}).then(response=>{
+            if(response.status){
+              if(response.phone){
+                var phoneList = $this.phoneList;
+                phoneList.forEach(function(item,index){
+                  if(item.id == response.phone.id){
+                    item.isOn = true;
+                    $this.formData.phoneid = response.phone.id;
+                  }else{
+                    item.isOn = false;
+                  }
+                });
+                $this.phoneList = phoneList;
+              }
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+            }
+        });
+      }
+    },
+
+    // 标识变化切换电话
+    signChangePhone(e){
+      var $this = this;
+      if($this.formData.sign!=""){
+        var res = {}
+        res.name = $this.formData.sign;
+        res.type = $this.formData.media;
+        $this.$store.dispatch("chinaphone/getVideoPhoneData", res).then(response=>{
             if(response.status){
               if(response.phone){
                 var phoneList = $this.phoneList;

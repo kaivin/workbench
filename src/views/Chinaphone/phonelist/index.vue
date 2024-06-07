@@ -67,7 +67,7 @@
                                 >
                               </el-table-column>
                               <el-table-column
-                                v-if="(menuButtonPermit.includes('Chinaphone_getchinaphonereadrole')||menuButtonPermit.includes('Chinaphone_getchinaphonewriterole')||menuButtonPermit.includes('Chinaphone_getphonedomain')||menuButtonPermit.indexOf('Chinaphone_phoneedit')||menuButtonPermit.indexOf('Chinaphone_phonedelete'))"
+                                v-if="(menuButtonPermit.includes('Chinaphone_getchinaphonereadrole')||menuButtonPermit.includes('Chinaphone_getchinaphonewriterole')||menuButtonPermit.includes('Chinaphone_getphonedomain')||menuButtonPermit.indexOf('Chinaphone_phoneedit')||menuButtonPermit.indexOf('Chinaphone_phonedelete') || menuButtonPermit.includes('Chinaphone_getphonevideo'))"
                                 :width="operationsWidth"
                                 align="center"
                                 fixed="right"
@@ -78,6 +78,7 @@
                                     <el-button size="mini" @click="allotReadRole(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Chinaphone_getchinaphonereadrole')">分配可读角色</el-button>
                                     <el-button size="mini" @click="allotWriteRole(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Chinaphone_getchinaphonewriterole')">分配可写角色</el-button>
                                     <el-button size="mini" @click="allotDomain(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Chinaphone_getphonedomain')">绑定域名</el-button>
+                                    <el-button size="mini" @click="allotVideo(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Chinaphone_getphonevideo')">绑定多媒体</el-button>
                                     <el-button size="mini" @click="editTableRow(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Chinaphone_phoneedit')">编辑</el-button>
                                     <el-button size="mini" @click="deleteTableRow(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Chinaphone_phonedelete')" type="info" plain>{{scope.row.is_delete?'激活':'禁用'}}</el-button>
                                   </div>
@@ -207,6 +208,26 @@
           </span>
         </template>
       </el-dialog>
+      <el-dialog :title="videoDialogText" v-if="(menuButtonPermit.includes('Chinaphone_getphonevideo'))" custom-class="transfer-dialog" :visible.sync="dialogVideoVisible" width="840px">
+        <div class="transfer-panel">
+          <div class="transfer-wrap">
+            <el-transfer 
+              v-model="videoValue" 
+              :data="videoData"
+              :titles="['可分配多媒体', '已分配多媒体']"
+              filterable
+              :filter-method="filterVideoMethod"
+              filter-placeholder="请输入多媒体关键字"
+            ></el-transfer>
+          </div>
+        </div>
+        <template #footer>
+          <span class="dialog-footer">
+            <el-button @click="dialogVideoVisible = false">取 消</el-button>
+            <el-button type="primary" :class="isSaveVideoData?'isDisabled':''" :disabled="isSaveVideoData" @click="saveVideoData">确 定</el-button>
+          </span>
+        </template>
+      </el-dialog>
   </div>
 </template>
 <script>
@@ -285,6 +306,16 @@ export default {
       isSaveData:false,
       isSaveRoleData:false,
       isSaveDomainData:false,
+      dialogVideoVisible: false,
+      videoData:[{key:"",label:""}],
+      videoValue:[],
+      filterVideoMethod(query, item) {
+          if(item.label){
+            return item.label.indexOf(query) > -1;
+          }
+      },
+      videoDialogText:"",
+      isSaveVideoData: false
     }
   },
   computed: {
@@ -457,6 +488,7 @@ export default {
                 $this.isSaveData=false;
                 $this.isSaveRoleData=false;
                 $this.isSaveDomainData=false;
+                $this.isSaveVideoData=false;
             },1000);
             $this.$nextTick(function () {
               $this.setTableHeight();
@@ -505,6 +537,9 @@ export default {
               }
               if($this.menuButtonPermit.includes('Chinaphone_getphonedomain')){
                 operationsWidth+=90;
+              }
+              if($this.menuButtonPermit.includes('Chinaphone_getphonevideo')){
+                operationsWidth+=110;
               }
               if($this.menuButtonPermit.includes('Chinaphone_phoneedit')){
                 operationsWidth+=66;
@@ -1009,6 +1044,119 @@ export default {
           }
       });
     },
+
+    // 电话绑定媒体弹窗
+    allotVideo(row,index){
+      var $this = this;
+      $this.videoData= [];
+      $this.videoValue=[];
+      $this.dialogVideoVisible = true;
+      $this.currentID = row.id;
+      $this.domainDialogText="给 "+row.phonenumber+" 绑定多媒体";
+      $this.getAllotedVideo();
+    },
+    // 电话绑定域名保存
+    saveVideoData(){
+        var $this = this;
+        if(!$this.isSaveVideoData){
+          $this.isSaveVideoData=true;
+          var videoPhoneData = {};
+          videoPhoneData.phoneid = $this.currentID;
+          videoPhoneData.video_id = $this.videoValue;
+          $this.$store.dispatch("chinaphone/phoneAllotedVideoAction", videoPhoneData).then(response=>{
+            if(response.status){
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'success'
+              });
+              $this.dialogVideoVisible = false;
+              $this.initPage();
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+              setTimeout(()=>{
+                $this.isSaveVideoData=false;
+              },1000);
+            }
+          });
+        }
+    },
+    // 获取当前电话已绑定的域名
+    getAllotedVideo(){
+      var $this = this;
+      $this.$store.dispatch('chinaphone/getPhoneAllotedVideo', {phoneid:$this.currentID}).then(response=>{
+        if(response.status){
+          var phoneVideoData = [];
+          var selectedPhoneVideoData = [];
+          if(response.data.length>0){
+            response.data.forEach(function(item,index){
+              var itemData = {};
+              itemData.key = item.id;
+              itemData.label = item.name+"("+ item.type +")";
+              itemData.disabled = false;
+              phoneVideoData.push(itemData);
+              selectedPhoneVideoData.push(item.id);
+            });
+          }
+          $this.videoData = phoneVideoData;
+          $this.videoValue = selectedPhoneVideoData;
+          $this.getAllotingVideo();
+        }else{
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'error'
+            });
+          }
+      });
+    },
+    // 获取当前登录用户可操作的域名
+    getAllotingVideo(){
+      var $this = this;
+      var videoData = [];
+      if($this.videoData.length>0){
+        $this.videoData.forEach(function(item,index){
+          videoData.push(item.key);
+        });
+      }
+      var videoDataNow = $this.videoData;
+      var videoIngData = [];
+      $this.$store.dispatch('chinaphone/getUserCanAllotVideo', {phoneid:$this.currentID}).then(response=>{
+        if(response.status){
+          if(response.data.length>0){
+            if(videoDataNow.length>0){
+              response.data.forEach(function(item,index){
+                videoIngData.push(item.id);
+              });
+              videoDataNow.forEach(function(item,index){
+                item.disabled = false;
+              });
+            }
+            response.data.forEach(function(item,index){
+              if(!videoData.includes(item.id)){
+                var itemData = {};
+                itemData.key = item.id;
+                itemData.label = item.name+"("+ item.type +")";
+                itemData.disabled = false;
+                videoDataNow.push(itemData);
+              }
+            });
+            $this.videoData = videoDataNow;
+          }
+        }else{
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'error'
+            });
+          }
+      });
+    },
+
     // 设置横向滚动条相关DOM数据
     setScrollDom(){
       var $this = this;

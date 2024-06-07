@@ -60,7 +60,11 @@
     chinaQualityConfirm,
     chinaQualityConfirmedit,
     chinaQualityHasSelect,
-    exportSearchData
+    exportSearchData,
+    phoneAllotVideo,
+    phoneAllotedVideo,
+    userCanAllotVideo,
+    videoPhoneData
 } from '@/api/chinaphone'
 
 const state = {}
@@ -695,6 +699,46 @@ const actions = {
             })
         })
     },
+    //电话 绑定媒体
+    phoneAllotedVideoAction({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            phoneAllotVideo(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+     //电话已绑定的媒体
+     getPhoneAllotedVideo({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            phoneAllotedVideo(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+     //用户可操作的媒体
+     getUserCanAllotVideo({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            userCanAllotVideo(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+     //填入链接后获取数据
+     getVideoPhoneData({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            videoPhoneData(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    }
 }
 
 export default {

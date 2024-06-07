@@ -94,6 +94,41 @@ export function userCanAllotDomain(data) {
   });
 }
 
+// 电话绑定多媒体
+export function phoneAllotVideo(data) {
+  return request({
+    url: "/hxindex/Chinaphone/getvideodomain",
+    method: "POST",
+    data
+  });
+}
+// 电话已绑定多媒体
+export function phoneAllotedVideo(data) {
+  return request({
+    url: "/hxindex/Chinaphone/hasphonevideo",
+    method: "POST",
+    data
+  });
+}
+
+// 当前登录用户可操作的多媒体
+export function userCanAllotVideo(data) {
+  return request({
+    url: "/hxindex/Chinaphone/videolist",
+    method: "POST",
+    data
+  });
+}
+
+// 获取链接的多媒体信息
+export function videoPhoneData(data) {
+  return request({
+    url: "/hxindex/Chinaphone/getvideophone",
+    method: "POST",
+    data
+  });
+}
+
 // 产品类型列表数据获取接口
 export function getProductTypeList() {
     return request({
