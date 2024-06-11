@@ -41,7 +41,7 @@
                   <span class="account_name">所有账号</span>
                 </div>
                 <div class="search_body">
-                  <div class="seach_total"  :class="showXun ? 'total_xun':''">
+                  <div class="seach_total"  :class="showXun && menuButtonPermit.includes('Douyin_xun') ? 'total_xun':''">
                     <el-popover
                       placement="top-start"
                       width="228"
@@ -72,7 +72,7 @@
                         <div id="scoreChart"></div>
                       </div>
                     </el-tab-pane>
-                    <el-tab-pane label="询盘趋势" name="fifth" v-if="showXun">
+                    <el-tab-pane label="询盘趋势" name="fifth" v-if="showXun && menuButtonPermit.includes('Douyin_xun')">
                       <div class="search_col">
                         <div class="search" v-if="isPopSearch"><p>请稍候...</p></div>
                         <div class="search_tab" v-else>
@@ -83,7 +83,7 @@
                           <div class="search_dw" v-if="nowChart == 1">
                             <el-popover
                               placement="right"
-                              content="1号询盘：上个月16号到上个月月底的询盘数；15号询盘：本月1号到15号的询盘数。"
+                              content="1号询盘：上个月16号到上个月月底的询盘数；15号询盘：本月1号到15号的询盘数。询盘提供者字段请填写提供者姓名，否则统计不上。"
                               trigger="hover">
                               <svg-icon class="tips_div tips_div2" slot="reference" icon-class="tips"></svg-icon>
                             </el-popover>  
@@ -555,19 +555,18 @@
       // 初始化数据
       initData(){
         var $this = this;
-        // $this.getUserMenuButtonPermit();
-        $this.getDouyinTime();
+        $this.getUserMenuButtonPermit();
       },
       // 获取当前登陆用户在该页面的操作权限
       getUserMenuButtonPermit(){
         var $this = this;
-        $this.$store.dispatch('api/getMenuButtonPermitAction',{id:$this.$router.currentRoute.meta.id}).then(res=>{
+        $this.$store.dispatch('api/getMenuButtonPermitAction',{id:160}).then(res=>{
           if(res.status){
             if(res.data.length>0){
               res.data.forEach(function(item,index){
                 $this.menuButtonPermit.push(item.action_route);
               });
-              if($this.menuButtonPermit.includes('Douyin_index') || $this.menuButtonPermit.includes('Douyin_personcount')){
+              if($this.menuButtonPermit.includes('Douyin_index')){
                 $this.getDouyinTime();
               }else{
                 $this.$message({
@@ -881,6 +880,7 @@
                   var xunobj = {};
                   xunobj.addtime = item.addtime;
                   xunobj.number = item.xunnumber;
+                  xunobj.score = item.user_data;
                   xundata2.push(xunobj);
                 })
                 $this.scoreData = resData.sort(sortByAsc("num"));
@@ -2003,11 +2003,19 @@
         var chartDom = document.getElementById('xunChart2');
         var myChart = echarts.init(chartDom);
         var option;
+        var timeList = [];
+        var xunList = [];
+        var scoreList = [];
+        $this.xundata2.forEach(item => {
+          timeList.push(item.addtime);
+          xunList.push(item.number);
+          scoreList.push(item.score);
+        })
         option = {
           grid:{
             left: '45',
             top:'35',
-            right:'15',
+            right:'45',
             bottom: '25'
           },
           tooltip:{
@@ -2025,18 +2033,21 @@
             },
             formatter(params){
               var res = `<div class="toolDiv">
-                    <div class="tooltitle">${params[0].name}</div>
-                    <div class="bar clearfix">
-                      <span style="display:inline-block;vertical-align:top;margin-top:4px;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:#0970ff;"></span>
-                      <span>${params[0].seriesName}：</span>
-                      <span>${params[0].data.number}</span>
-                    </div>`;
+                  <div class="tooltitle">${params[0].name}</div>`;
+                  params.forEach(item => {
+                    res +=`<div class="bar clearfix">
+                          <span style="display:inline-block;vertical-align:top;margin-top:4px;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:${item.borderColor};"></span>
+                          <span>${item.seriesName}：</span>
+                          <span>${item.value}</span>
+                        </div>`;
+                  })
                 return res;
             }
           },
           xAxis: {
             type: 'category',
             name: "日期",
+            data: timeList,
             axisLine:{
               lineStyle:{
                 color: "#dedede"
@@ -2046,27 +2057,38 @@
               color: "#888"
             },
           },
-          yAxis: {
-            type: 'value',
-            name: "单位（个）",
-            nameTextStyle: {
-              color: "#b4b4b4",
-              nameLocation: "start",
+          yAxis: [{
+              type: 'value',
+              name: "单位（个）",
+              nameTextStyle: {
+                color: "#b4b4b4",
+                nameLocation: "start",
+              },
+              axisLabel:{
+                color: "#888"
+              }
             },
-            axisLabel:{
-              color: "#888"
-            }
-          },
+            {
+              type: 'value',
+              name: "单位（分）",
+              nameTextStyle: {
+                color: "#b4b4b4",
+                nameLocation: "end",
+              },
+              alignTicks: true,
+              axisLabel:{
+                color: "#888"
+              },
+            },
+          ],
           animation: false,
-          dataset:{
-            source: $this.xundata2,  
-          },
           series: [
             {
               name: "询盘个数",
               type: 'line',
               symbol: 'circle',
               symbolSize: '5',
+              data: xunList,
               label:{
                 show: true,
                 position: 'top',
@@ -2089,7 +2111,37 @@
                   borderWidth: 2
                 }
               }
-            }
+            },
+            {
+              name: "积分",
+              data: scoreList,
+              type: 'line',
+              symbol: 'circle',
+              symbolSize: '5',
+              yAxisIndex: 1,
+              label:{
+                show: true,
+                position: 'top',
+                distance: '5'
+              },
+              itemStyle:{
+                color: '#fff',
+                borderColor: "#3ebea7",
+                borderWidth: 1
+              },
+              lineStyle:{
+                color: "#3ebea7",
+                width: 1
+              },
+              emphasis:{
+                lineStyle: {
+                  width: 2,
+                },
+                itemStyle:{
+                  borderWidth: 2
+                }
+              }
+            },
           ]
         };
         option && myChart.setOption(option);

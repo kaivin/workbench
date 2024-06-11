@@ -14,7 +14,7 @@
             <div class="card-header" ref="headerPane">
               <div class="search-wrap" ref="searchPane">
                 <div class="item-search item-check">
-                  <el-checkbox v-model="searchData.all_name" label="一/二部" border @change="searchResult" />
+                  <el-checkbox v-model="searchData.all_name" label="全公司" border @change="searchResult" />
                 </div>
                 <div class="item-search">
                   <el-select v-model="searchData.num" size="small" clearable placeholder="请选择日期" class="select-panel" @change="selectedTimeChange">
@@ -61,7 +61,7 @@
                   <el-input
                       class="input-panel"
                       size="small"
-                      placeholder="请输入抖音名称"
+                      placeholder="请输入抖音账号id"
                       v-model="searchData.nickname"
                       @keyup.enter.native="searchResult"
                       @clear="searchResult"
@@ -91,7 +91,7 @@
                   <span class="dy_item_s" @click="searchByName(item)">
                     <span class="rank">{{index<9?'0'+(index+1):index+1}}.</span>
                     <span class="cname">{{item.name}}</span>
-                    <span class="uname">[{{item.uname}}]</span>：<span class="score">{{item.score}}</span>
+                    <span class="uname">[{{item.department}}-{{item.uname}}]</span>：<span class="score">{{item.score}}</span>
                   </span>
                   <el-tooltip content="点击查看积分趋势" placement="right-start" effect="light">
                     <span class="dy_item_c" @click="showAccountChart(item)"><svg-icon icon-class="line2" /></span>
@@ -107,7 +107,7 @@
             </div>
             <div class="dy_res" v-if="checkBtnShow && nick_res.length > 0">
               <p class="res_p">
-                <span class="color_01" v-if="searchData.nickname">{{searchData.nickname}}</span>
+                <span class="color_01" v-if="searchData.nickname">{{searchData.name}}[{{searchData.department}}-{{searchData.uname}}]</span>
                 <span class="color_01" v-else>以上所有账号</span>
                 的关键词中：<span v-for="item,index in nick_res" :key="index"><i v-if="index > 0">，</i>{{item.name}}有<strong class="color_02" >{{item.value}}</strong>个</span>。
                 <span class="word_count" v-if="add_word.length > 0 || desc_word.length > 0" >
@@ -265,7 +265,7 @@
               <div id="chart"></div>
             </div>
           </el-tab-pane>
-          <el-tab-pane label="询盘趋势" name="second">
+          <el-tab-pane v-if="menuButtonPermit.includes('Douyin_xun')" label="询盘趋势" name="second">
             <div class="search_tab">
               <div class="item-change">
                 <div class="item-font" :class="nowChart == 1?'active':''" @click="tabChange(1)">月询盘统计</div>
@@ -274,7 +274,7 @@
               <div class="search_dw" v-if="nowChart == 1">
                 <el-popover
                   placement="right"
-                  content="1号询盘：上个月16号到上个月月底的询盘数；15号询盘：本月1号到15号的询盘数。"
+                  content="1号询盘：上个月16号到上个月月底的询盘数；15号询盘：本月1号到15号的询盘数。询盘提供者字段请填写提供者姓名，否则统计不上。"
                   trigger="hover">
                   <svg-icon class="tips_div tips_div2" slot="reference" icon-class="tips"></svg-icon>
                 </el-popover>  
@@ -325,7 +325,10 @@ export default {
         num: "",
         my_level: "",
         sort: "",
-        id: ""
+        id: "",
+        name: "",
+        uname: "",
+        department: ""
       },
       scrollPosition:{
         width:0,
@@ -761,6 +764,9 @@ export default {
         $this.searchData.my_level = "";
         $this.searchData.sort = "";
         $this.searchData.id = "";
+        $this.searchData.name = "";
+        $this.searchData.uname = "";
+        $this.searchData.department = "";
         $this.searchResult();
     },
     // 初始化数据
@@ -903,8 +909,7 @@ export default {
               }else{
                 $this.desc_word = [];
               }
-
-              if( $this.searchData.nickname == "" || $this.searchData.nickname && $this.CheckNameIn()){
+              if( $this.searchData.nickname == "" || $this.searchData.nickname == null || $this.searchData.nickname && $this.CheckNameIn()){
                 $this.checkBtnShow = true;
               }else{
                 $this.checkBtnShow = false;
@@ -979,9 +984,12 @@ export default {
       var $this = this;
       $this.searchData.page=1;
       $this.searchData.limit=20;
-      $this.searchData.nickname = data.name;
+      $this.searchData.nickname = data.dy_uuid;
       $this.searchData.all_name = true;
       $this.searchData.id = data.id;
+      $this.searchData.name = data.name;
+      $this.searchData.uname = data.uname;
+      $this.searchData.department = data.department;
       $this.searchResult();
     },
     // 点击展示图表
@@ -995,7 +1003,7 @@ export default {
       var formData = {};
       formData.pid = data.pid;
       formData.my_level = data.my_level;
-      formData.nickname = data.nickname;
+      formData.nickname = data.w_uid;
       $this.$store.dispatch('douyin/douyinEachLine', formData).then(response=>{
           if(response){
             $this.isSearchLine = false;
@@ -1042,7 +1050,7 @@ export default {
     },
     showAccountChart(data){
       var $this = this;
-      $this.dialogTitle = data.name+"["+data.uname+"]";
+      $this.dialogTitle = data.name+"["+data.department+"-"+data.uname+"]";
       $this.isChartShow = true;
       $this.isSearchLine = true;
       $this.dialogWidth = "1200px";
@@ -1439,6 +1447,7 @@ export default {
                   var xunobj = {};
                   xunobj.addtime = item.addtime;
                   xunobj.number = item.xunnumber;
+                  xunobj.score = item.user_data;
                   xundata2.push(xunobj);
                 })
                 $this.xundata = response.xundata&&response.xundata.length > 0 ? response.xundata : [];
@@ -1525,7 +1534,7 @@ export default {
       var isIn = false;
       var aim = $this.searchData.nickname;
       $this.scoreList.forEach(item => {
-        if(item.name == aim){
+        if(item.dy_uuid == aim){
           isIn = true;
         }
       })
@@ -1760,11 +1769,19 @@ export default {
       var chartDom = document.getElementById('xunChart2');
       var myChart = echarts.init(chartDom);
       var option;
+      var timeList = [];
+      var xunList = [];
+      var scoreList = [];
+      $this.xundata2.forEach(item => {
+        timeList.push(item.addtime);
+        xunList.push(item.number);
+        scoreList.push(item.score);
+      })
       option = {
         grid:{
           left: '45',
           top:'35',
-          right:'15',
+          right:'45',
           bottom: '25'
         },
         tooltip:{
@@ -1781,19 +1798,22 @@ export default {
               color: '#666'
           },
           formatter(params){
-            var res = `<div class="toolDiv">
-                  <div class="tooltitle">${params[0].name}</div>
-                  <div class="bar clearfix">
-                    <span style="display:inline-block;vertical-align:top;margin-top:4px;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:#0970ff;"></span>
-                    <span>${params[0].seriesName}：</span>
-                    <span>${params[0].data.number}</span>
-                  </div>`;
-              return res;
+              var res = `<div class="toolDiv">
+                  <div class="tooltitle">${params[0].name}</div>`;
+                  params.forEach(item => {
+                    res +=`<div class="bar clearfix">
+                          <span style="display:inline-block;vertical-align:top;margin-top:4px;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:${item.borderColor};"></span>
+                          <span>${item.seriesName}：</span>
+                          <span>${item.value}</span>
+                        </div>`;
+                  })
+                return res;
           }
         },
         xAxis: {
           type: 'category',
           name: "日期",
+          data: timeList,
           axisLine:{
             lineStyle:{
               color: "#dedede"
@@ -1803,7 +1823,7 @@ export default {
             color: "#888"
           },
         },
-        yAxis: {
+        yAxis: [{
           type: 'value',
           name: "单位（个）",
           nameTextStyle: {
@@ -1814,16 +1834,27 @@ export default {
             color: "#888"
           }
         },
+        {
+            type: 'value',
+            name: "单位（分）",
+            nameTextStyle: {
+              color: "#b4b4b4",
+              nameLocation: "end",
+            },
+            alignTicks: true,
+            axisLabel:{
+              color: "#888"
+            },
+          },
+        ],
         animation: false,
-        dataset:{
-          source: $this.xundata2,  
-        },
         series: [
           {
             name: "询盘个数",
             type: 'line',
             symbol: 'circle',
             symbolSize: '5',
+            data: xunList,
             label:{
               show: true,
               position: 'top',
@@ -1846,7 +1877,37 @@ export default {
                 borderWidth: 2
               }
             }
-          }
+          },
+          {
+            name: "积分",
+            data: scoreList,
+            type: 'line',
+            symbol: 'circle',
+            symbolSize: '5',
+            yAxisIndex: 1,
+            label:{
+              show: true,
+              position: 'top',
+              distance: '5'
+            },
+            itemStyle:{
+              color: '#fff',
+              borderColor: "#3ebea7",
+              borderWidth: 1
+            },
+            lineStyle:{
+              color: "#3ebea7",
+              width: 1
+            },
+            emphasis:{
+              lineStyle: {
+                width: 2,
+              },
+              itemStyle:{
+                borderWidth: 2
+              }
+            }
+          },
         ]
       };
       option && myChart.setOption(option);
@@ -1857,7 +1918,7 @@ export default {
       var uname = "";
       var ids = [];
       $this.scoreList.forEach(item => {
-        if(item.name == name){
+        if(item.dy_uuid == name){
           uname = item.uname
         }
       })
@@ -2043,7 +2104,7 @@ export default {
   .dy_item{
     display: inline-block;
     vertical-align: top;
-    width: 20%;
+    width: 25%;
     font-size: 14px;
     line-height: 2.4;
     cursor: pointer;

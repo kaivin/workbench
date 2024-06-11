@@ -499,6 +499,10 @@ export default {
       formData.level_id = $this.formData.level_id;
       formData.keying = $this.formData.keying;
       formData.id = $this.formData.id;
+      if($this.formData.sign){
+        formData.dy_type = $this.formData.media;
+        formData.dy_name = $this.formData.sign;
+      }
       return formData;
     },
     // 询盘编辑获取初始化询盘信息

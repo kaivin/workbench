@@ -59,7 +59,7 @@
             <div class="item-list group">
               <div class="item-checkbox" v-bind:class="checkAll?'active':''" @click="checkAllData"><i></i><span>全选</span></div>
               <div class="item-checkbox" v-bind:class="item.isOn?'active':''" v-for="item in groupList" v-bind:key="item.id" v-on:click="groupChangeHandler(item.id)">
-                <span><i></i><span>{{item.name}}</span><b>[{{item.uname}}]</b> </span>
+                <span><i></i><span>{{item.name}}</span><b>[{{item.department}}-{{item.uname}}]</b> </span>
               </div>
             </div>
             <el-button class="search_btn" type="primary" :disabled="isSearchData" @click="getDouyinCountData">查询</el-button>
@@ -605,6 +605,7 @@ export default {
                   color: '#666'
                 },
                 formatter(params){
+                  console.log(params)
                   let returnData = `<div class="toolDiv">
                       <div class="tooltitle">${params[0].name}</div>`;
                   for (let i = 0; i < params.length; i++) {

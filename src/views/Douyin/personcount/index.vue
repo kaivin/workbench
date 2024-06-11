@@ -69,7 +69,8 @@
                         :sortable = "item.sortable? 'custom' : false"
                         :label="item.label">
                           <template #default="scope">
-                            <span :class="item.prop == 'num_seperate' ? 'icon_num': ''">{{scope.row[item.prop]}}</span>
+                            <span v-if="item.prop == 'uname'">{{scope.row[item.prop]}}[{{scope.row.department}}]</span>
+                            <span v-else :class="item.prop == 'num_seperate' ? 'icon_num': ''">{{scope.row[item.prop]}}</span>
                             <el-tooltip v-if="item.prop == 'num_seperate'" content="点击查看关键词统计" placement="right-start" effect="light">
                               <span class="icon_chart" @click="showColumnChart(scope.row)"><svg-icon icon-class="line2" alt="" /></span>
                             </el-tooltip>
