@@ -134,3 +134,30 @@ export function getDouyinCountInfo(data) {
     data
   });
 }
+
+// 抖音账号列表
+export function getDouyinAccountList(data) {
+  return request({
+    url: "/hxindex/Douyin/dyaccount",
+    method: "POST",
+    data
+  });
+}
+
+// 抖音账号列表
+export function douyinAccountAdd(data) {
+  return request({
+    url: "/hxindex/Douyin/dyadd",
+    method: "POST",
+    data
+  });
+}
+
+// 抖音账号列表
+export function douyinAccountEdit(data) {
+  return request({
+    url: "/hxindex/Douyin/dyedit",
+    method: "POST",
+    data
+  });
+}

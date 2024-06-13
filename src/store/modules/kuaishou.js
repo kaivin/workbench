@@ -1,42 +1,72 @@
 import {
-    getKSData,
-    getKSTime,
-    getKSScore,
-    getKSdepartgroup,
-    getKSDepartlist,
-    getKSEachLine,
-    getKSAccountLine,
-    getKSPersonalCount,
-    getKSCount
+    getKuaishouData,
+    getKuaishouScore,
+    ksKeywordList,
+    ksKeywordAdd,
+    ksKeywordDel,
+    getKuaishouCount,
+    getKuaishouDepartlist,
+    getKuaishouTime,
+    getKuaishouEachLine,
+    getKuaishouAccountLine,
+    getKuaishouPersonalCount,
+    getKuaishouDepartgroup,
+    getKuaishouTotalCount,
+    getKuaishouWordInfo,
+    getKuaishouCountInfo,
+    getKuaishouAccountList,
+    kuaishouAccountAdd,
+    kuaishouAccountEdit
+
 } from '@/api/kuaishou'
 
 const state = {}
 const mutations = {}
 const actions = {
     // 获取抖音结果
-    getKSResData({ commit, state }, data) {
+    getKuaishouResData({ commit, state }, data) {
         return new Promise((resolve, reject) => {
-            getKSData(data).then(response => {
+            getKuaishouData(data).then(response => {
                 resolve(response)
             }).catch(error => {
                 reject(error)
             })
         })
     },
-    // 获取日期
-    getKSResTime({ commit, state }, data) {
+    // 获取抖音t统计结果
+    getKuaishouScoreData({ commit, state }, data) {
         return new Promise((resolve, reject) => {
-            getKSTime(data).then(response => {
+            getKuaishouScore(data).then(response => {
                 resolve(response)
             }).catch(error => {
                 reject(error)
             })
         })
     },
-    // 获取统计结果
-    getKSScoreData({ commit, state }, data) {
+    // 获取抖音统计结果
+    getKuaishouKeywordList({ commit, state }, data) {
         return new Promise((resolve, reject) => {
-            getKSScore(data).then(response => {
+            ksKeywordList(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 关键词添加
+    kuaishouKeywordAdd({ commit, state }, data) {
+        return new Promise((resolve, reject) => {
+            ksKeywordAdd(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 关键词删除
+    kuaishouKeywordDel({ commit, state }, data) {
+        return new Promise((resolve, reject) => {
+            ksKeywordDel(data).then(response => {
                 resolve(response)
             }).catch(error => {
                 reject(error)
@@ -44,9 +74,9 @@ const actions = {
         })
     },
     // 部门列表
-    KSDepartlist({ commit, state }, data) {
+    kuaishouDepartlist({ commit, state }, data) {
         return new Promise((resolve, reject) => {
-            getKSDepartlist(data).then(response => {
+            getKuaishouDepartlist(data).then(response => {
                 resolve(response)
             }).catch(error => {
                 reject(error)
@@ -54,9 +84,19 @@ const actions = {
         })
     },
     // 账号统计
-    KSdepartgroup({ commit, state }, data) {
+    kuaishouCountData({ commit, state }, data) {
         return new Promise((resolve, reject) => {
-            getKSdepartgroup(data).then(response => {
+            getKuaishouCount(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 获取日期
+    kuaishouCountTime({ commit, state }, data) {
+        return new Promise((resolve, reject) => {
+            getKuaishouTime(data).then(response => {
                 resolve(response)
             }).catch(error => {
                 reject(error)
@@ -64,9 +104,9 @@ const actions = {
         })
     },
     // 获取每个图表曲线
-    KSEachLine({ commit, state }, data) {
+    kuaishouEachLine({ commit, state }, data) {
         return new Promise((resolve, reject) => {
-            getKSEachLine(data).then(response => {
+            getKuaishouEachLine(data).then(response => {
                 resolve(response)
             }).catch(error => {
                 reject(error)
@@ -74,9 +114,9 @@ const actions = {
         })
     },
     // 获取账号图表曲线
-    KSAccountLine({ commit, state }, data) {
+    kuaishouAccountLine({ commit, state }, data) {
         return new Promise((resolve, reject) => {
-            getKSAccountLine(data).then(response => {
+            getKuaishouAccountLine(data).then(response => {
                 resolve(response)
             }).catch(error => {
                 reject(error)
@@ -84,25 +124,84 @@ const actions = {
         })
     },
     // 获取个人账号图表曲线
-    KSPersonalCountLine({ commit, state }, data) {
+    kuaishouPersonalCountLine({ commit, state }, data) {
         return new Promise((resolve, reject) => {
-            getKSPersonalCount(data).then(response => {
+            getKuaishouPersonalCount(data).then(response => {
                 resolve(response)
             }).catch(error => {
                 reject(error)
             })
         })
     },
-    // 快手账号统计
-    KSCountData({ commit, state }, data) {
+    kuaishouDepartgroup({ commit, state }, data) {
         return new Promise((resolve, reject) => {
-            getKSCount(data).then(response => {
+            getKuaishouDepartgroup(data).then(response => {
                 resolve(response)
             }).catch(error => {
                 reject(error)
             })
         })
     },
+    // 账号总计
+    kuaishouTotalCountData({ commit, state }, data) {
+        return new Promise((resolve, reject) => {
+            getKuaishouTotalCount(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 关键词详情
+    kuaishouWordInfo({ commit, state }, data) {
+        return new Promise((resolve, reject) => {
+            getKuaishouWordInfo(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 关键词详情
+    kuaishouCountInfo({ commit, state }, data) {
+        return new Promise((resolve, reject) => {
+            getKuaishouCountInfo(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 抖音账号列表
+    kuaishouAccountList({ commit, state }, data) {
+        return new Promise((resolve, reject) => {
+            getKuaishouAccountList(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    }, 
+    //  抖音账号添加
+    addKuaishouAccount({ commit, state }, data) {
+        return new Promise((resolve, reject) => {
+            kuaishouAccountAdd(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    }, 
+    //  抖音账号编辑
+    editKuaishouAccount({ commit, state }, data) {
+        return new Promise((resolve, reject) => {
+            kuaishouAccountEdit(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    }, 
 }
 
 export default {

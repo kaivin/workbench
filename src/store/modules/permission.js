@@ -334,6 +334,12 @@ function setRoutes(routers){
         meta: {id:'Douyin_keywordcount-159',title: '关键词统计', icon: null, keepAlive:false},
       },
       {
+        path: "/Kuaishou/keywordcount",
+        name:'Kuaishou_keywordcount',
+        component: () => import(/* webpackChunkName: "Kuaishou_keywordcount" */ "@/views/Kuaishou/keywordcount/index.vue"),
+        meta: {id:'Kuaishou_keywordcount-164',title: '关键词统计', icon: null, keepAlive:false},
+      },
+      {
         path: "/Ownpush/enpushcount",
         name:'Ownpush_enpushcount',
         component: () => import(/* webpackChunkName: "Ownpush_enpushcount" */ "@/views/Ownpush/enpushcount/index.vue"),

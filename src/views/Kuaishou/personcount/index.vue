@@ -29,8 +29,9 @@
                         :value="item.num">
                     </el-option>
                 </el-select>
-                <el-button class="search_btn" type="primary" size="small" :disabled="isSearchData" @click="getKSCountData">查询</el-button>
+                <el-button class="search_btn" type="primary" size="small" :disabled="isSearchData" icon="el-icon-search" @click="getKuaishouCountData">查询</el-button>
                 <el-button type="info" class="resetBtn" size="small" v-on:click="resetData()">重置</el-button>
+                <el-button type="warning" size="small" :disabled="isSearchData" class="exportBtn derived" @click="showExportDialog"><i class="svg-i"><svg-icon icon-class="derived" /></i>导出数据</el-button>
               </div>
             </div>
           </div>
@@ -65,8 +66,15 @@
                         :fixed="item.fixed"
                         :min-width="item.width"
                         :class-name = "item.classname"
-                        :sortable = "item.sortable"
+                        :sortable = "item.sortable? 'custom' : false"
                         :label="item.label">
+                          <template #default="scope">
+                            <span v-if="item.prop == 'uname'">{{scope.row[item.prop]}}[{{scope.row.department}}]</span>
+                            <span v-else :class="item.prop == 'num_seperate' ? 'icon_num': ''">{{scope.row[item.prop]}}</span>
+                            <el-tooltip v-if="item.prop == 'num_seperate'" content="点击查看关键词统计" placement="right-start" effect="light">
+                              <span class="icon_chart" @click="showColumnChart(scope.row)"><svg-icon icon-class="line2" alt="" /></span>
+                            </el-tooltip>
+                          </template>
                             <template v-if="item.hasChildren === 1">
                               <el-table-column
                                   v-for="_item,_index in item.children"
@@ -78,7 +86,14 @@
                                   :min-width="_item.width"
                                   :class-name = "_item.classname"
                                   align="center"
-                                ></el-table-column>
+                                >
+                                <template #default="scope">
+                                  <span :class="_item.prop == 'num_seperate' ? 'icon_num': ''">{{scope.row[_item.prop]}}</span>
+                                  <el-tooltip v-if="_item.prop == 'num_seperate'" content="点击查看关键词统计" placement="right-start" effect="light">
+                                    <span class="icon_chart" @click="showColumnChart(scope.row)"><svg-icon icon-class="line2" alt="" /></span>
+                                  </el-tooltip>
+                                </template>
+                              </el-table-column>
                             </template>
                         </el-table-column>
                       </el-table>
@@ -94,14 +109,20 @@
       </div>
     </div>
     <el-backtop target=".scroll-panel"></el-backtop>
+    <ExportModal ref="ExportModalRef" @exportSuccess="exportDone"></ExportModal>
   </div>
 </template>
 <script>
 import {mapGetters} from 'vuex';
 import * as echarts from 'echarts';
 import {sortByAsc} from "@/utils/index"
+import ExportModal from '@/components/Excel/exportModal.vue'
+import { jsonToSheetXlsx } from '@/components/Excel/Export2Excel'
 export default {
-  name: 'Douyin_personcount',
+  name: 'Kuaishou_personcount',
+  components: {
+    ExportModal
+  },
   data() {
     return {
         menuButtonPermit:[],         //网页权限字段
@@ -331,7 +352,7 @@ export default {
     // 获取部门列表
     getDepartList(){
       var $this = this;
-      $this.$store.dispatch('kuaishou/KSdepartgroup', null).then(response=>{
+      $this.$store.dispatch('kuaishou/kuaishouDepartgroup', null).then(response=>{
         if(response){
           if(response.status){
             if(response.data){
@@ -349,7 +370,7 @@ export default {
               }
               $this.groupList = resList;
               $this.searchData.uname = unames;
-              $this.getKSTime();
+              $this.getKuaishouTime();
             }
           }else{
             if(response.permitstatus&&response.permitstatus==2){
@@ -376,9 +397,9 @@ export default {
       });
     },
     // 获取日期
-    getKSTime(){
+    getKuaishouTime(){
       var $this = this;
-      $this.$store.dispatch('kuaishou/getKSResTime',null).then(res=>{
+      $this.$store.dispatch('kuaishou/kuaishouCountTime',null).then(res=>{
         if(res.status){
           $this.timeList = res.data;
           var numArr = [];
@@ -388,7 +409,7 @@ export default {
           $this.timeArr = numArr;
           $this.searchData.end_num = Math.max(...numArr);
           $this.searchData.start_num = $this.getPrevTime($this.searchData.end_num);
-          $this.getKSCountData();
+          $this.getKuaishouCountData();
         }else{
           $this.$message({
             showClose: true,
@@ -442,8 +463,8 @@ export default {
       }
       
     },
-    // 获取抖音数据
-    getKSCountData(){
+    // 获取快手数据
+    getKuaishouCountData(){
       var $this = this;
       if(!$this.isSearchData){
         if($this.searchData.start_num == "" ){
@@ -480,7 +501,7 @@ export default {
         formData.start_num = $this.searchData.start_num;
         formData.end_num = $this.searchData.end_num;
         $this.isSearchData = true;
-        $this.$store.dispatch('kuaishou/KSPersonalCountLine', formData).then(response=>{
+        $this.$store.dispatch('kuaishou/kuaishouPersonalCountLine', formData).then(response=>{
           if(response){
             $this.scorelist = [];
             $this.isSearchData = false;
@@ -500,7 +521,6 @@ export default {
                 fixed: false,
               }
             ];
-            $this.isAddScore = false;
             if(response.status){
               if(response.data){
                 var resList = []
@@ -521,21 +541,23 @@ export default {
                         newobj.uname = item.uname;
                         newobj.department = item.department;
                         newobj.name = "总计";
+                        newobj.haschart = 1;
+                        newobj.cid = item.id;
                         for(var i = 0; i< num; i++){
                           var latest_score = 0;
                           var prev_score = 0;
                           var obj = {};
                           obj.uname = item.uname;
                           obj.department = item.department;
+                          obj.haschart = 0;
                           item.score_trend.forEach((sitem,sindex) => {
-                            if(index === 0){
-                              console.log(item.score_trend)
+                            if(sitem.num == prev_num || sitem.num == latest_num){
+                              obj.name = sitem.son[i].name;
+                              obj.id = item.id+"_"+ vid;
+                              obj.cid = sitem.son[i].id;
+                              vid++;
+                              obj['score'+ sindex] = sitem.son[i].score;
                             }
-                            obj.name = sitem.son[i].name;
-                            obj.id = item.id+"_"+ vid;
-                            vid++;
-                            obj.totalscore = item.score;
-                            obj['score'+ sindex] = sitem.son[i].score;
                             if($this.searchData.end_num > $this.searchData.start_num ){
                               if(sitem.num === latest_num){
                                 latest_score = sitem.son[i].score;
@@ -544,7 +566,9 @@ export default {
                               }
                             }
                             if(i === num-1){
-                              newobj['score'+ sindex] = sitem.score;
+                              if(sitem.num == prev_num || sitem.num == latest_num){
+                                newobj['score'+ sindex] = sitem.score;
+                              }
                               if($this.searchData.end_num > $this.searchData.start_num ){
                                 if(sitem.num === latest_num){
                                   latest_score_2 = sitem.score;
@@ -553,20 +577,26 @@ export default {
                                 }
                               }
                             }
-                            if(index === 0 && i === 0){
-                              console.log(sitem.addtime, "多内容")
+                            if(index === 0 && i === 0 && (sitem.num == prev_num || sitem.num == latest_num)){
+                              // $this.tableHeader.push({
+                              //   label: sitem.addtime,
+                              //   prop: 'count'+sindex,
+                              //   hasChildren: 1,
+                              //   fixed: false,
+                              //   children: [{
+                              //       label:"积分",
+                              //       width: 100,
+                              //       prop: 'score'+sindex,
+                              //       fixed: false,
+                              //     }
+                              //   ]
+                              // })
                               $this.tableHeader.push({
                                 label: sitem.addtime,
-                                prop: 'count'+sindex,
-                                hasChildren: 1,
+                                prop: 'score'+sindex,
+                                hasChildren: 0,
                                 fixed: false,
-                                children: [{
-                                    label:"积分",
-                                    width: 100,
-                                    prop: 'score'+sindex,
-                                    fixed: false,
-                                  }
-                                ]
+                                sortable: true,
                               })
                             }
                           });
@@ -581,31 +611,43 @@ export default {
                         var obj = {};
                         // 单账号
                         item.score_trend.forEach((sitem,sindex) => {
-                          obj.id = item.id;
-                          obj.uname = item.uname;
-                          obj.department = item.department;
-                          obj.name = item.name;
-                          obj['score'+ sindex] = sitem.score;
-                          if($this.searchData.end_num > $this.searchData.start_num ){
-                            if(sitem.num === latest_num){
-                              latest_score = sitem.score;
-                            }else if(sitem.num === prev_num){
-                              prev_score = sitem.score;
+                          if(sitem.num == prev_num || sitem.num == latest_num){
+                            obj.id = item.id;
+                            obj.uname = item.uname;
+                            obj.department = item.department;
+                            obj.name = item.name;
+                            obj.haschart = 1;
+                            obj.cid = item.id;
+                            obj['score'+ sindex] = sitem.score;
+                            if($this.searchData.end_num > $this.searchData.start_num ){
+                              if(sitem.num === latest_num){
+                                latest_score = sitem.score;
+                              }else if(sitem.num === prev_num){
+                                prev_score = sitem.score;
+                              }
                             }
                           }
-                          if(index === 0){
+                          
+                          if(index === 0 && (sitem.num == prev_num || sitem.num == latest_num)){
+                            // $this.tableHeader.push({
+                            //   label: sitem.addtime,
+                            //   prop: 'count'+sindex,
+                            //   hasChildren: 1,
+                            //   fixed: false,
+                            //   children: [{
+                            //       label:"积分",
+                            //       width: 100,
+                            //       prop: 'score'+sindex,
+                            //       fixed: false,
+                            //     }
+                            //   ]
+                            // })
                             $this.tableHeader.push({
                               label: sitem.addtime,
-                              prop: 'count'+sindex,
-                              hasChildren: 1,
+                              prop: 'score'+sindex,
+                              hasChildren: 0,
                               fixed: false,
-                              children: [{
-                                  label:"积分",
-                                  width: 100,
-                                  prop: 'score'+sindex,
-                                  fixed: false,
-                                }
-                              ]
+                              sortable: true
                             })
                           }
                         });
@@ -613,7 +655,7 @@ export default {
                         resList.push(obj);
                       }
                     }
-                    
+
                   })
                   if($this.searchData.end_num > $this.searchData.start_num ){
                     $this.tableHeader.push({
@@ -631,6 +673,7 @@ export default {
                 resList.sort((a,b) =>{
                   return b.num_seperate- a.num_seperate
                 });
+                console.log(resList)
                 var aimres = $this.sortByGroup(resList);
                 $this.scorelist = aimres;
                 $this.scorelist2 = [...aimres];
@@ -1032,7 +1075,7 @@ export default {
       $this.scrollTable.clientHeight = document.documentElement.clientHeight;
       // 头部固定情况下视窗宽高改变，需要重新设置的一些宽高
       if($this.scrollPosition.isFixed){
-        var tableHeaderStyle = "width:"+$this.scrollPosition.width+"px;";
+        var tableHeaderStyle = "width:"+$this.scrollPosition.width +5+"px;";
         $this.scrollTable.tableHeaderFixedDom.style = tableHeaderStyle;
         document.querySelector(".table-mask").style = tableHeaderStyle;
         var tableStyle3 = "width:"+$this.scrollTable.fixedRightWidth+"px;";
@@ -1055,7 +1098,7 @@ export default {
         var tableFixedLeftDom = document.querySelector(".SiteTable .el-table__fixed");
         if(scrTop>=$this.scrollTable.fixedTopHeight){// 头部需要固定
           $this.scrollPosition.isFixed = true;
-          var tableHeaderStyle = "width:"+$this.scrollPosition.width+"px;"
+          var tableHeaderStyle = "width:"+$this.scrollPosition.width +5+"px;"
           $this.scrollTable.tableHeaderFixedDom.style = tableHeaderStyle;
           document.querySelector(".table-mask").style = tableHeaderStyle;
           var tableStyle1 = "padding-top:"+$this.scrollTable.tableheaderHeight+"px;";
@@ -1144,16 +1187,11 @@ export default {
       var $this = this;
       var prev = $this.searchData.start_num;
       var end = $this.searchData.end_num;
-      if($this.timeArr.length > 1){
-        $this.timeArr.forEach(item => {
-          if(item > prev && item < end){
-            prev = item;
-          }
-        })
-      }else{
-        prev = $this.searchData.end_num;
-      }
-      
+      $this.timeArr.forEach(item => {
+        if(item > prev && item < end){
+          prev = item;
+        }
+      })
       return prev;
     },
     objectSpanMethod({ row, column, rowIndex, columnIndex }) {
@@ -1199,9 +1237,17 @@ export default {
       })
       // if(val.row.name == '总计'){
       if(totalObj.indexOf(val.row.uname)%2 === 0){
-         return 'row-bg';
+        if(val.row.name == '总计'){
+          return 'row-total row-bg';
+        }else{
+          return 'row-bg';
+        }
       }else{
-         return '';
+        if(val.row.name == '总计'){
+          return 'row-total';
+        }else{
+          return '';
+        }
       }
     },
     sortByGroup(scorelist){
@@ -1256,7 +1302,84 @@ export default {
         $this.scorelist = [...$this.scorelist2];
       }
       $this.$refs.simpleTable.doLayout();
-    }
+    },
+    showColumnChart(data){
+      var $this = this;
+      var ids = [];
+      if(data.name == "总计"){
+        ids = $this.getDataIds(data.uname);
+        $this.$router.push({path:'/Kuaishou/keywordcount',query:{id:ids.join(","), start_num:$this.searchData.start_num, end_num: $this.searchData.end_num, isall:1}});
+      }else{
+        var id = [];
+        id.push(data.cid);
+        ids = id;
+        var allids = $this.getDataIds(data.uname);
+        if(allids.length == 1){
+          $this.$router.push({path:'/Kuaishou/keywordcount',query:{id:ids.join(","), start_num:$this.searchData.start_num, end_num: $this.searchData.end_num, isall:1}});
+        }else if(allids.length > 1){
+          $this.$router.push({path:'/Kuaishou/keywordcount',query:{id:ids.join(","), start_num:$this.searchData.start_num, end_num: $this.searchData.end_num, isall:0}});
+        }
+      }
+     
+    },
+    getDataIds(name){
+      var $this = this;
+      var ids = [];
+      $this.scorelist.forEach(item => {
+        if(item.uname == name && item.name != "总计"){
+          ids.push(item.cid)
+        }
+      })
+      return ids;
+    },
+    showExportDialog() {
+      var $this = this;
+      var fieldList = [];
+      $this.tableHeader.forEach(item => {
+        var obj = {};
+        obj.value = item.label;
+        if(item.hasChildren == 1){
+          obj.key = item.children[0].prop;
+        }else{
+          obj.key = item.prop;
+        }
+        fieldList.push(obj);
+      })
+      $this.$refs.ExportModalRef.showDialog({ fieldList: fieldList, hasSelected: false, hasData: false })
+    },
+    exportDone(obj) {
+      var $this = this;
+      const filename = obj.filename
+      const customData = []
+      let header = null
+      const bookType = obj.fileType
+      const headerSort = obj.sort
+      if (obj.headerType === 'custom') {
+        header = obj.header
+      }
+      var resData = $this.scorelist;
+      resData.forEach((item) => {
+        console.log(item)
+        console.log(headerSort)
+        const itemObj = {}
+        headerSort.forEach((current) => {
+          itemObj[current] = item[current]
+        })
+        customData.push(itemObj)
+      })
+      jsonToSheetXlsx({
+        data: customData,
+        header: header,
+        filename: filename,
+        json2sheetOpts: {
+          // 指定顺序
+          header: headerSort
+        },
+        write2excelOpts: {
+          bookType
+        }
+      })
+    },
   },
 
 }
@@ -1363,6 +1486,203 @@ export default {
     text-align: left;
   }
 }
+.line_box, .search_col{
+  position: relative;
+  .search,.no-data{
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    font-size: 14px;
+    line-height: 2;
+    text-align: center;
+    p{
+      position: absolute;
+      left: 0;
+      width: 100%;
+      top: 50%;
+      margin-top: -20px;
+    }
+  }
+  .search p{
+    color: #999
+  }
+}
+.icon_chart{
+  margin-left: 5px;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  text-align: center;
+  color: #0970ff;
+  cursor: pointer;
+  display: inline-block;
+  vertical-align: middle;
+  i{
+    font-size: 16px;
+  }
+}
+.icon_num{
+  display: inline-block;
+  vertical-align: middle;
+  width: 50px;
+}
+.pop_search .search_btn{
+  margin-left: 10px;
+}
+.search_body{
+  margin-top: 20px;
+  position: relative;
+  .seach_total{
+    position: absolute;
+    left: 350px;
+    top: 14px;
+    font-size: 13px;
+  }
+}
+.card-content{
+  position: relative;
+}
+.search_col{
+  height: calc(80vh - 185px);
+}
+#columnChart{
+  width: 1160px;
+  height: calc(80vh - 215px);
+}
+.search_pie:after{
+  content: "";
+  display: block;
+  clear: both;
+}
+.pie_item{
+  float: left;
+  width: 580px;
+  .pie_title{
+    text-align: center;
+    font-size: 14px;
+    line-height: 20px;
+    color: #666;
+  }
+}
+#pieChart1,#pieChart2{
+  width: 580px;
+  height: calc(80vh - 235px);
+}
+.table_wrap{
+  width: 1160px;
+  position: relative;
+  height: calc(80vh - 185px);
+}
+.search_tab{
+  .item-change{
+      float:left;
+      margin-right:20px;
+      margin-left: 1px;
+      .item-font{
+          float:left;
+          border:1px solid #e1e3ea;
+          font-size:14px;
+          color:#555555;
+          padding:4px 15px;
+          line-height:20px;
+          margin-left:-1px;
+          cursor:pointer;
+          &.active,&:hover{
+              color:#0970ff;
+              border:1px solid #0970ff;
+              background:#e0e9ff;
+              position:relative;
+              z-index:2;
+          }
+      }
+  }
+  .search_dw{
+    float: left;
+    font-size: 13px;
+    color: #acacac;
+    margin-top: 8px;
+  }
+  &:after{
+    content: "";
+    display: block;
+    clear: both;
+  }
+}
+
+.tab_p{
+  margin-bottom: 20px;
+}
+.item_text{
+  color: #606266;
+  text-align: center;
+  line-height: 0;
+  display: inline-block;
+  vertical-align: middle;
+  span{
+    line-height: 24px;
+    &.before{
+      color: #111;
+    }
+    &.after{
+      margin-left: 4px;
+    }
+    &.zero{
+      padding-left: 6px;
+      position: relative;
+      &:before{
+        content: '';
+        height: 2px;
+        width: 6px;
+        background-color: #999;
+        position: absolute;
+        left: 6px;
+        top: 7px;
+      }
+    }
+    &.default{
+      padding-left: 10px;
+      color: #999;
+    }
+    &.red{
+      padding-left: 10px;
+      color: #f97979;
+      background: url(../../../assets/up.png) left center no-repeat;
+      background-size: auto 10px;
+    }
+    &.green{
+      padding-left: 10px;
+      color: #6dd29a;
+      background: url(../../../assets/down.png) left center no-repeat;
+      background-size: auto 10px;
+    }
+  }
+  .icon-other{
+    font-size: 16px;
+    color: #f97979;
+    margin-right: 6px;
+    cursor: pointer;
+  }
+}
+.tips_div{
+  display:inline-block;
+  vertical-align: middle;
+  margin-left: 10px;
+  font-size: 24px;
+  color: #b4b4b4;
+}
+
+.dy_red{
+    color: #f2302f;
+  }
+.exportBtn{
+  background-color: #f9a500;
+  &:hover,&:focus{
+    background: #ffba00;
+    border-color: #ffba00;
+  }
+}
 </style>
 <style lang="scss">
 .userCount .el-table__cell{
@@ -1387,5 +1707,54 @@ export default {
 }
 .userCount .el-table__row.row-bg .el-table__cell{
   background-color: #f5f5f5;
+}
+.userCount .el-table__row.row-total .el-table__cell{
+  // background-color: #fff4d1;
+  color: #0970ff;
+  background-color: #e2eeff!important;
+}
+.el-table.dyTable{
+  width: 1160px;
+  border-radius:8px;
+  border-left:1px solid #ebeff1;
+  border-right:1px solid #ebeff1;
+  display:flex;
+  flex-direction:column;
+  .el-table__body-wrapper{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    .el-table__empty-block{
+      flex:1;
+    }
+  }
+  &:before{display:none;}
+  th.is-leaf{
+    background:#e2e9ed;
+    font-size: 14px;
+    color:#555;
+    font-weight:normal;
+    border-bottom:1px solid #ebeff1;
+    border-right:1px solid #ebeff1;
+    line-height:20px;
+  }
+  th.gutter{
+    background:#e2e9ed;
+  }
+  td{
+    border-bottom:1px solid #ebeff1 !important;
+    border-right:1px solid #ebeff1 !important;
+    font-size:13px !important;
+    color:#1a1a1a;
+  }
+  svg,i[class~="el-cion"]{
+    font-size:21px;
+  }
+  .el-table__placeholder{
+    display:none!important;
+  }
+}
+.fixed-table .el-table__fixed .el-table__fixed-header-wrapper{
+  border-top-left-radius: 0
 }
 </style>

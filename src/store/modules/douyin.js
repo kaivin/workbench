@@ -13,7 +13,10 @@ import {
     getDouyinDepartgroup,
     getDouyinTotalCount,
     getDouyinWordInfo,
-    getDouyinCountInfo
+    getDouyinCountInfo,
+    getDouyinAccountList,
+    douyinAccountAdd,
+    douyinAccountEdit
 
 } from '@/api/douyin'
 
@@ -169,6 +172,36 @@ const actions = {
             })
         })
     },
+    // 抖音账号列表
+    douyinAccountList({ commit, state }, data) {
+        return new Promise((resolve, reject) => {
+            getDouyinAccountList(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    }, 
+    //  抖音账号添加
+    addDouyinAccount({ commit, state }, data) {
+        return new Promise((resolve, reject) => {
+            douyinAccountAdd(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    }, 
+    //  抖音账号编辑
+    editDouyinAccount({ commit, state }, data) {
+        return new Promise((resolve, reject) => {
+            douyinAccountEdit(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    }, 
 }
 
 export default {

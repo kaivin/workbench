@@ -31,14 +31,38 @@
         </div>
         <div class="item-filter flex-box group">
           <div class="filter-title"><span class="txt-title">账号：</span></div>
+          <!-- <div class="filter-content flex-content">
+            <div class="checked_item">
+              <el-checkbox
+                v-model="checkAll"
+                :indeterminate="isIndeterminate"
+                @change="handleCheckAllChange"
+                ><span class="c_tit">全选</span>
+              </el-checkbox>
+              <el-checkbox-group
+                v-model="searchData.ids"
+                @change="handleCheckedChange"
+              >
+                  <el-checkbox
+                    v-for="item in groupList"
+                    :key="item.id"
+                    :label="item.id"
+                    :value="item.id"
+                    >
+                    <span class="c_tit">{{item.name}}</span><b  class="c_name">[{{item.uname}}]</b>
+                  </el-checkbox>
+              </el-checkbox-group>
+              <el-button class="search_btn" type="primary" :disabled="isSearchData" @click="getKuaishouCountData">查询</el-button>
+            </div>
+          </div> -->
           <div class="filter-content flex-content">
             <div class="item-list group">
               <div class="item-checkbox" v-bind:class="checkAll?'active':''" @click="checkAllData"><i></i><span>全选</span></div>
               <div class="item-checkbox" v-bind:class="item.isOn?'active':''" v-for="item in groupList" v-bind:key="item.id" v-on:click="groupChangeHandler(item.id)">
-                <span><i></i><span>{{item.name}}</span><b>[{{item.uname}}]</b> </span>
+                <span><i></i><span>{{item.name}}</span><b>[{{item.department}}-{{item.uname}}]</b> </span>
               </div>
             </div>
-            <el-button class="search_btn" type="primary" :disabled="isSearchData" @click="getKSCountData">查询</el-button>
+            <el-button class="search_btn" type="primary" :disabled="isSearchData" @click="getKuaishouCountData">查询</el-button>
             <el-button type="info" class="resetBtn" size="small" v-on:click="resetData()">重置</el-button>
           </div>
         </div>
@@ -181,7 +205,7 @@ export default {
             permitData.push(item.action_route);
           });
           if(permitData.includes('Kuaishou_doucounttwo')){
-              $this.getKSTime();
+              $this.getKuaishouTime();
               $this.getDepartList();
           }else{
             $this.$message({
@@ -209,9 +233,9 @@ export default {
       $this.getUserMenuButtonPermit();
     },
     // 获取日期
-    getKSTime(){
+    getKuaishouTime(){
       var $this = this;
-      $this.$store.dispatch('kuaishou/getKSResTime',null).then(res=>{
+      $this.$store.dispatch('kuaishou/kuaishouCountTime',null).then(res=>{
         if(res.status){
           $this.timeList = res.data;
         }else{
@@ -226,7 +250,7 @@ export default {
     // 获取部门列表
     getDepartList(){
       var $this = this;
-      $this.$store.dispatch('kuaishou/KSDepartlist', null).then(response=>{
+      $this.$store.dispatch('kuaishou/kuaishouDepartlist', null).then(response=>{
         if(response){
           if(response.status){
             if(response.data){
@@ -343,8 +367,8 @@ export default {
       }
       
     },
-    // 获取抖音数据
-    getKSCountData(){
+    // 获取快手数据
+    getKuaishouCountData(){
       var $this = this;
       if(!$this.isSearchData){
         if($this.searchData.start_num == "" ){
@@ -381,7 +405,7 @@ export default {
         formData.start_num = $this.searchData.start_num;
         formData.end_num = $this.searchData.end_num;
         $this.isSearchData = true;
-        $this.$store.dispatch('kuaishou/KSCountData', formData).then(response=>{
+        $this.$store.dispatch('kuaishou/kuaishouCountData', formData).then(response=>{
           if(response){
             $this.isSearchData = false;
             if(response.status){
@@ -581,6 +605,7 @@ export default {
                   color: '#666'
                 },
                 formatter(params){
+                  console.log(params)
                   let returnData = `<div class="toolDiv">
                       <div class="tooltitle">${params[0].name}</div>`;
                   for (let i = 0; i < params.length; i++) {
@@ -663,6 +688,102 @@ export default {
           option && myChart.setOption(option);
           $this.myChart = myChart;
         }
+      }
+    },
+    // 曲线图
+    drawAreaChart2(){
+      var $this = this;
+      if($this.scorelist.length>0){
+        var chartDom = document.getElementById('chart');
+        var myChart = echarts.init(chartDom);
+        var option;
+        option = {
+          grid:{
+            left: '45',
+            top:'25',
+            right:'15',
+            bottom: '25'
+          },
+          tooltip:{
+            show: true,
+            trigger: "axis",
+            axisPointer: {
+              type: "line", 
+              lineStyle:{
+                color: "#5b8ff9"
+              }
+            },
+            textStyle:{
+                fontSize:12,
+                color: '#666'
+            },
+            formatter(params){
+              return `<div class="toolDiv">
+                    <div class="tooltitle">${params[0].name}</div>
+                    <div class="bar clearfix">
+                      <span style="display:inline-block;vertical-align:middle;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:#0970ff;"></span>
+                      <span>${params[0].seriesName}：</span>
+                      <span>${params[0].data.user_data}</span>
+                    </div>
+                  </div>`;
+            }
+          },
+          xAxis: {
+            type: 'category',
+            name: "日期",
+            axisLine:{
+              lineStyle:{
+                color: "#dedede"
+              }
+            },
+            axisLabel:{
+              color: "#888"
+            }
+          },
+          yAxis: {
+            type: 'value',
+            axisLabel:{
+              color: "#888"
+            }
+          },
+          dataset:{
+            source: $this.scorelist,  
+          },
+          animation: false,
+          series: [
+            {
+              name: "积分",
+              type: 'line',
+              symbol: 'circle',
+              symbolSize: '5',
+              label:{
+                show: true,
+                position: 'top',
+                distance: '5'
+              },
+              itemStyle:{
+                color: '#fff',
+                borderColor: "#0970ff",
+                borderWidth: 1
+              },
+              lineStyle:{
+                color: "#0970ff",
+                width: 1
+              },
+              emphasis:{
+                lineStyle: {
+                  width: 2,
+                },
+                itemStyle:{
+                  borderWidth: 2
+                }
+              }
+            }
+          ]
+        };
+
+        option && myChart.setOption(option);
+        $this.myChart = myChart;
       }
     },
     echartsSize(){

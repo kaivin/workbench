@@ -14,7 +14,7 @@
             <div class="card-header" ref="headerPane">
               <div class="search-wrap" ref="searchPane">
                 <div class="item-search item-check">
-                  <el-checkbox v-model="searchData.all_name" label="一/二部" border @change="searchResult" />
+                  <el-checkbox v-model="searchData.all_name" label="全公司" border @change="searchResult" />
                 </div>
                 <div class="item-search">
                   <el-select v-model="searchData.num" size="small" clearable placeholder="请选择日期" class="select-panel" @change="selectedTimeChange">
@@ -61,7 +61,7 @@
                   <el-input
                       class="input-panel"
                       size="small"
-                      placeholder="请输入快手名称"
+                      placeholder="请输入快手账号id"
                       v-model="searchData.nickname"
                       @keyup.enter.native="searchResult"
                       @clear="searchResult"
@@ -71,33 +71,51 @@
                 <div class="item-search">
                   <el-button class="item-input" :class="isSearchResult?'isDisabled':''" :disabled="isSearchResult" type="primary" size="small" icon="el-icon-search" @click="searchResult">查询</el-button>
                   <el-button type="info" class="resetBtn" size="small" v-on:click="resetData()">重置</el-button>
-                  <el-button type="primary" size="small" class="derived" @click="showExportDialog"><i class="svg-i"><svg-icon icon-class="derived" /></i>导出数据</el-button>
+                  <el-button type="warning" size="small" class="exportBtn derived" @click="showExportDialog"><i class="svg-i"><svg-icon icon-class="derived" /></i>导出数据</el-button>
+                  <el-popover
+                    placement="top-start"
+                    width="228"
+                    trigger="hover">
+                    <el-table class="dyTable" stripe border :data="stageData">
+                      <el-table-column width="50" align="center" property="stage" label="级别"></el-table-column>
+                      <el-table-column width="150" align="center"  property="desc" label="描述"></el-table-column>
+                    </el-table>
+                    <svg-icon class="tips_div" slot="reference"  icon-class="tips"></svg-icon>
+                  </el-popover>
                 </div>
               </div>
             </div>
-            <div class="douyin_count" ref="countPane">
+            <div class="kuaishou_count" ref="countPane">
               <div class="dy_box">
                 <div class="dy_item" v-for="item,index in scoreList" :key="item.id">
                   <span class="dy_item_s" @click="searchByName(item)">
                     <span class="rank">{{index<9?'0'+(index+1):index+1}}.</span>
                     <span class="cname">{{item.name}}</span>
-                    <span class="uname">[{{item.uname}}]</span>：<span class="score">{{item.score}}</span>
+                    <span class="uname">[{{item.department}}-{{item.uname}}]</span>：<span class="score">{{item.score}}</span>
                   </span>
                   <el-tooltip content="点击查看积分趋势" placement="right-start" effect="light">
                     <span class="dy_item_c" @click="showAccountChart(item)"><svg-icon icon-class="line2" /></span>
                   </el-tooltip>
                 </div>
-                <div class="dy_item dy_red">积分总计：{{scoreCount}}</div>
+                <div class="dy_item dy_red">
+                  积分总计：{{scoreCount}} 
+                  <el-tooltip content="点击查看总积分趋势" placement="right-start" effect="light">
+                    <span class="dy_item_c" @click="getTotalCountData()"><svg-icon icon-class="line2" /></span>
+                  </el-tooltip>
+                </div>
               </div>
             </div>
-            <div class="dy_res" v-if="nick_res.length > 0 || add_word.length > 0 || desc_word.length > 0">
-              <p v-if="nick_res.length > 0">
-                <span class="color_01">{{searchData.nickname}}</span>的所有关键词中：<span v-for="item,index in nick_res" :key="index"><i v-if="index > 0">，</i>{{item.name}}有<strong class="color_02" >{{item.value}}</strong>个</span>。
-                <el-button type="info" plain size="mini" class="more_btn" @click="showPieChart">查看详情</el-button>
-                <span class="word_count" v-if="add_word.length > 0 || desc_word.length > 0" >最近一次统计中，</span>
+            <div class="dy_res" v-if="checkBtnShow && nick_res.length > 0">
+              <p class="res_p">
+                <span class="color_01" v-if="searchData.nickname">{{searchData.name}}[{{searchData.department}}-{{searchData.uname}}]</span>
+                <span class="color_01" v-else>以上所有账号</span>
+                的关键词中：<span v-for="item,index in nick_res" :key="index"><i v-if="index > 0">，</i>{{item.name}}有<strong class="color_02" >{{item.value}}</strong>个</span>。
+                <span class="word_count" v-if="add_word.length > 0 || desc_word.length > 0" >
+                  <template v-if="searchData.num">当前选中的日期</template>对比上次，
+                </span>
                 <span v-if="add_word.length > 0">新增的词有<strong class="color_02" >{{add_word.length}}</strong>个</span><span v-if="add_word.length > 0 && desc_word.length > 0">，</span>
                 <span v-if="desc_word.length > 0">减少的词有<strong class="color_02" >{{desc_word.length}}</strong>个</span>。
-                <el-button v-if="add_word.length > 0 || desc_word.length > 0" type="info" plain size="mini" class="more_btn" @click="showWordList">查看详情</el-button>
+                <el-button type="info" plain size="mini" class="more_btn" @click="showColumnChart">查看详情</el-button>
               </p>
             </div>
             <div class="card-content" ref="tableContent">
@@ -118,12 +136,15 @@
                       <el-table-column
                         prop="name"
                         label="关键词"
-                        min-width="100"
+                        min-width="120"
                         >
                         <template #default="scope">
-                          <el-link :href="'https://www.kuaishou.com/short-video/'+scope.row.aweme_id" target="_blank" type="primary">
+                          <el-link v-if="scope.row.url" :href="scope.row.url" target="_blank" type="primary">
                             {{scope.row.name}}
                           </el-link>
+                          <span v-else>
+                            {{scope.row.name}}
+                          </span>
                         </template>
                       </el-table-column>
                       <el-table-column
@@ -137,8 +158,17 @@
                         prop="rank_number"
                         label="排名"
                         align="center"
-                        width="60"
+                        width="100"
                         >
+                        <template #default="scope">
+                          <div class="item_text item_text_rank">
+                            <span class="before">{{scope.row.rank_number}}</span>
+                            <template v-if="scope.row.hasOwnProperty('rand_cha')">
+                              <span v-if="scope.row['rand_cha'] !== 0" class="after" :class="scope.row['rand_cha'] > 0 ? 'red' : scope.row['rand_cha'] < 0 ? 'green' : 'default'">{{ Math.abs(scope.row['rand_cha']) }}</span>
+                              <span v-else class="zero"></span>
+                            </template>
+                          </div>
+                        </template>
                       </el-table-column>
                       <el-table-column
                         v-if="searchData.all_name"
@@ -160,19 +190,27 @@
                         prop="score"
                         align="center"
                         label="积分"
-                        width="110"
+                        width="140"
                         >
                         <template #default="scope">
-                          <span class="score_num">{{scope.row.score}}</span>
-                          <el-tooltip content="点击查看积分趋势" placement="right-start" effect="light">
-                            <span class="icon_chart" @click="showLineChart(scope.row)"><svg-icon icon-class="line2" alt="" /></span>
-                          </el-tooltip>
+                          <div class="chart_main">
+                            <div class="item_text">
+                              <span class="before">{{scope.row.score}}</span>
+                              <template v-if="scope.row.hasOwnProperty('score_cha')">
+                                <span v-if="scope.row['score_cha'] !== 0" class="after" :class="scope.row['score_cha'] > 0 ? 'red' : scope.row['score_cha'] < 0 ? 'green' : 'default'">{{ Math.abs(scope.row['score_cha']).toFixed(1) }}</span>
+                                <span v-else class="zero"></span>
+                              </template>
+                            </div>
+                            <el-tooltip content="点击查看积分趋势" placement="right-start" effect="light">
+                              <span class="icon_chart" @click="showLineChart(scope.row)"><svg-icon icon-class="line2" alt="" /></span>
+                            </el-tooltip>
+                          </div>
                         </template>
                       </el-table-column>
                       <el-table-column
                         prop="desc"
                         label="标题"
-                        min-width="480"
+                        min-width="460"
                         >
                       </el-table-column>
                       <el-table-column
@@ -205,28 +243,49 @@
     </div>
     <el-backtop target=".scroll-panel"></el-backtop>
     <ExportModal ref="ExportModalRef" @exportSuccess="exportDone"></ExportModal>
-    <el-dialog :title="dialogTitle" top="20vh" :custom-class="isSearchPie ? 'chart-line pie_chart' : 'chart-line'" :visible.sync="isChartShow" :before-close="handleClose" :width="dialogWidth">
-      <div class="line_box">
+    <el-dialog :title="dialogTitle" top="20vh" custom-class="chart-line" :visible.sync="isChartShow" :before-close="handleClose" :width="dialogWidth">
+      <div class="line_box" v-if="charttype == 1">
         <div class="search" v-if="isSearchLine"><p>请稍候...</p></div>
-        <div class="no-data" v-if="!isSearchLine && lineData.length == 0 && !isSearchPie">暂无数据</div>
+        <div class="no-data" v-if="!isSearchLine && lineData.length == 0 ">暂无数据</div>
         <div id="chart"></div>
       </div>
-    </el-dialog>
-    <el-dialog :title="dialogTitle" top="10vh" custom-class="chart-line word-line" :visible.sync="isWordShow" :before-close="handleWordClose" :width="dialogWidth">
-      <el-scrollbar class="word_box">
-        <div class="word_item" v-if="add_word.length > 0">
-          <h3 class="word_tit">新增的词：</h3>
-          <ul class="word_ul">
-            <li v-for="item,index in add_word" :key="index">{{item.value}}</li>
-          </ul>
-        </div>
-        <div class="word_item" v-if="desc_word.length > 0">
-          <h3 class="word_tit">减少的词：</h3>
-          <ul class="word_ul">
-            <li v-for="item,index in desc_word" :key="index">{{item.value}}</li>
-          </ul>
-        </div>
-      </el-scrollbar>
+      <div class="line_box" v-if="charttype == 2">
+        <div class="search" v-if="isSearchLine"><p>请稍候...</p></div>
+        <el-tabs v-model="activeName" type="card" @tab-click="tabClick">
+          <el-tab-pane label="积分趋势" name="first">
+            <div class="search_column">
+              <div class="search" v-if="isPopSearch"><p>请稍候...</p></div>
+              <div id="chart"></div>
+            </div>
+          </el-tab-pane>
+          <el-tab-pane v-if="menuButtonPermit.includes('Kuaishou_xun')" label="询盘趋势" name="second">
+            <div class="search_tab">
+              <div class="item-change">
+                <div class="item-font" :class="nowChart == 1?'active':''" @click="tabChange(1)">月询盘统计</div>
+                <div class="item-font" :class="nowChart == 2?'active':''" @click="tabChange(2)">阶段询盘统计</div>
+              </div>
+              <div class="search_dw" v-if="nowChart == 1">
+                <el-popover
+                  placement="right"
+                  content="1号询盘：上个月16号到上个月月底的询盘数；15号询盘：本月1号到15号的询盘数。询盘提供者字段请填写提供者姓名，否则统计不上。"
+                  trigger="hover">
+                  <svg-icon class="tips_div tips_div2" slot="reference" icon-class="tips"></svg-icon>
+                </el-popover>  
+              </div>
+            </div>
+            <div class="search_column" v-if="nowChart == 1">
+              <div class="search" v-if="isPopSearch"><p>请稍候...</p></div>
+              <div id="xunChart"></div>
+            </div>
+            <div class="search_column" v-if="nowChart == 2">
+              <div class="search" v-if="isPopSearch"><p>请稍候...</p></div>
+              <div id="xunChart2"></div>
+            </div>
+          </el-tab-pane>
+        </el-tabs>
+        
+          
+      </div>
     </el-dialog>
   </div>
 </template>
@@ -253,12 +312,16 @@ export default {
       searchData:{
         keyword: "",
         nickname: "",
+        all_name: false,
         page: 1,
         limit: 20,
         num: "",
         my_level: "",
         sort: "",
-        all_name: false
+        id: "",
+        name: "",
+        uname: "",
+        department: ""
       },
       scrollPosition:{
         width:0,
@@ -292,6 +355,7 @@ export default {
         { key: 'name', value: '关键词' },
         { key: 'my_level', value: '关键词等级' },
         { key: 'rank_number', value: '排名' },
+        { key: 'avgnumber', value: '快手指数' },
         { key: 'score', value: '积分' },
         { key: 'desc', value: '标题' },
         { key: 'nickname', value: '名称' },
@@ -300,6 +364,7 @@ export default {
         { key: 'name', value: '关键词' },
         { key: 'my_level', value: '关键词等级' },
         { key: 'rank_number', value: '排名' },
+        { key: 'avgnumber', value: '快手指数' },
         { key: 'depart', value: '部门' },
         { key: 'uname', value: '负责人' },
         { key: 'score', value: '积分' },
@@ -313,7 +378,6 @@ export default {
       isChartShow: false,
       myChart:null,
       isSearchLine: false,
-      isSearchPie: false,
       dialogTitle: "",
       dialogWidth: "1200px",
       levelList: [
@@ -334,12 +398,12 @@ export default {
           value: "B2"
         },
         {
-          label: "C2",
-          value: "C2"
+          label: "C1",
+          value: "C1"
         },
         {
-          label: "C3",
-          value: "C3"
+          label: "C2",
+          value: "C2"
         },
         {
           label: "D",
@@ -363,7 +427,58 @@ export default {
       nick_res: [],
       add_word: [],
       desc_word: [],
-      isWordShow: false
+      isColumnShow: false,
+      accountIds: [],
+      timeArr: [],
+      columnData: {},
+      add_list: [],
+      desc_list: [],
+      popSearch: {
+        ids: [],
+        start_num: 0,
+        end_num: 0
+      },
+      isPopSearch: false,
+      activeName: "first",
+      add_allscore: [],
+      desc_allscore: [],
+      stageData: [
+          {
+            stage: "A1",
+            desc: "拳头产品"
+          },
+          {
+            stage: "A2",
+            desc: "拳头产品长尾词"
+          },
+          {
+            stage: "B1",
+            desc: "非拳头产品"
+          },
+          {
+            stage: "B2",
+            desc: "非拳头产品长尾词"
+          },
+          {
+            stage: "C1",
+            desc: "口碑词"
+          },
+          {
+            stage: "C2",
+            desc: "品牌词"
+          },
+          {
+            stage: "D",
+            desc: "配套产品"
+          },
+      ],
+      nowChart: 1,
+      xunChart: null,
+      xundata: [],
+      xunChart2: null,
+      xundata2: [],
+      checkBtnShow: false,
+      charttype: 1,
     }
   },
   computed: {
@@ -499,7 +614,8 @@ export default {
       var headerHeight = $this.$refs.headerPane.offsetHeight;
       var breadcrumbHeight = $this.$refs.breadcrumbPane.offsetHeight;
       var screenHeight = $this.$refs.boxPane.offsetHeight;
-      $this.tableHeight = screenHeight-headerHeight-breadcrumbHeight-40-45-31;
+      var countHeight = $this.$refs.countPane.offsetHeight;
+      $this.tableHeight = screenHeight-headerHeight-countHeight-breadcrumbHeight-40-45-31;
       $this.getBrowserType();
         setTimeout(function() {
           $this.setScrollDom();
@@ -571,9 +687,9 @@ export default {
         var formData = {}
         formData.page = $this.searchData.page;
         formData.limit = $this.totalDataNum;
-        formData.all_name = $this.searchData.all_name ? 1 : "";
         formData.keyword = $this.searchData.keyword;
         formData.nickname = $this.searchData.nickname;
+        formData.all_name = $this.searchData.all_name ? 1 : "";
         formData.num = $this.searchData.num;
         formData.my_level = $this.searchData.my_level;
         formData.sort = $this.searchData.sort;
@@ -581,7 +697,7 @@ export default {
           lock: true,
           text: '正在导出内容，请耐心等待……'
         });
-        $this.$store.dispatch('kuaishou/getKSResData', formData).then(res => {
+        $this.$store.dispatch('kuaishou/getKuaishouResData', formData).then(res => {
           if (res) {
             loading.close();
             if(res.status){
@@ -636,10 +752,14 @@ export default {
         $this.searchData.limit=20;
         $this.searchData.keyword = "";
         $this.searchData.nickname = "";
+        $this.searchData.all_name = false;
         $this.searchData.num = "";
         $this.searchData.my_level = "";
         $this.searchData.sort = "";
-        $this.searchData.all_name = false;
+        $this.searchData.id = "";
+        $this.searchData.name = "";
+        $this.searchData.uname = "";
+        $this.searchData.department = "";
         $this.searchResult();
     },
     // 初始化数据
@@ -688,11 +808,17 @@ export default {
     // 获取日期
     getKuaishouTime(){
       var $this = this;
-      $this.$store.dispatch('kuaishou/getKSResTime',null).then(res=>{
+      $this.$store.dispatch('kuaishou/kuaishouCountTime',null).then(res=>{
         if(res.status){
           $this.timeList = res.data;
+          var numArr = [];
+          res.data.forEach(item => {
+            numArr.push(item.num)
+          })
+          $this.searchData.num = Math.max(...numArr);
+          $this.timeArr = numArr;
           $this.initPage();
-          $this.getKSCount();
+          $this.getKuaishouCount();
         }else{
           $this.$message({
             showClose: true,
@@ -707,23 +833,24 @@ export default {
       if(!$this.isSearchResult){
         $this.isSearchResult=true;
         $this.initPage();
-        $this.getKSCount();
+        $this.getKuaishouCount();
       }
     },
     // 初始化页面信息
     initPage(){
       var $this = this;
+      $this.nick_res = [];
       var formData = {}
       formData.page = $this.searchData.page;
       formData.limit = $this.searchData.limit;
-      formData.all_name = $this.searchData.all_name ? 1 : "";
       formData.keyword = $this.searchData.keyword;
       formData.nickname = $this.searchData.nickname;
+      formData.all_name = $this.searchData.all_name ? 1 : "";
       formData.num = $this.searchData.num;
       formData.my_level = $this.searchData.my_level;
       formData.sort = $this.searchData.sort;
       document.getElementsByClassName("scroll-panel")[0].scrollTop = 0;
-      $this.$store.dispatch('kuaishou/getKSResData', formData).then(response=>{
+      $this.$store.dispatch('kuaishou/getKuaishouResData', formData).then(response=>{
           if(response){
             if(response.status){
               if(response.data){
@@ -775,6 +902,11 @@ export default {
               }else{
                 $this.desc_word = [];
               }
+              if( $this.searchData.nickname == "" || $this.searchData.nickname == null || $this.searchData.nickname && $this.CheckNameIn()){
+                $this.checkBtnShow = true;
+              }else{
+                $this.checkBtnShow = false;
+              }
             }else{
               if(response.permitstatus&&response.permitstatus==2){
                 $this.$message({
@@ -798,20 +930,23 @@ export default {
           }
       });
     },
-    // 获取快手账号统计数据
-    getKSCount(){
+    // 获取快手统计数据
+    getKuaishouCount(){
       var $this = this;
       var formData = {}
       formData.num = $this.searchData.num;
-      $this.$store.dispatch('kuaishou/getKSScoreData', formData).then(response=>{
+      $this.$store.dispatch('kuaishou/getKuaishouScoreData', formData).then(response=>{
           if(response){
             if(response.status){
               if(response.data && response.data.length > 0){
                 $this.scoreList = response.data.sort(sortByDesc("score"));
                 var count = 0;
+                var account_ids = [];
                 response.data.forEach(item => {
                   count += item.score;
+                  account_ids.push(item.id);
                 })
+                $this.accountIds = account_ids;
                 $this.scoreCount = Number(count).toFixed(1);
               }
             }else{
@@ -842,8 +977,12 @@ export default {
       var $this = this;
       $this.searchData.page=1;
       $this.searchData.limit=20;
-      $this.searchData.nickname = data.name;
+      $this.searchData.nickname = data.dy_uuid;
       $this.searchData.all_name = true;
+      $this.searchData.id = data.id;
+      $this.searchData.name = data.name;
+      $this.searchData.uname = data.uname;
+      $this.searchData.department = data.department;
       $this.searchResult();
     },
     // 点击展示图表
@@ -853,11 +992,12 @@ export default {
       $this.dialogWidth = "1200px";
       $this.isChartShow = true;
       $this.isSearchLine = true;
+      $this.charttype = 1;
       var formData = {};
       formData.pid = data.pid;
       formData.my_level = data.my_level;
-      formData.nickname = data.nickname;
-      $this.$store.dispatch('kuaishou/KSEachLine', formData).then(response=>{
+      formData.nickname = data.w_uid;
+      $this.$store.dispatch('kuaishou/kuaishouEachLine', formData).then(response=>{
           if(response){
             $this.isSearchLine = false;
             $this.lineData = [];
@@ -903,19 +1043,20 @@ export default {
     },
     showAccountChart(data){
       var $this = this;
-      $this.dialogTitle = data.name+"["+data.uname+"]";
+      $this.dialogTitle = data.name+"["+data.department+"-"+data.uname+"]";
       $this.isChartShow = true;
       $this.isSearchLine = true;
       $this.dialogWidth = "1200px";
+      $this.charttype = 1;
       var formData = {};
       formData.id = data.id;
-      $this.$store.dispatch('kuaishou/KSAccountLine', formData).then(response=>{
+      $this.$store.dispatch('kuaishou/kuaishouAccountLine', formData).then(response=>{
         if(response){
           $this.isSearchLine = false;
           $this.lineData = [];
           if(response.status){
             if(response.data && response.data.length > 0){
-              var resData = []
+              var resData = [];
               response.data.forEach(item => {
                 var obj = {};
                 obj.addtime = item.addtime;
@@ -928,9 +1069,11 @@ export default {
                 resData.push(obj);
               })
               $this.lineData = resData.sort(sortByAsc("num"));
-              $this.drawLineChart();
+              setTimeout(() => {
+                $this.drawLineChart();
+              }, 500);
             }
-            
+
           }else{
             if(response.permitstatus&&response.permitstatus==2){
               $this.$message({
@@ -965,7 +1108,7 @@ export default {
         option = {
           grid:{
             left: '45',
-            top:'25',
+            top:'35',
             right:'15',
             bottom: '25'
           },
@@ -1016,6 +1159,11 @@ export default {
           },
           yAxis: {
             type: 'value',
+            name: "单位（分）",
+            nameTextStyle: {
+              color: "#b4b4b4",
+              nameLocation: "start",
+            },
             axisLabel:{
               color: "#888"
             }
@@ -1063,11 +1211,21 @@ export default {
       var $this = this;
       $this.isChartShow = false;
       $this.isSearchLine = false;
-      $this.isSearchPie = false;
+      $this.isColumnShow = false;
+      $this.activeName = "first";
+      $this.nowChart = 1;
       if($this.myChart){
         $this.myChart.dispose();
       }
       $this.myChart = null;
+      if($this.xunChart){
+        $this.xunChart.dispose();
+      }
+      $this.xunChart = null;
+      if($this.xunChart2){
+        $this.xunChart2.dispose();
+      }
+      $this.xunChart2 = null;
     },
     // 每页显示条数改变事件
     handleSizeChange(val) {
@@ -1111,8 +1269,8 @@ export default {
       $this.scrollPosition.insetLeft = $this.scrollTable.scrollDom.scrollLeft/$this.scrollPosition.ratio;
       // 获取表格头吸顶需滚动的高度
       if($this.$refs.headerPane){
-         $this.scrollTable.fixedTopHeight = $this.$refs.headerPane.offsetHeight+$this.$refs.breadcrumbPane.offsetHeight+15+20;
-        }else{
+         $this.scrollTable.fixedTopHeight = $this.$refs.headerPane.offsetHeight+$this.$refs.countPane.offsetHeight+$this.$refs.breadcrumbPane.offsetHeight+15+20;
+      }else{
          $this.scrollTable.fixedTopHeight=$this.$refs.breadcrumbPane.offsetHeight+15+20;
       }
       $this.scrollTable.tableHeaderFixedDom = tableHeaderFixedDom;
@@ -1248,87 +1406,552 @@ export default {
       $this.scrollPosition.startPageX = 0;
       $this.scrollPosition.oldInsetLeft = $this.scrollPosition.insetLeft;
     },
-    showPieChart(){
+    getTotalCountData(){
       var $this = this;
+      $this.dialogTitle = "所有账号";
+      $this.dialogWidth = "1200px";
       $this.isChartShow = true;
-      $this.dialogTitle = $this.searchData.nickname;
-      $this.dialogWidth = "800px";
-      $this.isSearchPie = true;
-      setTimeout(() => {
-        $this.drawPieChart();
-      }, 300);
+      $this.isSearchLine = true;
+      $this.charttype = 2;
+      var formData = {};
+      var ids = [];
+      $this.scoreList.forEach(item => {
+        ids.push(item.id)
+      })
+      formData.ids = ids;
+      $this.$store.dispatch('kuaishou/kuaishouTotalCountData', formData).then(response=>{
+          if(response){
+            $this.isSearchLine = false;
+            $this.lineData = [];
+            if(response.status){
+              if(response.data && response.data.length > 0){
+                var resData = [];
+                var xundata2 = [];
+                response.data.forEach(item => {
+                  var obj = {};
+                  obj.addtime = item.addtime;
+                  obj.score = item.user_data;
+                  obj.number_one = item.one_number;
+                  obj.number_two = item.two_number;
+                  obj.number_three = item.three_number;
+                  obj.number_four = item.four_number;
+                  obj.num = item.num;
+                  resData.push(obj);
+                  var xunobj = {};
+                  xunobj.addtime = item.addtime;
+                  xunobj.number = item.xunnumber;
+                  xunobj.score = item.user_data;
+                  xundata2.push(xunobj);
+                })
+                $this.xundata = response.xundata&&response.xundata.length > 0 ? response.xundata : [];
+                $this.xundata2 = xundata2.sort(sortByAsc("num"));
+                $this.lineData = resData.sort(sortByAsc("num"));
+                setTimeout(() => {
+                  if($this.activeName == 'first'){
+                    $this.drawLineChart();
+                  }else{
+                    if($this.nowChart == 1){
+                      $this.drawXunChart();
+                    }else if($this.nowChart == 2){
+                      $this.drawXunChart2();
+                    }
+                  }
+                }, 500);
+              }
+            }else{
+              if(response.permitstatus&&response.permitstatus==2){
+                $this.$message({
+                  showClose: true,
+                  message: "未被分配该页面访问权限",
+                  type: 'error',
+                  duration:6000
+                });
+                $this.$router.push({path:`/401?redirect=${$this.$router.currentRoute.fullPath}`});
+              }else{
+                $this.$message({
+                  showClose: true,
+                  message: response.info,
+                  type: 'error'
+                });
+                setTimeout(()=>{
+                  $this.isSearchResult=false;
+                },1000);
+              }
+            }
+          }
+      });
     },
-    drawPieChart(){
+    showColumnChart(){
       var $this = this;
-      var chartDom = document.getElementById('chart');
+      var resId = [];
+      var res_start = "";
+      var res_end = "";
+      if($this.searchData.num){
+        res_end = $this.searchData.num;
+      }else{
+        res_end = Math.max(...$this.timeArr);
+      }
+      res_start = $this.getPrevTime(res_end);
+      if($this.searchData.nickname){
+        var ids = [];
+        if($this.searchData.id){
+          ids.push($this.searchData.id);
+        }else{
+          ids.push($this.tableData[0].aweme_id);
+        }
+        resId = ids;
+        console.log($this.checkAccount($this.searchData.nickname))
+        if($this.checkAccount($this.searchData.nickname)){
+          $this.$router.push({path:'/Kuaishou/keywordcount',query:{ id:resId.join(","), start_num:res_start, end_num: res_end, isall:1}});
+        }else{
+          $this.$router.push({path:'/Kuaishou/keywordcount',query:{ id:resId.join(","), start_num:res_start, end_num: res_end, isall:0}});
+        }
+      }else{
+        resId = $this.accountIds;
+        $this.$router.push({path:'/Kuaishou/keywordcount',query:{ id:resId.join(","), start_num:res_start, end_num: res_end, isall:1}});
+      }
+    },
+    getPrevTime(){
+      var $this = this;
+      var prev = 0;
+      var end = $this.searchData.num;
+      $this.timeArr.forEach(item => {
+        if(item > prev && item < end){
+          prev = item;
+        }
+      })
+      return prev;
+    },
+    CheckNameIn(){
+      var $this = this;
+      var isIn = false;
+      var aim = $this.searchData.nickname;
+      $this.scoreList.forEach(item => {
+        if(item.dy_uuid == aim){
+          isIn = true;
+        }
+      })
+      return isIn;
+    },
+    tabChange(inx){
+      var $this = this;
+      $this.nowChart = inx;
+      if($this.xunChart){
+        $this.xunChart.dispose();
+      }
+      $this.xunChart = null;
+      if($this.xunChart2){
+        $this.xunChart2.dispose();
+      }
+      $this.xunChart2 = null;
+      if(inx == 1){
+        setTimeout(() => {
+          $this.drawXunChart();
+        }, 500);
+      }else if(inx == 2){
+        setTimeout(() => {
+          $this.drawXunChart2();
+        }, 500);
+      }
+    },
+    getScoreData(data){
+      var $this = this;
+      var score = 0;
+      var hasScore = 0;
+      $this.lineData.forEach(item => {
+        if(item.addtime == data){
+          hasScore = 1;
+          score = item.score
+        }
+      })
+      if(hasScore == 1){
+        return score
+      }else{
+        var prevTime = "";
+        var nextTime = "";
+        var prevScore = 0;
+        var nextScore = 0;
+        $this.lineData.forEach(item => {
+          if(prevTime){
+            if(new Date(item.addtime) > new Date(prevTime) && new Date(item.addtime) < new Date(data)){
+              prevTime = item.addtime;
+              prevScore = item.score;
+            }
+          }else{
+            if(new Date(item.addtime) < new Date(data)){
+              prevTime = item.addtime;
+              prevScore = item.score;
+            }
+          }
+          if(nextTime){
+            if(new Date(item.addtime) < new Date(nextTime) && new Date(item.addtime) > new Date(data)){
+              nextTime = item.addtime;
+              prevScore = item.score;
+            }
+          }else{
+            if(new Date(item.addtime) > new Date(data)){
+              nextTime = item.addtime;
+              nextScore = item.score;
+            }
+          }
+        })
+        if(prevTime){
+          return prevScore
+        }else{
+          return nextScore
+        }
+      }
+    },
+    // 询盘
+    drawXunChart(){
+      var $this = this;
+      var chartDom = document.getElementById('xunChart');
       var myChart = echarts.init(chartDom);
       var option;
+      var timeList = [];
+      var xunList = [];
+      var scoreList = [];
+      $this.xundata.forEach(item => {
+        timeList.push(item.date);
+        xunList.push(item.number);
+      })
+      timeList.forEach(item => {
+        var score = $this.getScoreData(item);
+        scoreList.push(score);
+      })
       option = {
-        tooltip: {
-          trigger: 'item',
-          formatter(items){
-            var tooltext = `<div class="counttoolTip">
-            <div class="title">${items.name}</div>
-            <div class="bar clearfix">
-              ${items.marker}
-              <span class="name">${items.seriesName}：</span>
-              <span class="num">${items.value}</span>
-            </div>
-            `;
-            return tooltext;
+        grid:{
+          left: '45',
+          top:'35',
+          right:'45',
+          bottom: '25'
+        },
+        tooltip:{
+          show: true,
+          trigger: "axis",
+          axisPointer: {
+            type: "line", 
+            lineStyle:{
+              color: "#5b8ff9"
+            }
+          },
+          textStyle:{
+              fontSize:12,
+              color: '#666'
+          },
+          formatter(params){
+            var res = `<div class="toolDiv">
+                  <div class="tooltitle">${params[0].name}</div>`;
+                  params.forEach(item => {
+                    res +=`<div class="bar clearfix">
+                          <span style="display:inline-block;vertical-align:top;margin-top:4px;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:${item.borderColor};"></span>
+                          <span>${item.seriesName}：</span>
+                          <span>${item.value}</span>
+                        </div>`;
+                  })
+                return res;
           }
         },
-        legend: {
-          orient: 'vertical',
-          right: 'right',
-          top: 'middle',
-          itemWidth: 8,
-          itemHeight: 8,
-          icon: "circle",
+        xAxis: {
+          type: 'category',
+          data: timeList,
+          axisLine:{
+            lineStyle:{
+              color: "#dedede"
+            }
+          },
+          axisLabel:{
+            color: "#888"
+          },
         },
-        color: ["#2259e5","#3ebea7","#eca12d","#ee4747","#73c0de","#91cb74","#ff8d61","#9a60b4","#e522db","#e5d822","#5470c6","#fc8452","#fac858","#ee6666"],
+        yAxis: [
+          {
+            type: 'value',
+            name: "单位（个）",
+            nameTextStyle: {
+              color: "#b4b4b4",
+              nameLocation: "start",
+            },
+            alignTicks: true,
+            axisLabel:{
+              color: "#888"
+            },
+            
+          },
+          {
+            type: 'value',
+            name: "单位（分）",
+            nameTextStyle: {
+              color: "#b4b4b4",
+              nameLocation: "end",
+            },
+            alignTicks: true,
+            axisLabel:{
+              color: "#888"
+            },
+          },
+        ],
         animation: false,
         series: [
           {
-            name: '关键词个数',
-            type: 'pie',
-            radius: '75%',
-            data: $this.nick_res,
-            emphasis: {
-              itemStyle: {
-                shadowBlur: 10,
-                shadowOffsetX: 0,
-                shadowColor: 'rgba(0, 0, 0, 0.5)'
-              }
-            },
+            name: "询盘个数",
+            data: xunList,
+            type: 'line',
+            symbol: 'circle',
+            symbolSize: '5',
             label:{
-                normal:{
-                    formatter: function(params){
-                        var str = '';
-                        str = params.name+":"+params.percent.toFixed(1)+"%";
-                        return str
-                    },
-                    position: 'outside',
-                    fontSize: 13,
-                    color: "#666",
-                }
+              show: true,
+              position: 'top',
+              distance: '5'
+            },
+            itemStyle:{
+              color: '#fff',
+              borderColor: "#0970ff",
+              borderWidth: 1
+            },
+            lineStyle:{
+              color: "#0970ff",
+              width: 1
+            },
+            emphasis:{
+              lineStyle: {
+                width: 2,
               },
-          }
+              itemStyle:{
+                borderWidth: 2
+              }
+            }
+          },
+          {
+            name: "积分",
+            data: scoreList,
+            type: 'line',
+            symbol: 'circle',
+            symbolSize: '5',
+            yAxisIndex: 1,
+            label:{
+              show: true,
+              position: 'top',
+              distance: '5'
+            },
+            itemStyle:{
+              color: '#fff',
+              borderColor: "#3ebea7",
+              borderWidth: 1
+            },
+            lineStyle:{
+              color: "#3ebea7",
+              width: 1
+            },
+            emphasis:{
+              lineStyle: {
+                width: 2,
+              },
+              itemStyle:{
+                borderWidth: 2
+              }
+            }
+          },
         ]
       };
       option && myChart.setOption(option);
-      $this.myChart = myChart;
+      $this.xunChart = myChart;
     },
-    showWordList(){
+    drawXunChart2(){
       var $this = this;
-      $this.isWordShow = true;
-      $this.dialogTitle = $this.searchData.nickname;
-      $this.dialogWidth = "1200px";
+      var chartDom = document.getElementById('xunChart2');
+      var myChart = echarts.init(chartDom);
+      var option;
+      var timeList = [];
+      var xunList = [];
+      var scoreList = [];
+      $this.xundata2.forEach(item => {
+        timeList.push(item.addtime);
+        xunList.push(item.number);
+        scoreList.push(item.score);
+      })
+      option = {
+        grid:{
+          left: '45',
+          top:'35',
+          right:'45',
+          bottom: '25'
+        },
+        tooltip:{
+          show: true,
+          trigger: "axis",
+          axisPointer: {
+            type: "line", 
+            lineStyle:{
+              color: "#5b8ff9"
+            }
+          },
+          textStyle:{
+              fontSize:12,
+              color: '#666'
+          },
+          formatter(params){
+              var res = `<div class="toolDiv">
+                  <div class="tooltitle">${params[0].name}</div>`;
+                  params.forEach(item => {
+                    res +=`<div class="bar clearfix">
+                          <span style="display:inline-block;vertical-align:top;margin-top:4px;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:${item.borderColor};"></span>
+                          <span>${item.seriesName}：</span>
+                          <span>${item.value}</span>
+                        </div>`;
+                  })
+                return res;
+          }
+        },
+        xAxis: {
+          type: 'category',
+          name: "日期",
+          data: timeList,
+          axisLine:{
+            lineStyle:{
+              color: "#dedede"
+            }
+          },
+          axisLabel:{
+            color: "#888"
+          },
+        },
+        yAxis: [{
+          type: 'value',
+          name: "单位（个）",
+          nameTextStyle: {
+            color: "#b4b4b4",
+            nameLocation: "start",
+          },
+          axisLabel:{
+            color: "#888"
+          }
+        },
+        {
+            type: 'value',
+            name: "单位（分）",
+            nameTextStyle: {
+              color: "#b4b4b4",
+              nameLocation: "end",
+            },
+            alignTicks: true,
+            axisLabel:{
+              color: "#888"
+            },
+          },
+        ],
+        animation: false,
+        series: [
+          {
+            name: "询盘个数",
+            type: 'line',
+            symbol: 'circle',
+            symbolSize: '5',
+            data: xunList,
+            label:{
+              show: true,
+              position: 'top',
+              distance: '5'
+            },
+            itemStyle:{
+              color: '#fff',
+              borderColor: "#0970ff",
+              borderWidth: 1
+            },
+            lineStyle:{
+              color: "#0970ff",
+              width: 1
+            },
+            emphasis:{
+              lineStyle: {
+                width: 2,
+              },
+              itemStyle:{
+                borderWidth: 2
+              }
+            }
+          },
+          {
+            name: "积分",
+            data: scoreList,
+            type: 'line',
+            symbol: 'circle',
+            symbolSize: '5',
+            yAxisIndex: 1,
+            label:{
+              show: true,
+              position: 'top',
+              distance: '5'
+            },
+            itemStyle:{
+              color: '#fff',
+              borderColor: "#3ebea7",
+              borderWidth: 1
+            },
+            lineStyle:{
+              color: "#3ebea7",
+              width: 1
+            },
+            emphasis:{
+              lineStyle: {
+                width: 2,
+              },
+              itemStyle:{
+                borderWidth: 2
+              }
+            }
+          },
+        ]
+      };
+      option && myChart.setOption(option);
+      $this.xunChart2 = myChart;
     },
-    handleWordClose(){
+    checkAccount(name){
       var $this = this;
-      $this.isWordShow = false;
-    }
+      var uname = "";
+      var ids = [];
+      $this.scoreList.forEach(item => {
+        if(item.dy_uuid == name){
+          uname = item.uname
+        }
+      })
+      $this.scoreList.forEach(item => {
+        if(item.uname == uname){
+          ids.push(item.id);
+        }
+      })
+      if(ids.length > 1){
+        return false
+      }else{
+        return true
+      }
+    },
+    tabClick(e){
+      var $this = this;
+      if($this.xunChart){
+        $this.xunChart.dispose();
+      }
+      $this.xunChart = null;
+      if($this.xunChart2){
+        $this.xunChart2.dispose();
+      }
+      $this.xunChart2 = null;
+        
+      if(e.name == 'first'){
+        setTimeout(() => {
+          $this.drawLineChart();  
+        }, 300);
+      }
+      if(e.name == 'second'){
+        setTimeout(() => {
+          if($this.nowChart == 1){
+            $this.drawXunChart();  
+          }else{
+            $this.drawXunChart2();  
+          }
+        }, 300);
+      }
+    },
   }
 }
 </script>
@@ -1466,7 +2089,7 @@ export default {
     background-color:#0970ff;
   }
 }
-.douyin_count{
+.kuaishou_count{
   padding: 15px;
   background: #fff;
   margin-bottom: 15px;
@@ -1474,7 +2097,7 @@ export default {
   .dy_item{
     display: inline-block;
     vertical-align: top;
-    width: 20%;
+    width: 25%;
     font-size: 14px;
     line-height: 2.4;
     cursor: pointer;
@@ -1498,6 +2121,9 @@ export default {
     color: #f2302f;
   }
 }
+.dy_red{
+    color: #f2302f;
+  }
 .dy_res{
     padding-bottom: 15px;
     p{
@@ -1528,9 +2154,9 @@ export default {
       opacity: 0;
       visibility: hidden;
     }
-    .word_count{
-      margin-left: 30px;
-    }
+    // .word_count{
+    //   margin-left: 30px;
+    // }
   }
 .word-line{
   .word_box{
@@ -1603,7 +2229,7 @@ export default {
 }
 
 @media screen and (max-width: 1800px){
-  .douyin_count .dy_item{
+  .kuaishou_count .dy_item{
     width: auto;
     margin-right: 30px;
   }
@@ -1613,20 +2239,6 @@ export default {
   vertical-align: middle;
   width: 40px;
 }
-.icon_chart{
-  margin-left: 10px;
-  width: 20px;
-  height: 20px;
-  line-height: 20px;
-  text-align: center;
-  color: #0970ff;
-  cursor: pointer;
-  display: inline-block;
-  vertical-align: middle;
-  i{
-    font-size: 16px;
-  }
-}
 
 #chart{
   width: 1160px;
@@ -1635,7 +2247,7 @@ export default {
 .pie_chart #chart{
   width: 760px;
 }
-.line_box{
+.line_box, .search_col{
   position: relative;
   .search,.no-data{
     position: absolute;
@@ -1658,9 +2270,228 @@ export default {
     color: #999
   }
 }
-</style>
-<style>
 
+.pop_search .search_btn{
+  margin-left: 10px;
+}
+.search_body{
+  margin-top: 20px;
+  position: relative;
+  .seach_total{
+    position: absolute;
+    left: 350px;
+    top: 14px;
+    font-size: 13px;
+  }
+}
+
+.search_pie:after{
+  content: "";
+  display: block;
+  clear: both;
+}
+.pie_item{
+  float: left;
+  width: 580px;
+  .pie_title{
+    text-align: center;
+    font-size: 14px;
+    line-height: 20px;
+    color: #666;
+  }
+}
+.search_col{
+  height: calc(80vh - 185px);
+}
+#columnChart{
+  width: 1160px;
+  height: calc(80vh - 215px);
+}
+#pieChart1,#pieChart2{
+  width: 580px;
+  height: calc(80vh - 235px);
+}
+.table_wrap{
+  width: 1160px;
+  position: relative;
+  height: calc(80vh - 185px);
+}
+.search_tab{
+  margin-bottom: 10px;
+  .item-change{
+      float:left;
+      margin-right:15px;
+      margin-left: 1px;
+      .item-font{
+          float:left;
+          border:1px solid #e1e3ea;
+          font-size:13px;
+          color:#555555;
+          padding:5px 12px;
+          line-height:20px;
+          margin-left:-1px;
+          cursor:pointer;
+          &.active,&:hover{
+              color:#0970ff;
+              border:1px solid #0970ff;
+              background:#e0e9ff;
+              position:relative;
+              z-index:2;
+          }
+      }
+  }
+  .search_dw{
+    float: left;
+    font-size: 13px;
+    color: #acacac;
+    margin-top: 4px;
+  }
+  &:after{
+    content: "";
+    display: block;
+    clear: both;
+  }
+}
+
+.tab_p{
+  margin-bottom: 20px;
+}
+.item_text{
+  color: #606266;
+  line-height: 0;
+  display: inline-block;
+  vertical-align: middle;
+  text-align: center;
+  span{
+    line-height: 24px;
+    float:left;
+    &.before{
+      color: #111;
+      width: 36px;
+      text-align: center;
+    }
+    &.after{
+      width: 40px;
+      text-align: center;
+    }
+    &.zero{
+      width: 40px;
+      height: 24px;
+      position: relative;
+      &:before{
+        content: '';
+        height: 2px;
+        width: 6px;
+        background-color: #999;
+        position: absolute;
+        left: 17px;
+        top: 10px;
+      }
+    }
+    &.default{
+      padding-left: 10px;
+      color: #999;
+    }
+    &.red{
+      color: #f97979;
+      &:before{
+        content: "";
+        display: inline-block;
+        vertical-align: middle;
+        width: 10px;
+        height: 24px;
+        background: url(../../../assets/up.png) left 6px no-repeat;
+        background-size: auto 10px;
+      }
+    }
+    &.green{
+      color: #6dd29a;
+      &:before{
+        content: "";
+        display: inline-block;
+        vertical-align: middle;
+        width: 10px;
+        height: 24px;
+        background: url(../../../assets/down.png) left 6px no-repeat;
+        background-size: auto 10px;
+      }
+    }
+  }
+  .icon-other{
+    font-size: 16px;
+    color: #f97979;
+    margin-right: 6px;
+    cursor: pointer;
+  }
+  &:after{
+    content: "";
+    display: block;
+    clear: both;
+  }
+}
+.item_text_rank{
+  span{
+    &.before{
+      width: 30px;
+    }
+    &.after{
+      width: 32px;
+    }
+    &.zero{
+      width:32px;
+      &:before{
+        left: 13px;
+      }
+    }
+  }
+}
+.chart_main{
+  position: relative;
+  .icon_chart{
+    margin-left: 10px;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+    display: inline-block;
+    vertical-align: middle;
+    color: #0970ff;
+    cursor: pointer;
+    i{
+      font-size: 16px;
+    }
+  }
+}
+.tips_div{
+  display:inline-block;
+  vertical-align: middle;
+  margin-left: 10px;
+  font-size: 24px;
+  color: #b4b4b4;
+  cursor: pointer;
+}
+.tips_div2{
+  font-size: 20px;
+  margin-left: 0;
+  margin-top: 2px;
+}
+.exportBtn{
+  background-color: #f9a500;
+  &:hover,&:focus{
+    background: #ffba00;
+    border-color: #ffba00;
+  }
+}
+
+.search_column #chart{
+  height: 442px;
+}
+.search_column #xunChart, .search_column #xunChart2{
+  width: 100%;
+  height: 400px;
+}
+</style>
+<style lang="scss" > 
 .el-table__cell.stripe{
   background: #fafafa;
 }
@@ -1686,4 +2517,46 @@ export default {
   max-width: 380px;
   min-width: 380px!important;
 }
+
+.el-table.dyTable{
+  border-radius:8px;
+  border-left:1px solid #ebeff1;
+  border-right:1px solid #ebeff1;
+  display:flex;
+  flex-direction:column;
+  .el-table__body-wrapper{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    .el-table__empty-block{
+      flex:1;
+    }
+  }
+  &:before{display:none;}
+  th.is-leaf{
+    background:#e2e9ed;
+    font-size: 14px;
+    color:#555;
+    font-weight:normal;
+    border-bottom:1px solid #ebeff1;
+    border-right:1px solid #ebeff1;
+    line-height:20px;
+  }
+  th.gutter{
+    background:#e2e9ed;
+  }
+  td{
+    border-bottom:1px solid #ebeff1 !important;
+    border-right:1px solid #ebeff1 !important;
+    font-size:13px !important;
+    color:#1a1a1a;
+  }
+  svg,i[class~="el-cion"]{
+    font-size:21px;
+  }
+  .el-table__placeholder{
+    display:none!important;
+  }
+}
+
 </style>
