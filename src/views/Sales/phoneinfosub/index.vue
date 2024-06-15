@@ -147,7 +147,8 @@
                                         </span>
                                         <div class="flex-content">
                                             <el-checkbox-group v-model="replystatusArr" @change="replystatusClick">
-                                              <el-checkbox v-for="item in replystatusList" :label="item.value" :key="item.value" :disabled="item.value== 4||item.value==5?formData.is_select==1?false:true:false">
+                                              <!-- :disabled="item.value== 4||item.value==5?formData.is_select==1?false:true:false" -->
+                                              <el-checkbox v-for="item in replystatusList" :label="item.value" :key="item.value" :disabled="item.value== 4||item.value==5?true:false">
                                                 {{item.label}}
                                                 <template v-if="item.value == 4||item.value ==5">
                                                   <el-popover

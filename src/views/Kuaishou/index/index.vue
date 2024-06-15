@@ -258,7 +258,7 @@
               <div id="chart"></div>
             </div>
           </el-tab-pane>
-          <el-tab-pane v-if="menuButtonPermit.includes('Kuaishou_xun')" label="询盘趋势" name="second">
+          <el-tab-pane label="询盘趋势" name="second">
             <div class="search_tab">
               <div class="item-change">
                 <div class="item-font" :class="nowChart == 1?'active':''" @click="tabChange(1)">月询盘统计</div>
@@ -355,7 +355,6 @@ export default {
         { key: 'name', value: '关键词' },
         { key: 'my_level', value: '关键词等级' },
         { key: 'rank_number', value: '排名' },
-        { key: 'avgnumber', value: '快手指数' },
         { key: 'score', value: '积分' },
         { key: 'desc', value: '标题' },
         { key: 'nickname', value: '名称' },
@@ -364,7 +363,6 @@ export default {
         { key: 'name', value: '关键词' },
         { key: 'my_level', value: '关键词等级' },
         { key: 'rank_number', value: '排名' },
-        { key: 'avgnumber', value: '快手指数' },
         { key: 'depart', value: '部门' },
         { key: 'uname', value: '负责人' },
         { key: 'score', value: '积分' },

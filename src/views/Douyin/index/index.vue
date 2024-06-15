@@ -265,7 +265,7 @@
               <div id="chart"></div>
             </div>
           </el-tab-pane>
-          <el-tab-pane v-if="menuButtonPermit.includes('Douyin_xun')" label="询盘趋势" name="second">
+          <el-tab-pane label="询盘趋势" name="second">
             <div class="search_tab">
               <div class="item-change">
                 <div class="item-font" :class="nowChart == 1?'active':''" @click="tabChange(1)">月询盘统计</div>
