@@ -126,7 +126,7 @@
                                         <el-button class="item-input" size="small" type="primary" :disabled="!isReady2" :icon="isReady2?'':'el-icon-loading'" @click="getCnMsgDataTwo">同步hxjq.com.cn留言</el-button>
                                     </div> -->
                                     <div class="item-search" v-if="menuButtonPermit.includes('Webmsg_getmsgthree')">
-                                        <el-button class="item-input" size="small" type="primary" :disabled="!isReady3" :icon="isReady3?'':'el-icon-loading'" @click="getCnMsgDataThree">同步一部特殊站留言</el-button>
+                                        <el-button class="item-input" size="small" type="primary" :disabled="!isReady3" :icon="isReady3?'':'el-icon-loading'" @click="getCnMsgDataThree">同步客服2留言</el-button>
                                     </div>
                                     <div class="item-search" v-if="currentStatus==='Untreated'&&menuButtonPermit.includes('Webmsg_addpersondeal')">
                                         <el-button class="item-input" size="small" type="primary" :disabled="isDisabled" @click="allotToPending">添加到个人待处理</el-button>

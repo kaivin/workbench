@@ -114,7 +114,7 @@
                   <template v-if="searchData.num">当前选中的日期</template>对比上次，
                 </span>
                 <span v-if="add_word.length > 0">新增的词有<strong class="color_02" >{{add_word.length}}</strong>个</span><span v-if="add_word.length > 0 && desc_word.length > 0">，</span>
-                <span v-if="desc_word.length > 0">减少的词有<strong class="color_02" >{{desc_word.length}}</strong>个</span>。
+                <span v-if="desc_word.length > 0">减少的词有<strong class="color_02" >{{desc_word.length}}</strong>个</span><span v-if="add_word.length > 0 || desc_word.length > 0">。</span>
                 <el-button type="info" plain size="mini" class="more_btn" @click="showColumnChart">查看详情</el-button>
               </p>
             </div>

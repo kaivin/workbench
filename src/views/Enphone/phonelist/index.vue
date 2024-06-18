@@ -67,7 +67,7 @@
                                   >
                                 </el-table-column>
                                 <el-table-column
-                                  v-if="(menuButtonPermit.includes('Enphone_getenphonereadrole')||menuButtonPermit.includes('Enphone_getenphonewriterole')||menuButtonPermit.includes('Enphone_getphonedomain')||menuButtonPermit.indexOf('Enphone_phoneedit')||menuButtonPermit.indexOf('Enphone_phonedelete'))"
+                                  v-if="(menuButtonPermit.includes('Enphone_getenphonereadrole')||menuButtonPermit.includes('Enphone_getenphonewriterole')||menuButtonPermit.includes('Enphone_getphonedomain')||menuButtonPermit.indexOf('Enphone_phoneedit')||menuButtonPermit.indexOf('Enphone_phonedelete') ||menuButtonPermit.indexOf('Enphone_fenurl'))"
                                   :width="operationsWidth"
                                   align="center"
                                   fixed="right"
@@ -78,6 +78,7 @@
                                       <el-button size="mini" @click="allotReadRole(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Enphone_getenphonereadrole')">分配可读角色</el-button>
                                       <el-button size="mini" @click="allotWriteRole(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Enphone_getenphonewriterole')">分配可写角色</el-button>
                                       <el-button size="mini" @click="allotDomain(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Enphone_getphonedomain')">绑定域名</el-button>
+                                      <el-button size="mini" @click="allotUrl(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Enphone_fenurl')">绑定URL</el-button>
                                       <el-button size="mini" @click="editTableRow(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Enphone_phoneedit')">编辑</el-button>
                                       <el-button size="mini" @click="deleteTableRow(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Enphone_phonedelete')" type="info" plain>{{scope.row.is_delete?'激活':'禁用'}}</el-button>
                                     </div>
@@ -195,6 +196,22 @@
           </span>
         </template>
       </el-dialog>
+      <el-dialog :title="urlDialogText" v-if="(menuButtonPermit.includes('Enphone_fenurl'))" custom-class="transfer-dialog" :visible.sync="dialogUrlVisible" width="840px">
+        <el-form>
+          <div class="item-form">
+            <el-form-item label="绑定Url：" label-width="80px">
+              <el-input v-model="url" :rows="4" ref="url" type="textarea"></el-input>
+              <p class="tips" style="color: #999">注：如需绑定多个url，请换行填写。</p>
+            </el-form-item>
+          </div>
+        </el-form>
+        <template #footer>
+          <span class="dialog-footer">
+            <el-button @click="dialogUrlVisible = false">取 消</el-button>
+            <el-button type="primary" :class="isSaveUrlData?'isDisabled':''" :disabled="isSaveUrlData" @click="saveUrlData">确 定</el-button>
+          </span>
+        </template>
+      </el-dialog>
   </div>
 </template>
 <script>
@@ -271,6 +288,10 @@ export default {
       isSaveData:false,
       isSaveRoleData:false,
       isSaveDomainData:false,
+      dialogUrlVisible: false,
+      urlDialogText: "",
+      url: "",
+      isSaveUrlData: false,
     }
   },
   computed: {
@@ -443,6 +464,7 @@ export default {
               $this.isSaveData=false;
               $this.isSaveRoleData=false;
               $this.isSaveDomainData=false;
+              $this.isSaveUrlData=false;
             },1000);
             $this.$nextTick(function () {
               $this.setTableHeight();
@@ -497,6 +519,9 @@ export default {
               }
               if($this.menuButtonPermit.includes('Enphone_phonedelete')){
                 operationsWidth+=66;
+              }
+              if($this.menuButtonPermit.includes('Enphone_fenurl')){
+                operationsWidth+=90;
               }
               $this.operationsWidth = "" + operationsWidth;
               $this.initPage();
@@ -975,6 +1000,62 @@ export default {
             });
             $this.domainData = domainDataNow;
           }
+        }else{
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'error'
+            });
+          }
+      });
+    },
+    // 电话绑定URL弹窗
+    allotUrl(row,index){
+      var $this = this;
+      $this.url= "";
+      $this.dialogUrlVisible = true;
+      $this.currentID = row.id;
+      $this.urlDialogText="给 "+row.phonenumber+" 绑定URL";
+      $this.getAllotedUrl();
+    },
+    // 电话绑定域名保存
+    saveUrlData(){
+        var $this = this;
+        if(!$this.isSaveUrlData){
+          $this.isSaveUrlData=true;
+          var urlData = {};
+          urlData.phoneid = $this.currentID;
+          urlData.url = $this.url;
+
+          $this.$store.dispatch("enphone/getEnphoneFenurlData", urlData).then(response=>{
+            if(response.status){
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'success'
+              });
+              $this.dialogUrlVisible = false;
+              $this.isSaveUrlData=false;
+              $this.initPage();
+            }else{
+              $this.$message({
+                showClose: true,
+                message: response.info,
+                type: 'error'
+              });
+              setTimeout(()=>{
+                $this.isSaveUrlData=false;
+              },1000);
+            }
+          });
+        }
+    },
+    // 获取当前电话已绑定的域名
+    getAllotedUrl(){
+      var $this = this;
+      $this.$store.dispatch('enphone/getEnphoneHasfenurlData', {phoneid:$this.currentID}).then(response=>{
+        if(response.status){
+          $this.url = response.data && response.data.url ? response.data.url : "";
         }else{
             $this.$message({
               showClose: true,

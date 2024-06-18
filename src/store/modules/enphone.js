@@ -61,7 +61,9 @@
     getInquiryResult,
     exportSearchData,
     enphoneFeedback,
-    enphoneFiveXun
+    enphoneFiveXun,
+    enphoneFenurl,
+    enphoneHasfenurl,
 
 } from '@/api/enphone'
 
@@ -716,6 +718,26 @@ const actions = {
     getEnphoneFiveXunData({ commit, state },data) {
         return new Promise((resolve, reject) => {
             enphoneFiveXun(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 英文电话绑定url
+    getEnphoneFenurlData({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            enphoneFenurl(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // 英文电话已绑定的url
+    getEnphoneHasfenurlData({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            enphoneHasfenurl(data).then(response => {
                 resolve(response)
             }).catch(error => {
                 reject(error)

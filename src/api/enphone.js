@@ -503,3 +503,20 @@ export function enphoneFiveXun(data){
     data
   });
 }
+
+// 电话绑定url
+export function enphoneFenurl(data){
+  return request({
+    url: "/hxindex/Enphone/fenurl",
+    method: "POST",
+    data
+  });
+}
+// 电话已绑定的url
+export function enphoneHasfenurl(data){
+  return request({
+    url: "/hxindex/Enphone/hasfenurl",
+    method: "POST",
+    data
+  });
+}
