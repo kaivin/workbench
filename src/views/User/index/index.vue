@@ -38,6 +38,26 @@
                           </el-input>
                         </div>
                         <div class="item-search">
+                          <el-input
+                            class="input-panel"
+                            size="small"
+                            placeholder="请输入电话"
+                            v-model="searchData.phone"
+                            @keyup.enter.native="searchResult"
+                            clearable>
+                          </el-input>
+                        </div>
+                        <div class="item-search">
+                          <el-input
+                            class="input-panel"
+                            size="small"
+                            placeholder="请输入邮箱"
+                            v-model="searchData.email"
+                            @keyup.enter.native="searchResult"
+                            clearable>
+                          </el-input>
+                        </div>
+                        <div class="item-search">
                           <el-button class="item-input" :class="isDisabled?'isDisabled':''" :disabled="isDisabled" type="primary" size="small" icon="el-icon-search" @click="searchResult">查询</el-button>
                           <el-button type="info" class="resetBtn" size="small" v-on:click="resetData()">重置</el-button>
                         </div>
@@ -343,7 +363,9 @@ export default {
           limit:20,
           dept_id:0,
           is_delete:"",
-          comtime:''
+          comtime:'',
+          phone: '',
+          email: ''
       },
       userStatus:[
         {label:"激活用户",value:0,isOn:false},
@@ -588,6 +610,8 @@ export default {
         $this.searchData.limit=20;
         $this.searchData.dept_id=0;
         $this.searchData.is_delete='';
+        $this.searchData.phone = '';
+        $this.searchData.email = '';
         $this.searchResult();
     },
     // 初始化数据
@@ -603,6 +627,8 @@ export default {
       formData.dept_id = Array.isArray($this.searchData.dept_id)?$this.searchData.dept_id[$this.searchData.dept_id.length-1]:$this.searchData.dept_id;
       formData.uname = $this.searchData.uname;
       formData.limit = $this.searchData.limit;
+      formData.phone = $this.searchData.phone;
+      formData.email = $this.searchData.email;
       if($this.searchData.is_delete!=''){
         formData.is_delete = $this.searchData.is_delete;
       }
@@ -893,6 +919,8 @@ export default {
       $this.searchData.limit = 10;
       $this.searchData.dept_id = 0;
       $this.searchData.is_delete = "";
+      $this.searchData.phone = "";
+      $this.searchData.email = "";
     },
     // 重置添加数据表单
     resetFormData(){
