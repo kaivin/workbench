@@ -312,6 +312,7 @@
                                                     >
                                                 </el-input>
                                             </div>
+                                            <el-checkbox class="item-checkbox" style="margin-left: 10px;" v-model="searchData.is_noemail" size="mini" border>空邮箱</el-checkbox>
                                             <div class="search-panelThree" style="display:inline-block;margin-left: 10px;">
                                                 <span style="float:left;line-height:28px;font-size:12px;">显示条数：</span>
                                                 <el-input
@@ -888,6 +889,7 @@ export default {
             url:"",
             is_url:false,
             effective:false,
+            is_noemail: false,
             is_adduser:false,
             is_group:false,
             groupurlproduct:"1",
@@ -1548,6 +1550,7 @@ export default {
         resultData.url = $this.searchData.url;
         resultData.is_url = $this.searchData.is_url?1:0;
         resultData.effective = $this.searchData.effective?1:0;
+        resultData.is_noemail = $this.searchData.is_noemail?1:0;
         resultData.is_adduser = $this.searchData.is_adduser?1:0;
         resultData.is_group = $this.searchData.is_group?1:0;
         resultData.sort = $this.searchData.sort;
@@ -1873,6 +1876,7 @@ export default {
         $this.searchData.url="";
         $this.searchData.is_url=false;
         $this.searchData.effective=false;
+        $this.searchData.is_noemail=false;
         $this.searchData.is_adduser=false;
         $this.searchData.is_group=false;
         $this.searchData.groupurlproduct="1";
@@ -2137,6 +2141,7 @@ export default {
       searchData.groupurlproduct = $this.searchData.groupurlproduct;
       searchData.is_url = $this.searchData.is_url ? 1 : 0;
       searchData.effective = $this.searchData.effective ? 1 : 0;
+      searchData.is_noemail = $this.searchData.is_noemail ? 1 : 0;
       searchData.is_group = $this.searchData.is_group ? 1 : 0;
       searchData.is_core = $this.searchData.is_core ? 1 : 0;
       searchData.mode = $this.searchData.mode;
