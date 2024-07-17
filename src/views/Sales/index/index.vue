@@ -471,7 +471,7 @@
           </ul>
         </div>
       </div>
-      <div class="five_warn" v-if="defaultData.rely_warn && defaultData.rely_warn.length > 0" :class="fiveClass">
+      <!-- <div class="five_warn" v-if="defaultData.rely_warn && defaultData.rely_warn.length > 0" :class="fiveClass">
         <div class="n_head" @click="toggleFiveNotice">
           <div class="title">分配超过五天 待标记询盘提醒</div>
           <div class="del" v-if="isFiveShow"><i class="el-icon-arrow-down"></i></div>
@@ -488,7 +488,7 @@
             </li>
           </ul>
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -640,7 +640,8 @@ export default {
       if($this.isOpen){
         resclass += " notice_left";
       }
-      if($this.defaultData.rely_warn && $this.defaultData.rely_warn.length > 0 || $this.defaultData.two_xun && $this.defaultData.two_xun.length > 0){
+      // if($this.defaultData.rely_warn && $this.defaultData.rely_warn.length > 0 || $this.defaultData.two_xun && $this.defaultData.two_xun.length > 0){
+      if($this.defaultData.two_xun && $this.defaultData.two_xun.length > 0){
         resclass += " notice_active";
       }
       return resclass;
