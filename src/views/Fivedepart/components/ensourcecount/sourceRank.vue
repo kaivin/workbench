@@ -22,7 +22,21 @@
                           {{item.ranking}}
                       </div>
                   </div>
-                  <div class="userName" :style="item.emptyDivisor?'color:red;font-weight:bold;':''"><span>{{item.name}}</span></div>
+                  <div class="userName" :style="item.emptyDivisor?'color:red;font-weight:bold;':''">
+                    <span v-if="item.country && item.country.length > 0">
+                      <el-popover
+                      placement="right"
+                      width="220"
+                      trigger="hover">
+                      <ul class="country_ul">
+                        <li v-for="(count,inx) in item.country" :key="inx">{{inx+1}}. {{count.country}}</li>
+                      </ul>
+                      <span slot="reference">{{item.name}}</span>
+                    </el-popover>
+                      
+                    </span>
+                    <span v-else>{{item.name}}</span>
+                  </div>
                   <div class="userInquiry flex-content">
                       <span :style="item.emptyDivisor?'color:red;font-weight:bold;':''" v-if="item.ranking<numItem&&item.value>0" :class="'num0'+(item.ranking)">{{item.number}}<span v-if='currentData.unit'>{{currentData.unit}}</span></span>
                       <span :style="item.emptyDivisor?'color:red;font-weight:bold;':''" v-else>{{item.number}}<span v-if='currentData.unit'>{{currentData.unit}}</span></span>
@@ -130,8 +144,8 @@ export default {
         if(isFold){
           boxHeight = "auto";
         }else{
-          if($this.currentData.mainArr.length>8){
-              boxHeight = "504px";
+          if($this.currentData.mainArr.length>6){
+              boxHeight = $this.currentData.normalHeight;
           }else{
               boxHeight = $this.currentData.boxHeight;
           }
@@ -147,5 +161,14 @@ export default {
   float: right;
   color: #0749f3;
   font-size: 14px;
+}
+.country_ul{
+  max-height: 400px;
+  overflow: scroll;
+}
+.country_ul li{
+  font-size: 14px;
+  color: #666;
+  padding: 6px;
 }
 </style>

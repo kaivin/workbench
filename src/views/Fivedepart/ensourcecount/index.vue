@@ -271,9 +271,11 @@
         if(dateArr.length>8){
           itemObj.ifFold=true;
           itemObj.boxHeight='504px';
+          itemObj.normalHeight='504px';
         }else{
           itemObj.ifFold=false;
           itemObj.boxHeight=dateArr.length*63+'px';
+          itemObj.normalHeight=dateArr.length*63+'px';
         }
         itemObj.isFold=false;
         itemObj.randomStr = randomString(4);

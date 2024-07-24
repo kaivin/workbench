@@ -275,7 +275,7 @@
         itemObj.mainArr=dateArr;
         itemObj.name=Name;
         itemObj.unit=Tag;
-        itemObj.allscore = allscore;
+        itemObj.allscore = allscore.toFixed(1);
         var total = dateArr.reduce((prev,next) => {
           return prev + Number(next.value)
         },0)
@@ -283,9 +283,11 @@
         if(dateArr.length>6){
           itemObj.ifFold=true;
           itemObj.boxHeight='378px';
+          itemObj.normalHeight='378px';
         }else{
           itemObj.ifFold=false;
           itemObj.boxHeight= '378px';
+          itemObj.normalHeight='378px';
         }
         itemObj.isFold=false;
         itemObj.randomStr = randomString(4);
