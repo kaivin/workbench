@@ -26,11 +26,21 @@
                     <span v-if="item.country && item.country.length > 0">
                       <el-popover
                       placement="right"
-                      width="220"
+                      width="330"
                       trigger="hover">
-                      <ul class="country_ul">
-                        <li v-for="(count,inx) in item.country" :key="inx">{{inx+1}}. {{count.country}}</li>
-                      </ul>
+                      <el-table 
+                        :data="item.country" 
+                        :border="true" 
+                        :style="'width:100%'"
+                        max-height="400"
+                        stripe
+                        class="country_table"
+                        :default-sort = "{prop: 'score', order: 'descending'}"
+                      >
+                        <el-table-column type="index" width="50" label="序号" align="center"></el-table-column>
+                        <el-table-column prop="country" label="国家"></el-table-column>
+                        <el-table-column prop="score" label="积分" sortable width="80" align="center"></el-table-column>
+                      </el-table>
                       <span slot="reference">{{item.name}}</span>
                     </el-popover>
                       
@@ -170,5 +180,18 @@ export default {
   font-size: 14px;
   color: #666;
   padding: 6px;
+}
+.country_table th.is-leaf{
+    background:#e2e9ed;
+    font-size: 14px;
+    color:#555;
+    font-weight:normal;
+    border-bottom:1px solid #ebeff1;
+    border-right:1px solid #ebeff1;
+    line-height:20px;
+    padding: 6px 0;
+  }
+.country_table  .el-table__body-wrapper{
+  max-height: 353px!important;
 }
 </style>
