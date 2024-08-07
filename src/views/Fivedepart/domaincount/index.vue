@@ -432,6 +432,7 @@ export default {
       domainList: [
         {id:1,value:"ftmmachinery.com", label: "ftmmachinery.com"},
         {id:2,value:"ftmsino.com", label: "ftmsino.com"},
+        {id:3,value:"fotemine.com",label: "fotemine.com"}
       ],
       isAllItem:false,
       checkAllItem:false,
