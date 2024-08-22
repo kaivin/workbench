@@ -1,4 +1,4 @@
-﻿.process-index,.Consumption-statistic{
+﻿.process-index,.Consumption-statistic, .deal-page{
     .search-wrap{
         .item-search{
             float:left;
@@ -39,6 +39,17 @@
     }
   }
 }
+.deal-page{
+  .search-wrap{
+    .item-search{
+      padding:0px 10px 0px 0;
+      .el-button--small{
+        padding:9px 15px 8px 15px;
+      }
+    }
+  }
+}
+
 .depart-index{
     .filter-panel{
       background-color:#fff;

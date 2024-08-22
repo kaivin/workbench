@@ -87,6 +87,11 @@
                               >
                               </el-table-column>
                               <el-table-column
+                              prop="xun_id"
+                              label="询盘ID"
+                              >
+                              </el-table-column>
+                              <el-table-column
                               prop="url"
                               label="来自网站/电话"
                               >
