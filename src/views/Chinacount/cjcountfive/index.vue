@@ -1,5 +1,10 @@
 ﻿<template>
-  <div class="page-root deal-page" ref="boxPane">
+  <div class="page-root deal-page" ref="boxPane" 
+  v-loading="loading"
+  element-loading-background="rgba(255, 255, 255, 0)"
+  element-loading-text="拼命加载中"
+  element-loading-spinner="el-icon-loading"
+  >
       <div class="abs-panel" ref="mainPane">
             <div class="scroll-panel" ref="scrollDom" style="will-change:scroll-position">
                 <div class="true-height" ref="scrollPane">
@@ -129,7 +134,8 @@ export default {
         tableBottom:0,
         clientHeight:0,
       },
-      monthList: []
+      monthList: [],
+      loading: true,
     }
   },
   computed: {
@@ -290,6 +296,7 @@ export default {
       $this.$store.dispatch('chinadeal/futureDealData', null).then(res=>{
         if(res){
           if(res.status){
+            $this.loading = false;
             if(res.data && res.data.length > 0){
               res.data.forEach(item => {
                 item.cj_number_one = item.xunlist[0].yc_allnumber;
