@@ -74,7 +74,7 @@
                                     </el-table-column>
                                     <el-table-column
                                       prop="month_number"
-                                      label="当月总成交数量"
+                                      :label="searchData.date+' 总成交数量'"
                                       sortable
                                       align="center"
                                       width="200"
@@ -82,7 +82,7 @@
                                     </el-table-column>
                                     <el-table-column
                                       prop="month_score"
-                                      label="当月总成交分"
+                                      :label="searchData.date+' 总成交分'"
                                       sortable
                                       align="center"
                                       width="180"

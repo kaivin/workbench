@@ -56,11 +56,14 @@
                                     show-summary
                                     max-height="calc(100vh - 248px)"
                                     :summary-method="getSummaries"
+                                    @sort-change="tableSort"
                                     >
                                     <el-table-column
                                       prop="name"
                                       label="组别"
                                       align="center"
+                                      :filters="filterDepartList"
+                                      :filter-method="filteDepartHandler"
                                       >
                                     </el-table-column>
                                     <el-table-column
@@ -73,13 +76,13 @@
                                     <el-table-column
                                       prop="groupmoney"
                                       label="付费花费"
-                                      sortable
+                                      sortable="custom"
                                       align="center"
                                       >
                                     </el-table-column>
                                     <el-table-column
                                       prop="cj_xunnumber"
-                                      label="当月询盘至今成交数量"
+                                      :label="searchData.date+' 询盘至今成交数量'"
                                       sortable
                                       align="center"
                                       >
@@ -87,7 +90,7 @@
                                     <el-table-column
                                       prop="cj_percenter"
                                       label="成交率"
-                                      sortable
+                                      sortable="custom"
                                       align="center"
                                       >
                                       <template #default="scope">
@@ -109,7 +112,7 @@
                                     <el-table-column
                                       prop="avgmoney"
                                       label="成交成本（元/分）"
-                                      sortable
+                                      sortable="custom"
                                       align="center"
                                     >
                                     </el-table-column>
@@ -178,6 +181,8 @@ export default {
       },
       isSearchResult:false,
       loading: true,
+      copyData: [],
+      filterDepartList:[]
     }
   },
   computed: {
@@ -351,6 +356,15 @@ export default {
           if(res.status){
             $this.loading = false;
               $this.tableData=res.data;
+              $this.copyData = [...res.data];
+              var grouplist = [];
+              res.data.forEach(function(item,index){
+                var obj = {};
+                obj.text = item.name;
+                obj.value = item.name;
+                grouplist.push(obj);
+              })
+              $this.filterDepartList = grouplist;
               setTimeout(()=>{
                 $this.isSearchResult=false;
               },500);
@@ -475,7 +489,7 @@ export default {
           }
           if(index == 5 && sums[5] > 0){
             // sums[index] = sums[5].toFixed(1);
-            sums[index] = $this.getSeperateScore();
+            sums[index] = $this.getSeperateScore(data);
           }
           if(index == 6){
             if(!isNaN(sums[2])){
@@ -484,7 +498,7 @@ export default {
               // }else{
               //   sums[index] = 0;
               // }
-              sums[index] = $this.getPerScoreCost();
+              sums[index] = $this.getPerScoreCost(data);
               // sums[index] = $this.getPerScoreCost();
             }else{
               sums[index] = '-';
@@ -495,11 +509,10 @@ export default {
         return sums;
     },
     // 获取付费花费的正确的值
-    getPerScoreCost(){
-      var $this = this;
+    getPerScoreCost(data){
       var totalCost = 0;
       var totalScore = 0;
-      $this.tableData.forEach(function(item,index){
+      data.forEach(function(item,index){
         if(item.groupmoney > 0){
           totalCost += Number(item.groupmoney);
           if(item.score > 0){
@@ -514,11 +527,10 @@ export default {
       }
     },
     // 获取成交积分
-    getSeperateScore(){
-      var $this = this;
+    getSeperateScore(data){
       var payScore = 0;
       var unpayScore = 0;
-      $this.tableData.forEach(function(item,index){
+      data.forEach(function(item,index){
         if(item.groupmoney > 0){
           if(item.score > 0){
             payScore += Number(item.score);
@@ -538,6 +550,48 @@ export default {
         resText = (payScore+unpayScore).toFixed(1);
       }
       return resText;
+    },
+    tableSort(column){
+      var $this = this;
+      var col = column.prop;
+      var way = column.order;
+      var tableData = $this.tableData;
+      if(way === 'ascending'){
+        var aimres = $this.sortBySelf(tableData, col, 'asc');
+        $this.tableData = aimres;
+      }else if(way === 'descending'){
+        var aimres = $this.sortBySelf(tableData, col, 'desc');
+        $this.tableData = aimres;
+      }else{
+        $this.tableData = $this.copyData;
+      }
+      $this.$refs.simpleTable.doLayout();
+    },
+    sortBySelf(arr,col, way){
+      var $this = this;
+      var temp = [];
+      var temp2 = [];
+      arr.forEach(function(item,index){
+        if(!isNaN(item[col])){
+          temp.push(item);
+        }else{
+          temp2.push(item);
+        }
+      })
+      if(way === 'asc'){
+        temp.sort((a,b) =>{
+          return a[col]- b[col]
+        });
+      }
+      if(way === 'desc'){
+        temp.sort((a,b) =>{
+          return b[col]- a[col]
+        });
+      }
+      return temp.concat(temp2);
+    },
+    filteDepartHandler(value,row,column){
+      return row.name == value;
     },
     // 设置横向滚动条相关DOM数据
     setScrollDom(){
@@ -713,5 +767,16 @@ export default {
 }
 :deep(.SiteTable .el-table__footer-wrapper .cell){
   white-space: pre-line;
+}
+:deep(.el-table__column-filter-trigger i){
+  font-size: 16px;
+}
+
+</style>
+<style>
+.el-table-filter__bottom{
+  padding: 10px;
+  display: flex;
+  justify-content: space-around;
 }
 </style>

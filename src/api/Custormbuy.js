@@ -49,7 +49,7 @@ export function getCustormenbuyListTwo(data) {
 // 英文成交详情导入2
 export function setExportLinkenTwo(data) {
   return request({
-    url: "​/hxindex​/Custormenbuy​/exportlinktwo",
+    url: "/hxindex/Custormenbuy/exportlinktwo",
     method: "POST",
     data,
     headers:{

@@ -40,7 +40,7 @@
                                     </el-table-column>
                                     <el-table-column
                                       prop="name"
-                                      label="近3个月询盘预期成交个数"
+                                      :label="time+' 询盘预期成交个数'"
                                       align="center"
                                       >
                                       <el-table-column
@@ -136,6 +136,7 @@ export default {
       },
       monthList: [],
       loading: true,
+      time: "",
     }
   },
   computed: {
@@ -308,6 +309,7 @@ export default {
               })
             }
             $this.tableData=res.data;
+            $this.time = res.time;
               // $this.$nextTick(function () {
               //   $this.setTableHeight();
               // })
