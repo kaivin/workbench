@@ -55,6 +55,8 @@
                                       prop="name"
                                       label="组别"
                                       align="center"
+                                      :filters="filterDepartList"
+                                      :filter-method="filteDepartHandler"
                                       >
                                     </el-table-column>
                                     <el-table-column
@@ -200,6 +202,7 @@ export default {
         clientHeight:0,
       },
       isSearchResult:false,
+      filterDepartList:[]
     }
   },
   computed: {
@@ -372,6 +375,14 @@ export default {
         if(res){
           if(res.status){
               $this.tableData=res.data;
+              var grouplist = [];
+              res.data.forEach(function(item,index){
+                var obj = {};
+                obj.text = item.name;
+                obj.value = item.name;
+                grouplist.push(obj);
+              })
+              $this.filterDepartList = grouplist;
               setTimeout(()=>{
                 $this.isSearchResult=false;
               },500);
@@ -484,6 +495,9 @@ export default {
           }
         });
         return sums;
+    },
+    filteDepartHandler(value,row,column){
+      return row.name == value;
     },
     // 设置横向滚动条相关DOM数据
     setScrollDom(){
@@ -672,5 +686,8 @@ export default {
 }
 :deep(.SiteTable .el-table__header-wrapper){
   overflow: visible;
+}
+:deep(.el-table__column-filter-trigger i){
+  font-size: 16px;
 }
 </style>

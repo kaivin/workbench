@@ -52,6 +52,13 @@
                                     :summary-method="getSummaries"
                                     >
                                     <el-table-column
+                                      prop="mtime"
+                                      label="成交月份"
+                                      align="center"
+                                      width="100"
+                                      >
+                                    </el-table-column>
+                                    <el-table-column
                                       prop="timelook"
                                       label="询盘时间"
                                       align="center"
@@ -62,7 +69,7 @@
                                       prop="ownuser"
                                       label="姓名"
                                       align="center"
-                                      width="120"
+                                      width="110"
                                       >
                                     </el-table-column>
                                     <el-table-column
@@ -77,7 +84,7 @@
                                       :label="searchData.date+' 总成交数量'"
                                       sortable
                                       align="center"
-                                      width="200"
+                                      width="190"
                                       >
                                     </el-table-column>
                                     <el-table-column
@@ -498,16 +505,16 @@ export default {
           } else {
             sums[index] = '-';
           }
-          if(index == 4 && sums[4] > 0){
-            sums[index] = sums[4].toFixed(1);
+          if(index == 5 && sums[5] > 0){
+            sums[index] = sums[5].toFixed(1);
           }
-          if(index == 6 && sums[6] > 0){
-            sums[index] = sums[6].toFixed(1);
+          if(index == 7 && sums[7] > 0){
+            sums[index] = sums[7].toFixed(1);
           }
-          if(index == 7){
-            if(!isNaN(sums[3])&&!isNaN(sums[5])){
-              if(sums[5] > 0 && sums[3] > 0){
-                sums[index] = (sums[5]/sums[3]*100).toFixed(3)+'%';
+          if(index == 8){
+            if(!isNaN(sums[4])&&!isNaN(sums[6])){
+              if(sums[6] > 0 && sums[4] > 0){
+                sums[index] = (sums[6]/sums[4]*100).toFixed(3)+'%';
               }else{
                 sums[index] = 0;
               }
@@ -516,10 +523,10 @@ export default {
             }
             
           }
-          if(index == 8){
-            if(!isNaN(sums[4])&&!isNaN(sums[6])){
-              if(sums[6] > 0 && sums[4] > 0){
-                sums[index] = (sums[6]/sums[4]*100).toFixed(3)+'%';
+          if(index == 9){
+            if(!isNaN(sums[5])&&!isNaN(sums[7])){
+              if(sums[7] > 0 && sums[5] > 0){
+                sums[index] = (sums[7]/sums[5]*100).toFixed(3)+'%';
               }else{
                 sums[index] = 0;
               }

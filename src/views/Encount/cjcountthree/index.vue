@@ -16,6 +16,7 @@
                                 <div class="search-wrap" ref="searchPane">
                                     <div class="item-search">
                                       <el-date-picker
+                                          style="width: 240px;"
                                           v-model="searchData.date"
                                           type="monthrange"
                                           format="yyyy-MM"

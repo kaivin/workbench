@@ -21,15 +21,17 @@
                                 <div class="search-wrap" ref="searchPane">
                                     <div class="item-search">
                                         <el-date-picker
-                                          style="width: 140px;"
+                                          style="width: 240px;"
                                           v-model="searchData.date"
-                                          type="month"
+                                          type="monthrange"
                                           format="yyyy-MM"
                                           value-format="yyyy-MM"
                                           key="b"
                                           size="small"
                                           class="date-range"
-                                          placeholder="选择查询月份"
+                                          range-separator="~"
+                                          start-placeholder="开始月份"
+                                          end-placeholder="结束月份"
                                           :clearable="false"
                                           :picker-options="pickerMonthOptions"
                                           @change="searchResult"
@@ -82,9 +84,10 @@
                                     </el-table-column>
                                     <el-table-column
                                       prop="cj_xunnumber"
-                                      :label="searchData.date+' 询盘至今成交数量'"
+                                      :label="getSearchDate()+' 询盘至今成交数量'"
                                       sortable
                                       align="center"
+                                      width="300"
                                       >
                                     </el-table-column>
                                     <el-table-column
@@ -141,7 +144,7 @@ export default {
       tableHeight:200,                               //列表默认高度
       formLabelWidth:"120px",                        //导出项目宽度
       searchData:{                                   //搜索数据条件
-        date:"",
+        date:[],
       },
       pickerMonthOptions: {
         disabledDate(time) {
@@ -338,7 +341,10 @@ export default {
     searchDataInit(){
       var $this = this;
       var searchData = {};
-      searchData.time = $this.searchData.date;
+      if($this.searchData.date&&$this.searchData.date.length>0){
+        searchData.time = $this.searchData.date[0];
+        searchData.endtime = $this.searchData.date[1];
+      }
       return searchData;
     },
     // 初始化数据
@@ -442,18 +448,32 @@ export default {
       if(date < 15){
         month = month -1;
       }
+      // var prevMonth = 0;
+      // var prevYear = 0;
+      // if(month<3){
+      //   prevMonth = 12+month-2;
+      //   prevYear = year-1;
+      // }else{
+      //   prevMonth = month-2;
+      //   prevYear = year;
+      // }
       if(month<10){
         month = "0"+month;
       }
-      return year+"-"+month;
+      // if(prevMonth<10){
+      //   prevMonth = "0"+prevMonth;
+      // }
+      // return [prevYear+"-"+prevMonth,year+"-"+month];
+      return [year+"-"+month,year+"-"+month];
     },
     getSearchDate(){
       var $this = this;
       var date = $this.searchData.date;
-      var date = new Date(date);
-      var year = date.getFullYear();
-      var month = date.getMonth()+1;
-      return year+"年"+month+"月";
+      if(date[0] == date[1]){
+        return date[0];
+      }else{
+        return date[0]+"至"+date[1];
+      }
     },
     getSummaries(param) {
         const { columns, data } = param;
@@ -542,7 +562,7 @@ export default {
         }
       })
       var resText = "";
-      if(payScore > 0 && unpayScore > 0){
+      if(payScore > 0){
         resText += "付费成交分数："+payScore.toFixed(1);
         resText += "\n非付费成交分："+unpayScore.toFixed(1);
         resText += "\n成交分数总计："+(payScore+unpayScore).toFixed(1);
