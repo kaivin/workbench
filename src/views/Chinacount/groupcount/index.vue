@@ -60,7 +60,6 @@
                                     max-height="calc(100vh - 248px)"
                                     :summary-method="getSummaries"
                                     @sort-change="tableSort"
-                                    :span-method="objectSpanMethod"
                                     >
                                     <el-table-column
                                       prop="name"
@@ -76,7 +75,7 @@
                                       align="center"
                                     > 
                                       <el-table-column
-                                        prop="scoreall"
+                                        prop="allscore"
                                         label="实际成交分"
                                         sortable
                                         align="center"
@@ -528,7 +527,7 @@ export default {
             sums[index] = '-';
           }
           if(index == 1 && sums[1] > 0){
-            sums[index] = $this.getAllScore(data);
+            sums[index] = sums[1].toFixed(1);
           }
           if(index == 3 && sums[3] > 0){
             sums[index] = sums[3].toFixed(2);
@@ -596,20 +595,6 @@ export default {
         resText = (payScore+unpayScore).toFixed(1);
       }
       return resText;
-    },
-    // 获取成交总分
-    getAllScore(data){
-      var totalScore = 0;
-      var dname = [];
-      data.forEach(function(item,index){
-        if(item.scoreall > 0){
-          if(dname.indexOf(item.dname) < 0){
-            dname.push(item.dname);
-            totalScore += Number(item.scoreall);
-          }
-        }
-      })
-      return totalScore.toFixed(1);
     },
     tableSort(column){
       var $this = this;
