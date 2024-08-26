@@ -48,6 +48,7 @@
                             <div class="table-wrapper" v-bind:class="scrollPosition.isFixed?'fixed-table':''">
                                 <div class="table-mask"></div>
                                 <el-table
+                                    v-if="searchData.date.length>0"
                                     ref="simpleTable"
                                     :data="tableData"
                                     tooltip-effect="dark"
@@ -59,66 +60,95 @@
                                     max-height="calc(100vh - 248px)"
                                     :summary-method="getSummaries"
                                     @sort-change="tableSort"
+                                    :span-method="objectSpanMethod"
                                     >
                                     <el-table-column
                                       prop="name"
                                       label="组别"
+                                      :min-width="160"
                                       align="center"
                                       :filters="filterDepartList"
                                       :filter-method="filteDepartHandler"
                                       >
                                     </el-table-column>
                                     <el-table-column
-                                      prop="xunnumber"
-                                      label="询盘数量"
-                                      sortable
+                                      :label="getSearchDate()"
                                       align="center"
-                                      >
-                                    </el-table-column>
-                                    <el-table-column
-                                      prop="groupmoney"
-                                      label="付费花费"
-                                      sortable="custom"
-                                      align="center"
-                                      >
-                                    </el-table-column>
-                                    <el-table-column
-                                      prop="cj_xunnumber"
-                                      :label="getSearchDate()+' 询盘至今成交数量'"
-                                      sortable
-                                      align="center"
-                                      width="300"
-                                      >
-                                    </el-table-column>
-                                    <el-table-column
-                                      prop="cj_percenter"
-                                      label="成交率"
-                                      sortable="custom"
-                                      align="center"
-                                      >
-                                      <template #default="scope">
-                                        <template v-if="scope.row.cj_percenter && !isNaN(scope.row.cj_percenter)">
-                                          {{scope.row.cj_percenter+'%'}}
+                                    > 
+                                      <el-table-column
+                                        prop="scoreall"
+                                        label="实际成交分"
+                                        sortable
+                                        align="center"
+                                        :min-width="160"
+                                        >
+                                      </el-table-column>
+                                      <el-table-column
+                                        prop="xunnumber"
+                                        label="询盘数量"
+                                        sortable
+                                        align="center"
+                                        :min-width="160"
+                                        >
+                                      </el-table-column>
+                                      <el-table-column
+                                        prop="groupmoney"
+                                        label="付费花费"
+                                        sortable="custom"
+                                        align="center"
+                                        :min-width="160"
+                                        >
+                                        <template #default="scope">
+                                          <template v-if="scope.row.groupmoney && !isNaN(scope.row.groupmoney)">
+                                            {{scope.row.groupmoney.toFixed(2)}}
+                                          </template>
+                                          <template v-else>
+                                            {{scope.row.groupmoney}}
+                                          </template>
                                         </template>
-                                        <template v-else>
-                                          {{scope.row.cj_percenter}}
+                                      </el-table-column>
+                                      <el-table-column
+                                        prop="cj_xunnumber"
+                                        label="询盘至今成交数量"
+                                        sortable
+                                        align="center"
+                                        :min-width="180"
+                                        >
+                                      </el-table-column>
+                                      <el-table-column
+                                        prop="cj_percenter"
+                                        label="询盘至今成交率"
+                                        sortable="custom"
+                                        align="center"
+                                        :min-width="180"
+                                        >
+                                        <template #default="scope">
+                                          <template v-if="scope.row.cj_percenter && !isNaN(scope.row.cj_percenter)">
+                                            {{scope.row.cj_percenter+'%'}}
+                                          </template>
+                                          <template v-else>
+                                            {{scope.row.cj_percenter}}
+                                          </template>
                                         </template>
-                                      </template>
-                                    </el-table-column>
-                                    <el-table-column
-                                      prop="score"
-                                      label="成交分数"
-                                      sortable
-                                      align="center"
+                                      </el-table-column>
+                                      <el-table-column
+                                        prop="score"
+                                        label="询盘至今成交分数"
+                                        sortable
+                                        align="center"
+                                        :min-width="180"
+                                        >
+                                      </el-table-column>
+                                      <el-table-column
+                                        prop="avgmoney"
+                                        label="询盘至今成交成本（元/分）"
+                                        sortable="custom"
+                                        align="center"
+                                        :min-width="220"
                                       >
+                                      </el-table-column>
                                     </el-table-column>
-                                    <el-table-column
-                                      prop="avgmoney"
-                                      label="成交成本（元/分）"
-                                      sortable="custom"
-                                      align="center"
-                                    >
-                                    </el-table-column>
+                                   
                                 </el-table>
                             </div>
                             <div class="out_box fixed" v-if="scrollPosition.maxScrollWidth>0&&scrollPosition.isPC" :style="'left:'+scrollPosition.left+'px;width:'+scrollPosition.width+'px;bottom:'+scrollPosition.fixedBottom+'px;'" ref="out_box">
@@ -497,29 +527,25 @@ export default {
           } else {
             sums[index] = '-';
           }
-          if(index == 2 && sums[2] > 0){
-            sums[index] = sums[2].toFixed(2);
+          if(index == 1 && sums[1] > 0){
+            sums[index] = $this.getAllScore(data);
           }
-          if(index == 4){
-            if(sums[3] > 0 && sums[1] > 0){
-              sums[index] = (sums[3]/sums[1]*100).toFixed(3)+'%';
+          if(index == 3 && sums[3] > 0){
+            sums[index] = sums[3].toFixed(2);
+          }
+          if(index == 5){
+            if(sums[4] > 0 && sums[2] > 0){
+              sums[index] = (sums[4]/sums[2]*100).toFixed(3)+'%';
             }else{
               sums[index] = 0;
             }
           }
-          if(index == 5 && sums[5] > 0){
-            // sums[index] = sums[5].toFixed(1);
+          if(index == 6 && sums[6] > 0){
             sums[index] = $this.getSeperateScore(data);
           }
-          if(index == 6){
-            if(!isNaN(sums[2])){
-              // if(sums[2] > 0 && sums[5] > 0){
-              //   sums[index] = (sums[2]/sums[5]).toFixed(2);
-              // }else{
-              //   sums[index] = 0;
-              // }
+          if(index == 7){
+            if(!isNaN(sums[3])){
               sums[index] = $this.getPerScoreCost(data);
-              // sums[index] = $this.getPerScoreCost();
             }else{
               sums[index] = '-';
             }
@@ -571,6 +597,20 @@ export default {
       }
       return resText;
     },
+    // 获取成交总分
+    getAllScore(data){
+      var totalScore = 0;
+      var dname = [];
+      data.forEach(function(item,index){
+        if(item.scoreall > 0){
+          if(dname.indexOf(item.dname) < 0){
+            dname.push(item.dname);
+            totalScore += Number(item.scoreall);
+          }
+        }
+      })
+      return totalScore.toFixed(1);
+    },
     tableSort(column){
       var $this = this;
       var col = column.prop;
@@ -612,6 +652,38 @@ export default {
     },
     filteDepartHandler(value,row,column){
       return row.name == value;
+    },
+    objectSpanMethod({ row, column, rowIndex, columnIndex }) {
+      // 如果是第一行
+      var $this = this;
+      if (columnIndex === 1) {
+        const _row = $this.filterSpan($this.tableData, 'dname')[rowIndex] // 这里需要修改
+        const _col = _row > 0 ? 1 : 0
+        return {
+          rowspan: _row,
+          colspan: _col
+        }
+      }
+    },
+    // 处理数据
+    filterSpan(arr, condition) {
+        const spanOneArr = []
+        let concatOne = 0
+        arr.map((item, index) => {
+          if (index === 0) {
+            spanOneArr.push(1)
+          } else {
+            // 第一列需合并相同内容的判断条件
+            if (item[condition] === arr[index - 1][condition]) {
+                spanOneArr[concatOne] += 1
+                spanOneArr.push(0)
+            } else {
+                spanOneArr.push(1)
+                concatOne = index
+            }
+          }
+        })
+        return spanOneArr
     },
     // 设置横向滚动条相关DOM数据
     setScrollDom(){
@@ -779,6 +851,15 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+:deep(.el-table.SiteTable thead.is-group th.el-table__cell){
+  background: #e2e9ed;
+  font-size: 14px;
+  color: #555;
+  font-weight: normal;
+  border-bottom: 1px solid #ebeff1;
+  border-right: 1px solid #ebeff1;
+  line-height: 32px;
+}
 :deep(.SiteTable .el-table__footer-wrapper){
   overflow: visible;
 }
