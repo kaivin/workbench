@@ -59,7 +59,7 @@
                                     <el-table-column
                                       prop="name"
                                       label="组别"
-                                      :min-width="160"
+                                      :min-width="140"
                                       align="center"
                                       :filters="filterDepartList"
                                       :filter-method="filteDepartHandler"
@@ -72,17 +72,25 @@
                                       <el-table-column
                                         prop="allscore"
                                         label="实际成交分"
-                                        sortable
+                                        sortable="custom"
                                         align="center"
-                                        :min-width="160"
+                                        :min-width="120"
                                         >
                                       </el-table-column>
                                       <el-table-column
                                         prop="xunnumber"
                                         label="询盘数量"
-                                        sortable
+                                        sortable="custom"
                                         align="center"
-                                        :min-width="160"
+                                        :min-width="110"
+                                        >
+                                      </el-table-column>
+                                      <el-table-column
+                                        prop="all_money"
+                                        label="总成本"
+                                        sortable="custom"
+                                        align="center"
+                                        :min-width="110"
                                         >
                                       </el-table-column>
                                       <el-table-column
@@ -90,7 +98,7 @@
                                         label="付费花费"
                                         sortable="custom"
                                         align="center"
-                                        :min-width="160"
+                                        :min-width="110"
                                         >
                                         <template #default="scope">
                                           <template v-if="scope.row.groupmoney && !isNaN(scope.row.groupmoney)">
@@ -102,11 +110,35 @@
                                         </template>
                                       </el-table-column>
                                       <el-table-column
+                                        prop="person_money"
+                                        label="人力成本"
+                                        sortable="custom"
+                                        align="center"
+                                        :min-width="110"
+                                        >
+                                      </el-table-column>
+                                      <el-table-column
+                                        prop="person_number"
+                                        label="人数"
+                                        sortable="custom"
+                                        align="center"
+                                        :min-width="100"
+                                        >
+                                      </el-table-column>
+                                      <el-table-column
+                                        prop="avgperson_money"
+                                        label="人均成本"
+                                        sortable="custom"
+                                        align="center"
+                                        :min-width="110"
+                                        >
+                                      </el-table-column>
+                                      <el-table-column
                                         prop="cj_xunnumber"
                                         label="询盘至今成交数量"
-                                        sortable
+                                        sortable="custom"
                                         align="center"
-                                        :min-width="180"
+                                        :min-width="160"
                                         >
                                       </el-table-column>
                                       <el-table-column
@@ -114,7 +146,7 @@
                                         label="询盘至今成交率"
                                         sortable="custom"
                                         align="center"
-                                        :min-width="180"
+                                        :min-width="150"
                                         >
                                         <template #default="scope">
                                           <template v-if="scope.row.cj_percenter && !isNaN(scope.row.cj_percenter)">
@@ -128,17 +160,17 @@
                                       <el-table-column
                                         prop="score"
                                         label="询盘至今成交分数"
-                                        sortable
+                                        sortable="custom"
                                         align="center"
-                                        :min-width="180"
+                                        :min-width="160"
                                         >
                                       </el-table-column>
                                       <el-table-column
                                         prop="avgmoney"
-                                        label="询盘至今成交成本（元/分）"
+                                        label="询盘至今成交成本(元/分)"
                                         sortable="custom"
                                         align="center"
-                                        :min-width="220"
+                                        :min-width="200"
                                       >
                                       </el-table-column>
                                     </el-table-column>
@@ -383,6 +415,20 @@ export default {
       $this.$store.dispatch('endeal/xunQualityData', searchData).then(res=>{
         if(res){
           if(res.status){
+              res.data.forEach(function(item,index){
+                if(!(isNaN(item.groupmoney) && isNaN(item.person_money))){
+                  var totalmoney = 0;
+                  if(!isNaN(item.groupmoney)){
+                    totalmoney += Number(item.groupmoney);
+                  }
+                  if(!isNaN(item.person_money)){
+                    totalmoney += Number(item.person_money);
+                  }
+                  item.all_money = totalmoney.toFixed(2);
+                }else{
+                  item.all_money = "-";
+                }
+              })
               $this.tableData=res.data;
               $this.copyData = [...res.data];
               var grouplist = [];
@@ -490,7 +536,7 @@ export default {
         var $this = this;
         columns.forEach((column, index) => {
           if (index === 0) {
-            sums[index] = '合计';
+            sums[index] ="合计";
             return;
           }
           const values = data.map(item => Number(item[column.property]));
@@ -512,17 +558,26 @@ export default {
           if(index == 3 && sums[3] > 0){
             sums[index] = sums[3].toFixed(2);
           }
-          if(index == 5){
-            if(sums[4] > 0 && sums[2] > 0){
-              sums[index] = (sums[4]/sums[2]*100).toFixed(3)+'%';
+          if(index == 4 && sums[4] > 0){
+            sums[index] = sums[4].toFixed(2);
+          }
+          if(index == 5 && sums[5] > 0){
+            sums[index] = sums[5].toFixed(2);
+          }
+          if(index == 7 && sums[7] > 0){
+            sums[index] = sums[7].toFixed(2);
+          }
+          if(index == 9){
+            if(sums[8] > 0 && sums[2] > 0){
+              sums[index] = (sums[8]/sums[2]*100).toFixed(3)+'%';
             }else{
               sums[index] = 0;
             }
           }
-          if(index == 6 && sums[6] > 0){
+          if(index == 10 && sums[10] > 0){
             sums[index] = $this.getSeperateScore(data);
           }
-          if(index == 7){
+          if(index == 11){
             if(!isNaN(sums[3])){
               sums[index] = $this.getPerScoreCost(data);
             }else{

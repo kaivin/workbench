@@ -84,6 +84,20 @@
                                     align="center"
                                     >
                                     </el-table-column>
+                                    <el-table-column
+                                    prop="person_number"
+                                    label="人数"
+                                    sortable
+                                    align="center"
+                                    >
+                                    </el-table-column>
+                                    <el-table-column
+                                    prop="person_money"
+                                    label="人力成本"
+                                    sortable
+                                    align="center"
+                                    >
+                                    </el-table-column>
                                 </el-table>
                             </div>
                             <div class="out_box fixed" v-if="scrollPosition.maxScrollWidth>0&&scrollPosition.isPC" :style="'left:'+scrollPosition.left+'px;width:'+scrollPosition.width+'px;bottom:'+scrollPosition.fixedBottom+'px;'" ref="out_box">
