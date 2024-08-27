@@ -91,12 +91,20 @@
                                         >
                                       </el-table-column>
                                       <el-table-column
-                                        prop="all_money"
+                                        prop="allmoney"
                                         label="总成本"
                                         sortable="custom"
                                         align="center"
-                                        :min-width="110"
+                                        :min-width="160"
                                         >
+                                        <template #default="scope">
+                                          <template v-if="scope.row.allmoney && !isNaN(scope.row.allmoney)">
+                                            {{scope.row.allmoney.toFixed(2)}}
+                                          </template>
+                                          <template v-else>
+                                            {{scope.row.allmoney}}
+                                          </template>
+                                        </template>
                                       </el-table-column>
                                       <el-table-column
                                         prop="groupmoney"
@@ -121,22 +129,14 @@
                                         align="center"
                                         :min-width="110"
                                         >
-                                      </el-table-column>
-                                      <el-table-column
-                                        prop="person_number"
-                                        label="人数"
-                                        sortable="custom"
-                                        align="center"
-                                        :min-width="100"
-                                        >
-                                      </el-table-column>
-                                      <el-table-column
-                                        prop="avgperson_money"
-                                        label="人均成本"
-                                        sortable="custom"
-                                        align="center"
-                                        :min-width="110"
-                                        >
+                                        <template #default="scope">
+                                          <template v-if="scope.row.person_money && !isNaN(scope.row.person_money)">
+                                            {{scope.row.person_money.toFixed(2)}}
+                                          </template>
+                                          <template v-else>
+                                            {{scope.row.person_money}}
+                                          </template>
+                                        </template>
                                       </el-table-column>
                                       <el-table-column
                                         prop="cj_xunnumber"
@@ -422,20 +422,6 @@ export default {
         if(res){
           if(res.status){
               $this.loading = false;
-              res.data.forEach(function(item,index){
-                if(!(isNaN(item.groupmoney) && isNaN(item.person_money))){
-                  var totalmoney = 0;
-                  if(!isNaN(item.groupmoney)){
-                    totalmoney += Number(item.groupmoney);
-                  }
-                  if(!isNaN(item.person_money)){
-                    totalmoney += Number(item.person_money);
-                  }
-                  item.all_money = totalmoney.toFixed(2);
-                }else{
-                  item.all_money = "-";
-                }
-              })
               $this.tableData=res.data;
               $this.copyData = [...res.data];
               var grouplist = [];
@@ -576,7 +562,7 @@ export default {
             sums[index] = sums[1].toFixed(1);
           }
           if(index == 3 && sums[3] > 0){
-            sums[index] = sums[3].toFixed(2);
+            sums[index] = $this.getTotalCost(data);
           }
           if(index == 4 && sums[4] > 0){
             sums[index] = sums[4].toFixed(2);
@@ -584,25 +570,18 @@ export default {
           if(index == 5 && sums[5] > 0){
             sums[index] = sums[5].toFixed(2);
           }
-          if(index == 7 && sums[7] > 0){
-            sums[index] = sums[7].toFixed(2);
-          }
-          if(index == 9){
-            if(sums[8] > 0 && sums[2] > 0){
-              sums[index] = (sums[8]/sums[2]*100).toFixed(3)+'%';
+          if(index == 7){
+            if(sums[6] > 0 && sums[2] > 0){
+              sums[index] = (sums[6]/sums[2]*100).toFixed(3)+'%';
             }else{
               sums[index] = 0;
             }
           }
-          if(index == 10 && sums[10] > 0){
+          if(index == 8 && sums[8] > 0){
             sums[index] = $this.getSeperateScore(data);
           }
-          if(index == 11){
-            if(!isNaN(sums[3])){
-              sums[index] = $this.getPerScoreCost(data);
-            }else{
-              sums[index] = '-';
-            }
+          if(index == 9){
+            sums[index] = $this.getPerScoreCost(data);
           }
         });
 
@@ -610,21 +589,44 @@ export default {
     },
     // 获取付费花费的正确的值
     getPerScoreCost(data){
+      var payCost = 0;
+      var payScore = 0;
+      var unpayCost = 0;
+      var unpayScore = 0;
       var totalCost = 0;
       var totalScore = 0;
       data.forEach(function(item,index){
         if(item.groupmoney > 0){
-          totalCost += Number(item.groupmoney);
+          if(item.allmoney > 0){
+            payCost += Number(item.allmoney);
+          }
           if(item.score > 0){
-            totalScore += Number(item.score);
+            payScore += Number(item.score);
+          }
+        }else{
+          if(item.allmoney > 0){
+            unpayCost += Number(item.allmoney);
+          }
+          if(item.score > 0){
+            unpayScore += Number(item.score);
           }
         }
       })
-      if(totalCost > 0 && totalScore > 0){
-        return "付费成交成本："+(totalCost/totalScore).toFixed(2);
-      }else{
-        return "-";
+      totalCost = payCost + unpayCost;
+      totalScore = payScore + unpayScore;
+      var resText = "";
+      if(payCost > 0 && payScore > 0){
+        resText += "付费成交成本："+(payCost/payScore).toFixed(2);
       }
+      if(unpayCost > 0 && unpayScore > 0){
+        resText += "\n非付费成交成本："+(unpayCost/unpayScore).toFixed(2);
+      }
+      if(totalCost > 0 && totalScore > 0){
+        resText += "\n总成交成本："+(totalCost/totalScore).toFixed(2);
+      }else{
+        resText = "-";
+      }
+      return resText;
     },
     // 获取成交积分
     getSeperateScore(data){
@@ -645,9 +647,39 @@ export default {
       if(payScore > 0){
         resText += "付费成交分数："+payScore.toFixed(1);
         resText += "\n非付费成交分："+unpayScore.toFixed(1);
-        resText += "\n成交分数总计："+(payScore+unpayScore).toFixed(1);
+        resText += "\n成交分数共计："+(payScore+unpayScore).toFixed(1);
       }else{
         resText = (payScore+unpayScore).toFixed(1);
+      }
+      return resText;
+    },
+    // 获取总成交成本
+    getTotalCost(data){
+      var payCost = 0;
+      var unpayCost = 0;
+      data.forEach(function(item,index){
+        if(item.groupmoney > 0){
+          if(item.allmoney > 0){
+            payCost += Number(item.allmoney);
+          }
+        }else{
+          if(item.allmoney > 0){
+            unpayCost += Number(item.allmoney);
+          }
+        }
+      })
+      var totalCost = payCost + unpayCost;
+      var resText = "";
+      if(payCost > 0){
+        resText += "付费总成本："+payCost.toFixed(2);
+      }
+      if(unpayCost > 0){
+        resText += "\n非付费总成本："+unpayCost.toFixed(2);
+      }
+      if(totalCost > 0){
+        resText += "\n总成本共计："+totalCost.toFixed(2);
+      }else{
+        resText = "-";
       }
       return resText;
     },
