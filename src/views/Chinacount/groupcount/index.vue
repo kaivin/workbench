@@ -208,14 +208,9 @@ export default {
         date:[],
       },
       pickerMonthOptions: {
-        disabledDate(time) {
-          var end = new Date();
-          end.setMonth(end.getMonth() - 1);
+        disabledDate:time=>{
+          var end = new Date(this.chtime).getTime();
           var start = new Date("2022-01-01 00:00:00");
-          var date = end.getDate();
-          if(date < 15){
-            end.setMonth(end.getMonth() - 1);
-          }
           return time.getTime() > end || time.getTime() < start;
         },
       },                                    //默认今天数据
@@ -246,7 +241,8 @@ export default {
       isSearchResult:false,
       loading: true,
       copyData: [],
-      filterDepartList:[]
+      filterDepartList:[],
+      chtime: "",
     }
   },
   computed: {
@@ -291,8 +287,20 @@ export default {
   },
   created(){
     var $this = this;
-    $this.getBreadcrumbList();
-    $this.initData();
+    $this.$store.dispatch('chinadeal/dealTimeData',null).then(res=>{
+      if(res.status){
+        $this.chtime = res.chtime;
+        $this.searchData.date = [res.chtime, res.chtime];
+        $this.getBreadcrumbList();
+        $this.initData();
+      }else{
+        $this.$message({
+          showClose: true,
+          message: res.info,
+          type: 'error'
+        });
+      }
+    });  
   },
   updated(){
     this.$nextTick(() => {
@@ -472,7 +480,6 @@ export default {
             });
            
             if($this.menuButtonPermit.includes('Chinacount_groupcount')){
-              $this.searchData.date = $this.getNowMonth();
               $this.initPage();
             }else{
               $this.$message({

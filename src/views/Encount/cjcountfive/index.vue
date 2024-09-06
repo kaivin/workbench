@@ -130,7 +130,8 @@ export default {
         clientHeight:0,
       },
       monthList: [],
-      time: ""
+      time: "",
+      chtime: "",
     }
   },
   computed: {
@@ -175,8 +176,19 @@ export default {
   },
   created(){
     var $this = this;
-    $this.getBreadcrumbList();
-    $this.initData();
+    $this.$store.dispatch('chinadeal/dealTimeData',null).then(res=>{
+      if(res.status){
+        $this.chtime = res.entime;
+        $this.getBreadcrumbList();
+        $this.initData();
+      }else{
+        $this.$message({
+          showClose: true,
+          message: res.info,
+          type: 'error'
+        });
+      }
+    }); 
   },
   updated(){
     this.$nextTick(() => {
@@ -399,10 +411,10 @@ export default {
       $this.monthList = month;
     },
     getMonthAfter(months) {
-      const now = new Date();
-      let nextMonth = now.getMonth() + 1; // 当前月份
+      var $this = this;
+      const now = new Date($this.chtime);
+      let nextMonth = now.getMonth() + 2; // 当前月份
       let nextYear = now.getFullYear(); // 当前年份
-    
       // 如果月份加上参数后超过12，则需要增加年份
       while (months-- > 0) {
         nextMonth++;

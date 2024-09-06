@@ -5,7 +5,8 @@ import {
   getGroupDealCycleData,
   getDealProductData,
   getPersonalDealCycleData,
-  getFutureDealData
+  getFutureDealData,
+  getDealTime,
 } from '@/api/chinadeal'
 
 const state = {}
@@ -81,6 +82,15 @@ const actions = {
           })
       })
   },
+  dealTimeData({ commit, state },data) {
+    return new Promise((resolve, reject) => {
+        getDealTime(data).then(response => {
+            resolve(response)
+        }).catch(error => {
+            reject(error)
+        })
+    })
+},
 }
 
 export default {

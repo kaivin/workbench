@@ -124,16 +124,11 @@ export default {
       totalDataNum:0,
       pagerCount:5,
       pickerMonthRangeOptions: {
-        disabledDate(time) {
-          var end = new Date();
-          end.setMonth(end.getMonth() - 1);
+        disabledDate:time=>{
+          var end = new Date(this.chtime).getTime();
           var start = new Date("2022-01-01 00:00:00");
-          var date = end.getDate();
-          if(date < 15){
-            end.setMonth(end.getMonth() - 1);
-          }
           return time.getTime() > end || time.getTime() < start;
-        },
+        }
       },                                    //默认今天数据
       scrollPosition:{
         width:0,
@@ -160,6 +155,7 @@ export default {
         clientHeight:0,
       },
       isSearchResult:false,
+      chtime: "",
     }
   },
   computed: {
@@ -204,8 +200,32 @@ export default {
   },
   created(){
     var $this = this;
-    $this.getBreadcrumbList();
-    $this.initData();
+    $this.$store.dispatch('chinadeal/dealTimeData',null).then(res=>{
+      if(res.status){
+        $this.chtime = res.entime;
+        $this.searchData.date = res.entime;
+        var month = new Date(res.entime).getMonth()+1;
+        var year = new Date(res.entime).getFullYear();
+        var startDate = "";
+        if(month < 3){
+          var startYear = year-1;
+          var startMonth = month+12-2;
+          startDate = startMonth < 10 ? startYear+"-"+ "0"+startMonth : startYear+ "-"+ startMonth;
+        }else{
+          var startMonth = month - 2;
+          startDate = startMonth < 10 ? year+"-"+ "0"+startMonth : year+ "-"+ startMonth;
+        }
+        $this.searchData.date = [startDate,res.entime];
+        $this.getBreadcrumbList();
+        $this.initData();
+      }else{
+        $this.$message({
+          showClose: true,
+          message: res.info,
+          type: 'error'
+        });
+      }
+    }); 
   },
   updated(){
     this.$nextTick(() => {
@@ -409,8 +429,6 @@ export default {
             });
            
             if($this.menuButtonPermit.includes('Encount_cjcountthree')){
-              var nowData = $this.getNowMonth();
-              $this.searchData.date = nowData;
               $this.initPage();
             }else{
               $this.$message({

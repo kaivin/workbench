@@ -60,3 +60,11 @@ export function getFutureDealData(data) {
     data
   });
 }
+
+export function getDealTime(data) {
+  return request({
+    url: "/hxindex/Api/maxchtime",
+    method: "POST",
+    data
+  });
+}
