@@ -3,6 +3,7 @@
       <div class="abs-panel" ref="mainPane">
           <div class="scroll-panel" ref="scrollDom" style="will-change:scroll-position">
               <div class="true-height" ref="scrollPane">
+                <div class="bread_top">
                   <p class="breadcrumb" ref="breadcrumbPane">
                     <router-link class="breadcrumb-link" to="/"><span>首页</span></router-link>
                     <template v-for="item in breadcrumbList">
@@ -10,6 +11,8 @@
                       <span class="breadcrumb-link" v-bind:key="item.id" v-else><b>-</b><span>{{item.title}}</span></span>
                     </template>
                   </p>
+                  <el-button type="primary" size="small" class="exportBtn derived" @click="showExportDialog" v-if="menuButtonPermit.includes('Chinaphone_listexport')"><i class="svg-i"><svg-icon icon-class="derived" /></i>导出电话询盘</el-button>
+                </div>
                   <el-card class="box-card" shadow="hover">
                     <div class="card-content" ref="tableContent">
                       <div class="table-wrapper" v-bind:class="scrollPosition.isFixed?'fixed-table':''">
@@ -228,10 +231,36 @@
           </span>
         </template>
       </el-dialog>
+      <el-dialog title="导出数据" v-if="menuButtonPermit.includes('Chinaphone_listexport')" custom-class="export-dialog" :visible.sync="exportVisible" width="500px">
+        <el-form>
+          <div class="item-form">
+            <el-form-item class="export_item" label="询盘时间：" label-width="90px">
+              <el-date-picker
+                v-model="exportTime"
+                type="daterange"
+                range-separator="至"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+                value-format="yyyy-MM-dd"
+                format="yyyy-MM-dd"
+                :picker-options="pickerDateRangeOptions"
+                >
+              </el-date-picker>
+            </el-form-item>
+          </div>
+        </el-form>
+        <template #footer>
+          <span class="dialog-footer">
+            <el-button @click="exportClose">取 消</el-button>
+            <el-button type="primary" :class="isExportData?'isDisabled':''" :disabled="isExportData" @click="exportData">确 定</el-button>
+          </span>
+        </template>
+      </el-dialog>
   </div>
 </template>
 <script>
 import { mapGetters } from 'vuex'
+import { pickerDateRangeOptions } from "@/utils/index"
 export default {
   name: 'Chinaphone_phonelist',
   data() {
@@ -279,6 +308,7 @@ export default {
           }
       },
       domainDialogText:"",
+      exportVisible:false,
       scrollPosition:{
         width:0,
         left:0,
@@ -315,7 +345,10 @@ export default {
           }
       },
       videoDialogText:"",
-      isSaveVideoData: false
+      isSaveVideoData: false,
+      exportTime: [],
+      isExportData: false,
+      pickerDateRangeOptions: pickerDateRangeOptions,
     }
   },
   computed: {
@@ -1157,6 +1190,65 @@ export default {
       });
     },
 
+    // 导出数据
+    showExportDialog(){
+      var $this = this;
+      $this.exportVisible = true;
+    },
+
+    exportData(){
+      var $this = this;
+      if($this.exportTime && $this.exportTime.length>0){
+        var formData = {};
+        formData.time1 = $this.exportTime[0];
+        formData.time2 = $this.exportTime[1];
+        $this.$store.dispatch('chinaphone/getPhoneExcel', formData).then(response=>{
+          let blob = new Blob([response], {
+            type: "application/octet-stream",
+          });
+          let filename = $this.exportTime[0]+"至"+$this.exportTime[1]+"电话询盘数据"+ '.xls'
+          // 创建一个代表该 Blob 对象的 URL，这个 URL 可以用于在浏览器中引用该 Blob
+          let blobURL = window.URL.createObjectURL(blob);
+          // 创建一个新的 <a> HTML 元素，用于触发下载
+          let tempLink = document.createElement("a");
+          tempLink.style.display = "none";
+          tempLink.href = blobURL;
+          // 设置 <a> 元素的 download 属性，这样当用户点击这个链接时，浏览器会开始下载数据，而不是导航到它
+          tempLink.setAttribute("download", filename);
+          //如果浏览器的 download 属性不被支持（在某些旧版或特定的浏览器中），则设置 target 属性为 "_blank"，这样当用户点击链接时，它会在新的浏览器标签或窗口中打开
+          if (typeof tempLink.download === "undefined") {
+            tempLink.setAttribute("target", "_blank");
+          }
+          // 将这个 <a> 元素添加到文档的 body 中
+          document.body.appendChild(tempLink);
+          // 模拟用户点击这个 <a> 元素，从而触发下载
+          tempLink.click();
+          // 从文档的 body 中移除这个 <a> 元素
+          document.body.removeChild(tempLink);
+          // 释放之前创建的 Blob URL，避免内存泄漏
+          window.URL.revokeObjectURL(blobURL);
+          $this.$message({
+            showClose: true,
+            message: '正在导出，可在浏览器查看进度',
+            type: 'success'
+          });
+          $this.exportTime = [];
+          $this.exportVisible = false;
+        });
+      }else{
+        $this.$message({
+          showClose: true,
+          message: '请选择导出时间！',
+          type: 'error'
+        });
+      }
+    },
+
+    exportClose(){
+      var $this = this;
+      $this.exportTime = [];
+      $this.exportVisible = false
+    },
     // 设置横向滚动条相关DOM数据
     setScrollDom(){
       var $this = this;
@@ -1307,4 +1399,15 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.bread_top{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  .exportBtn{
+    margin-bottom: 15px;
+  }
+}
+:deep(.export_item .el-form-item__label){
+  margin-top: 5px;
+}
 </style>

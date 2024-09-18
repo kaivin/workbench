@@ -525,3 +525,12 @@ export function exportSearchData(data){
     data
   });
 }
+// 导出电话数据
+export function exportPhoneData(data){
+  return request({
+    url: "/hxindex/Chinaphone/listexport",
+    method: "POST",
+    data,
+    responseType: "blob"
+  });
+}
