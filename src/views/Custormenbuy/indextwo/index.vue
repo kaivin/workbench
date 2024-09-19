@@ -65,61 +65,81 @@
                               <el-table-column
                               prop="mtime"
                               label="成交时间"
+                              min-width="100"
+                              >
+                              </el-table-column>
+                              <el-table-column
+                              prop="departname"
+                              label="部门"
+                              min-width="80"
                               >
                               </el-table-column>
                               <el-table-column
                               prop="groupname"
                               label="组别"
+                              min-width="100"
                               >
                               </el-table-column>
                               <el-table-column
                               prop="price"
                               label="价值"
+                              min-width="100"
                               >
                               </el-table-column>
                               <el-table-column
                               prop="score"
                               label="得分"
+                              min-width="80"
+                              align="center"
                               >
                               </el-table-column>
                               <el-table-column
                               prop="xunproduct"
                               label="产品"
+                              min-width="80"
                               >
                               </el-table-column>
                               <el-table-column
                               prop="url"
                               label="来自网站/电话"
+                              min-width="300"
                               >
                               </el-table-column>
                               <el-table-column
                               prop="ownuser"
                               label="所属人"
+                              min-width="90"
                               >
                               </el-table-column>
                               <el-table-column
                               prop="source"
                               label="渠道"
+                              min-width="120"
                               >
                               </el-table-column>
                               <el-table-column
                               prop="level"
                               label="初始级别"
+                              min-width="80"
+                              align="center"
                               >
                               </el-table-column>
                               <el-table-column
                               prop="addtime"
                               label="添加时间"
+                              min-width="100"
                               >
                               </el-table-column>
                               <el-table-column
                               prop="province"
                               label="省份"
+                              min-width="120"
                               >
                               </el-table-column>
                               <el-table-column
                               prop="buyproduct"
                               label="成交设备"
+                              min-width="160"
                               >
                               </el-table-column>
                           </el-table>
