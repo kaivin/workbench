@@ -88,7 +88,7 @@
                               </el-table-column>
                               <el-table-column
                               prop="cj_score"
-                              label="成交得分"
+                              label="成交积分"
                               min-width="80"
                               align="center"
                               >
