@@ -136,6 +136,16 @@
                                     clearable>
                                 </el-input>
                             </div>
+                            <div class="team-headerItem">
+                                <span class="require">域名：</span>
+                                <el-input
+                                    size="mini"
+                                    v-model="searchData.domain"
+                                    :class="searchData.domain!=''?'el-xzstate':''"
+                                    placeholder="域名"
+                                    clearable>
+                                </el-input>
+                            </div>
                         </div>
                       </div>
                     </div>
@@ -497,7 +507,8 @@ export default {
       searchData:{
         date:[],
         name:'',
-        country:""
+        country:"",
+        domain: "",
       },
       deviceList:[],
       productList:[],
@@ -785,6 +796,7 @@ export default {
       $this.searchData.date=[];
       $this.searchData.name='';
       $this.searchData.country='';
+      $this.searchData.domain = "";
       $this.searchResult.allInquiryCount=[];
       $this.searchResult.trendScoreCount=[];
       $this.searchResult.trendInquiryCount=[];
@@ -821,6 +833,7 @@ export default {
       var searchData = {};
       searchData.keyword = $this.searchData.name;
       searchData.country = $this.searchData.country;
+      searchData.domain = $this.searchData.domain;
       if($this.searchData.date&&$this.searchData.date.length>0){
         searchData.starttime = $this.searchData.date[0];
         searchData.endtime = $this.searchData.date[1];
