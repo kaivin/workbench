@@ -11,7 +11,7 @@
                       <span class="breadcrumb-link" v-bind:key="item.id" v-else><b>-</b><span>{{item.title}}</span></span>
                     </template>
                   </p>
-                  <el-button type="primary" size="small" class="exportBtn derived" @click="showExportDialog" v-if="menuButtonPermit.includes('Chinaphone_listexport')"><i class="svg-i"><svg-icon icon-class="derived" /></i>导出电话询盘</el-button>
+                  <el-button type="primary" size="small" class="exportBtn derived" @click="showExportDialog" v-if="menuButtonPermit.includes('Chinaphone_listexport')"><i class="svg-i"><svg-icon icon-class="derived" /></i>导出中文电话询盘</el-button>
                 </div>
                   <el-card class="box-card" shadow="hover">
                     <div class="card-content" ref="tableContent">
@@ -231,7 +231,7 @@
           </span>
         </template>
       </el-dialog>
-      <el-dialog title="导出数据" v-if="menuButtonPermit.includes('Chinaphone_listexport')" custom-class="export-dialog" :visible.sync="exportVisible" width="500px">
+      <el-dialog title="导出中文电话询盘数据" v-if="menuButtonPermit.includes('Chinaphone_listexport')" custom-class="export-dialog" :visible.sync="exportVisible" width="500px">
         <el-form>
           <div class="item-form">
             <el-form-item class="export_item" label="询盘时间：" label-width="90px">
@@ -1206,7 +1206,7 @@ export default {
           let blob = new Blob([response], {
             type: "application/octet-stream",
           });
-          let filename = $this.exportTime[0]+"至"+$this.exportTime[1]+"电话询盘数据"+ '.xls'
+          let filename = $this.exportTime[0]+"至"+$this.exportTime[1]+"中文电话询盘数据"+ '.xls'
           // 创建一个代表该 Blob 对象的 URL，这个 URL 可以用于在浏览器中引用该 Blob
           let blobURL = window.URL.createObjectURL(blob);
           // 创建一个新的 <a> HTML 元素，用于触发下载
@@ -1229,7 +1229,7 @@ export default {
           window.URL.revokeObjectURL(blobURL);
           $this.$message({
             showClose: true,
-            message: '正在导出，可在浏览器查看进度',
+            message: '正在导出，可在浏览器右上角查看进度',
             type: 'success'
           });
           $this.exportTime = [];

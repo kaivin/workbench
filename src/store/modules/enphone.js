@@ -64,6 +64,7 @@
     enphoneFiveXun,
     enphoneFenurl,
     enphoneHasfenurl,
+    exportPhoneData,
 
 } from '@/api/enphone'
 
@@ -744,6 +745,16 @@ const actions = {
             })
         })
     },
+    // 导出电话数据
+    getPhoneExcel({ commit, state },data) {
+        return new Promise((resolve, reject) => {
+            exportPhoneData(data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    }
 }
 
 export default {

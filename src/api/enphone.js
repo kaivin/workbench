@@ -520,3 +520,13 @@ export function enphoneHasfenurl(data){
     data
   });
 }
+
+// 导出电话数据
+export function exportPhoneData(data){
+  return request({
+    url: "/hxindex/Enphone/listexport",
+    method: "POST",
+    data,
+    responseType: "blob"
+  });
+}
