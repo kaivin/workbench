@@ -524,7 +524,7 @@ export function enphoneHasfenurl(data){
 // 导出电话数据
 export function exportPhoneData(data){
   return request({
-    url: "/hxindex/Enphone/listexport",
+    url: "/hxindex/Enphone/otherlistexport",
     method: "POST",
     data,
     responseType: "blob"

@@ -11,7 +11,7 @@
                       <span class="breadcrumb-link" v-bind:key="item.id" v-else><b>-</b><span>{{item.title}}</span></span>
                     </template>
                   </p>
-                  <el-button type="primary" size="small" class="exportBtn derived" @click="showExportDialog" v-if="menuButtonPermit.includes('Chinaphone_listexport')"><i class="svg-i"><svg-icon icon-class="derived" /></i>导出中文电话询盘</el-button>
+                  <el-button type="primary" size="small" class="exportBtn derived" @click="showExportDialog" v-if="menuButtonPermit.includes('Chinaphone_otherlistexport')"><i class="svg-i"><svg-icon icon-class="derived" /></i>导出中文电话询盘</el-button>
                 </div>
                   <el-card class="box-card" shadow="hover">
                     <div class="card-content" ref="tableContent">
@@ -231,7 +231,7 @@
           </span>
         </template>
       </el-dialog>
-      <el-dialog title="导出中文电话询盘数据" v-if="menuButtonPermit.includes('Chinaphone_listexport')" custom-class="export-dialog" :visible.sync="exportVisible" width="500px">
+      <el-dialog title="导出中文电话询盘数据" v-if="menuButtonPermit.includes('Chinaphone_otherlistexport')" custom-class="export-dialog" :visible.sync="exportVisible" width="500px">
         <el-form>
           <div class="item-form">
             <el-form-item class="export_item" label="询盘时间：" label-width="90px">

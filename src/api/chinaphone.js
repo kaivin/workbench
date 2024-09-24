@@ -528,7 +528,7 @@ export function exportSearchData(data){
 // 导出电话数据
 export function exportPhoneData(data){
   return request({
-    url: "/hxindex/Chinaphone/listexport",
+    url: "/hxindex/Chinaphone/otherlistexport",
     method: "POST",
     data,
     responseType: "blob"
