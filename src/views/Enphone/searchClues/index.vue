@@ -241,8 +241,8 @@
                                             <el-checkbox class="item-checkbox" v-model="searchData.is_url" size="mini" border>精确</el-checkbox>
                                             <el-input
                                                 size="mini"
-                                                placeholder="ID"
-                                                style="width:120px;margin-right:10px;margin-bottom:10px;"
+                                                placeholder="询盘ID，多个以空格分隔"
+                                                style="width:180px;margin-right:10px;margin-bottom:10px;"
                                                 v-model="searchData.messageid"
                                                 @keyup.enter.native="enCluesSearchData"
                                                 :class="searchData.messageid!=''?'el-xzstate':''"
