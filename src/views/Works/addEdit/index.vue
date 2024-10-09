@@ -51,9 +51,11 @@
                     <div class="item-form inline-item other-td">
                       <strong>工单标签：</strong>
                       <div class="item-form-panel buttonTwo">
-                        <el-checkbox-group @change="tagsChange" class="checkbox-panel" v-model="formData.tags_id" size="small">
+                        <!-- @change="tagsChange" -->
+                        <el-checkbox-group class="checkbox-panel" v-model="formData.tags_id" size="small">
                             <el-checkbox :label="item.id" v-for="item in systemTag" v-bind:key="item.id" border>{{item.name}}</el-checkbox>
-                        </el-checkbox-group>
+                            <p class="tips">（如果是视频组工单，请选择视频组工单标签，并填写下方积分。）</p>
+                          </el-checkbox-group>
                       </div>
                     </div>
                   </div>
@@ -100,7 +102,7 @@
                       </div>
                     </div>
                     <div class="item-form inline-item other-td" v-if="isScore">
-                      <strong>工单积分：</strong>
+                      <strong>工单积分<i class="c-red">*</i>：</strong>
                       <div class="item-form-panel">
                         <el-input
                           placeholder="请输入工单积分"
@@ -593,7 +595,7 @@ export default {
           var tags_id = parseInt(data.tags_id);
           $this.formData.tags_id = [tags_id];
         }
-        $this.tagsChange($this.formData.tags_id);
+        // $this.tagsChange($this.formData.tags_id);
       }else{
         $this.formData.tags_id = [];
       }
@@ -727,4 +729,16 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.tips{
+  font-size: 13px;
+  color: red;
+  display: inline-block;
+  vertical-align: top;
+  margin-top: 12px;
+  margin-left: 2px;
+}
+.c-red{
+  color: red;
+  font-style: normal;
+}
 </style>
