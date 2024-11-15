@@ -1027,6 +1027,7 @@ export default {
         { key: 'xuntime', value: '本地时间' },
         { key: 'foreigntime', value: '当地时间' },
         { key: 'domain', value: '域名' },
+        { key: 'url', value: 'URL' },
         { key: 'sourcename', value: '渠道' },
         { key: 'messagetype', value: '来源类型' },
         { key: 'continent', value: '大洲' },
