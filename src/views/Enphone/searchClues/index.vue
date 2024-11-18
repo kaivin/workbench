@@ -2404,4 +2404,10 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+::-webkit-scrollbar-thumb{
+    background-color:#0970ff;
+}
+:deep(.el-scrollbar__thumb) {
+  background: #0970ff;
+}
 </style>
