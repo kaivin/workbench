@@ -2131,36 +2131,44 @@ export default {
       var searchData = {};
       searchData.page = $this.searchData.page;
       searchData.limit = $this.searchData.limit;
-      searchData.phoneid = $this.phoneSelected;
       searchData.messageid = $this.searchData.messageid;
-      searchData.province = $this.searchData.province;
-      searchData.search = $this.searchData.search;
-      searchData.anymessage = $this.searchData.anymessage;
-      searchData.useridname = $this.searchData.useridname;
-      searchData.domain = $this.searchData.domain;
-      searchData.url = $this.searchData.url;
-      searchData.groupurlproduct = $this.searchData.groupurlproduct;
-      searchData.is_url = $this.searchData.is_url ? 1 : 0;
-      searchData.effective = $this.searchData.effective ? 1 : 0;
-      searchData.is_noemail = $this.searchData.is_noemail ? 1 : 0;
-      searchData.is_group = $this.searchData.is_group ? 1 : 0;
-      searchData.is_core = $this.searchData.is_core ? 1 : 0;
-      searchData.mode = $this.searchData.mode;
-      searchData.typekey = $this.searchData.typekey;
-      searchData.productid = $this.searchData.productid;
-      searchData.level_id = $this.searchData.level_id;
-      searchData.productlevel = $this.searchData.productlevel;
-      searchData.device = $this.searchData.device;
-      searchData.idlist = $this.searchData.idlist;
-      searchData.hasquality = $this.searchData.hasquality;
-      searchData.qualityscore = $this.searchData.qualityscore;
-      if ($this.searchData.date && $this.searchData.date.length > 0) {
+      searchData.ftword_id = $this.searchData.ftword_id;
+      searchData.custormname = $this.searchData.custormname;
+      searchData.custormemail = $this.searchData.custormemail;
+      searchData.custormphone = $this.searchData.custormphone;
+      searchData.ip = $this.searchData.ip;
+      if($this.searchData.date&&$this.searchData.date.length>0){
         searchData.starttime = $this.searchData.date[0];
         searchData.endtime = $this.searchData.date[1];
-      } else {
+      }else{
         searchData.starttime = "";
         searchData.endtime = "";
       }
+      searchData.timeing = $this.searchData.timeing;
+      searchData.mode = $this.searchData.mode;
+      searchData.device = $this.searchData.device;
+      searchData.producttype_id = $this.searchData.producttype_id;
+      searchData.productid = $this.searchData.productid;
+      searchData.feedback = $this.searchData.feedback;
+      searchData.level_id = $this.searchData.level_id;
+      searchData.erroring = $this.searchData.erroring;
+      searchData.country = $this.searchData.country;
+      searchData.continent = $this.searchData.continent;        
+      searchData.anymessage = $this.searchData.anymessage;
+      searchData.remark2 = $this.searchData.remark2;
+      searchData.remark3 = $this.searchData.remark3;
+      searchData.domain = $this.searchData.domain;
+      searchData.url = $this.searchData.url;
+      searchData.is_url = $this.searchData.is_url?1:0;
+      searchData.effective = $this.searchData.effective?1:0;
+      searchData.is_noemail = $this.searchData.is_noemail?1:0;
+      searchData.is_adduser = $this.searchData.is_adduser?1:0;
+      searchData.is_group = $this.searchData.is_group?1:0;
+      searchData.sort = $this.searchData.sort;
+      searchData.groupurlproduct = $this.searchData.groupurlproduct;        
+      searchData.phoneid = $this.searchData.phoneid;
+      searchData.messagetype = $this.searchData.messagetype;//留言类型
+      searchData.ennature = $this.searchData.ennature;//性质id
       if(!isNaN(parseFloat($this.searchData.start_score)) && !isNaN(parseFloat($this.searchData.end_score))){
         searchData.start_score = $this.searchData.start_score;
         searchData.end_score = $this.searchData.end_score;
