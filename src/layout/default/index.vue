@@ -6,7 +6,10 @@
       <el-container class="container-layout">
         <sidebar v-if="isSales" />
         <div class="tags-bar clearfix" :class="isDataView?'tags-color':''" v-if="isSales">
-              <div class="tags-btn" :class="!sidebar.opened?'btn-active':''"><hamburger v-bind:is-fold="!sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" /></div>
+              <div class="tags-btn" 
+                :class="!sidebar.opened ? 'btn-active' : ''">
+                <hamburger v-bind:is-fold="!sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
+              </div>
               <div class="tags-list"><tags-view  /></div>
           </div>
         <el-main :style="{'margin-top':isSales?'48px':''}" class="main-layout" v-if="isRefresh">
@@ -20,10 +23,13 @@
 
 <script>
 import { Sidebar, HeaderPane ,TagsView} from './components/index';
+import useWatermark from '@/utils/useWatermark'
 import ResizeMixin from './mixin/ResizeHandler'
 import { mapState,mapGetters } from 'vuex';
 import Hamburger from '@/components/Hamburger';
 import Cookies from 'js-cookie'
+
+const { loadWatermark } = useWatermark()
 export default {
   name: 'Layout',
   components: {
@@ -39,6 +45,20 @@ export default {
       screenWidth:0,
       isSales:true,
       isDataView:false,
+      watermark: {
+        watermark_x: 40,
+        watermark_y: 40,
+        watermark_x_space: 40,
+        watermark_y_space: 40,
+        watermark_width: 200,
+        watermark_height: 150,
+        watermark_alpha: 0.15,
+        watermark_angle: 15,
+        watermark_color: '#000000',
+        watermark_fontsize: '18px',
+        watermark_txt: 'vue-admin-system',
+        watermark_parent_node: null
+      }
     }
   },
   metaInfo: {
@@ -77,7 +97,9 @@ export default {
     userInfo = JSON.parse(userInfo);
     if(userInfo.issales==2){
       $this.isSales=false;
-    };
+    }
+    this.watermark.watermark_txt = userInfo.name
+    loadWatermark(this.watermark)
     this.setTagesColor()
   },
   mounted(){
