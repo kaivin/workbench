@@ -53,6 +53,25 @@
                                     <el-button size="mini" @click="allotPostPermit(scope.row,scope.$index)" v-if="scope.row.issuper!=1&&menuButtonPermit.includes('Role_gettypepermit')">分配论坛权限</el-button>
                                     <el-button size="mini" @click="allotWorkOrderPermit(scope.row,scope.$index)" v-if="scope.row.issuper!=1&&menuButtonPermit.includes('Role_getworktypepermit')">分配工单权限</el-button>
                                     <el-button size="mini" @click="allotResourcePermit(scope.row,scope.$index)" v-if="scope.row.issuper!=1&&menuButtonPermit.includes('Role_getsourcetypepermit')">分配资源管理权限</el-button>
+                                    <el-dropdown class="userControl" v-if="menuButtonPermit.includes('Role_subchinaphonereadrole') || menuButtonPermit.includes('Role_subchinaphonewriterole') || menuButtonPermit.includes('Role_subenphonereadrole') || menuButtonPermit.includes('Role_subenphonewriterole')">
+                                      <el-button size="mini">
+                                        分配电话组别权限<i class="el-icon-arrow-down el-icon--right"></i>
+                                      </el-button>
+                                      <el-dropdown-menu slot="dropdown">
+                                        <el-dropdown-item>
+                                          <el-button type="text" class="userControlItem" @click="allotSubChinaPhoneReadRole(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Role_subchinaphonereadrole')">分配中文可读电话组别</el-button>
+                                        </el-dropdown-item>
+                                        <el-dropdown-item>
+                                          <el-button type="text" class="userControlItem" @click="allotSubChinaPhoneWriteRole(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Role_subchinaphonewriterole')">分配中文可写电话组别</el-button>
+                                        </el-dropdown-item>
+                                        <el-dropdown-item>
+                                          <el-button type="text" class="userControlItem" @click="allotSubEnPhoneReadRole(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Role_subenphonereadrole')">分配英文可读电话组别</el-button>
+                                        </el-dropdown-item>
+                                        <el-dropdown-item>
+                                          <el-button type="text" class="userControlItem" @click="allotSubEnPhoneWriteRole(scope.row,scope.$index)" v-if="menuButtonPermit.includes('Role_subenphonewriterole')">分配英文可写电话组别</el-button>
+                                        </el-dropdown-item>
+                                      </el-dropdown-menu>
+                                    </el-dropdown>
                                     <el-button size="mini" @click="editTableRow(scope.row,scope.$index)" v-if="scope.row.issuper!=1&&menuButtonPermit.includes('Role_edit')">编辑</el-button>
                                     <el-button size="mini" @click="deleteTableRow(scope.row,scope.$index)" v-if="scope.row.issuper!=1&&menuButtonPermit.includes('Role_delete')" type="info" plain>删除</el-button>
                                   </div>
@@ -304,10 +323,31 @@
           </span>
         </template>
       </el-dialog>
+      <el-dialog :title="phoneTitle" v-if="menuButtonPermit.includes('Role_subchinaphonereadrole') || menuButtonPermit.includes('Role_subchinaphonewriterole') || menuButtonPermit.includes('Role_subenphonereadrole') || menuButtonPermit.includes('Role_subenphonewriterole')" custom-class="transfer-dialog" :visible.sync="dialogPhoneVisible" width="840px">
+        <div class="transfer-panel">
+          <div class="transfer-wrap">
+            <el-transfer 
+              v-model="phoneValue" 
+              :data="phoneData"
+              :titles="['可分配电话组别', '已分配电话组别']"
+              filterable
+              :filter-method="filterPhoneMethod"
+              filter-placeholder="请输入电话"
+            ></el-transfer>
+          </div>
+        </div>
+        <template #footer>
+          <span class="dialog-footer">
+            <el-button @click="dialogPhoneVisible = false">取 消</el-button>
+            <el-button type="primary" :class="isSavePhoneData?'isDisabled':''" :disabled="isSavePhoneData" @click="savePhoneData">确 定</el-button>
+          </span>
+        </template>
+      </el-dialog>
   </div>
 </template>
 <script>
 import { mapGetters } from 'vuex'
+import {getRoleChReadPhone, getRoleChWritePhone, addRoleChReadPhone, addRoleChWritePhone, getRoleEnReadPhone, getRoleEnWritePhone, addRoleEnReadPhone, addRoleEnWritePhone} from "@/api/role.js";
 export default {
   name: 'Role_index',
   data() {
@@ -439,6 +479,19 @@ export default {
       isSavePermitData:false,
       isSaveData:false,
       isDisabled:false,
+      dialogPhoneVisible: false,
+      phoneTitle: "",
+      isSavePhoneData: false,
+      phoneValue: [],
+      phoneData: [{ key: "", label: "" }],
+      chinaPhoneData: [],
+      enPhoneData: [],
+      phoneType: 0, //1中文可读 2中文可写 3英文可读 4英文可写
+      filterPhoneMethod(query, item) {
+          if(item.label){
+            return item.label.indexOf(query) > -1;
+          }
+      },
     }
   },
   computed: {
@@ -725,6 +778,9 @@ export default {
                 operationsWidth+=114;
               }
               if($this.menuButtonPermit.includes('Role_getsourcetypepermit')){
+                operationsWidth+=150;
+              }
+              if($this.menuButtonPermit.includes('Role_subchinaphonereadrole') || $this.menuButtonPermit.includes('Role_subchinaphonewriterole') || $this.menuButtonPermit.includes('Role_subenphonereadrole') || $this.menuButtonPermit.includes('Role_subenphonewriterole')){
                 operationsWidth+=150;
               }
               $this.operationsWidth = "" + operationsWidth;
@@ -2100,6 +2156,226 @@ export default {
             });
             setTimeout(()=>{
               $this.isDisabled=false;
+            },1000);
+          }
+        });
+      }
+    },
+
+    // 分配中文电话可读
+    allotSubChinaPhoneReadRole(row,index){
+      var $this = this;
+      $this.resetPhoneData();
+      $this.dialogPhoneVisible = true;
+      $this.phoneTitle = "给 " + row.name + " 分配中文电话可读权限";
+      $this.currentRoleID = row.id;
+      $this.currentRoleName = row.name;
+      $this.phoneType = 1;
+      if($this.chinaPhoneData.length == 0){
+        $this.getAllotedChinaPhone();
+      }else{
+        $this.phoneData = $this.chinaPhoneData;
+      }
+      $this.getRoleHasPhone(1);
+    },
+    // 分配中文电话可写
+    allotSubChinaPhoneWriteRole(row,index){
+      var $this = this;
+      $this.resetPhoneData();
+      $this.dialogPhoneVisible = true;
+      $this.phoneTitle = "给 " + row.name + " 分配中文电话可写权限";
+      $this.currentRoleID = row.id;
+      $this.currentRoleName = row.name;
+      $this.phoneType = 2;
+      if($this.chinaPhoneData.length == 0){
+        $this.getAllotedChinaPhone();
+      }else{
+        $this.phoneData = $this.chinaPhoneData;
+      }
+      $this.getRoleHasPhone(2);
+    },
+    // 分配英文电话可读
+    allotSubEnPhoneReadRole(row,index){
+      var $this = this;
+      $this.resetPhoneData();
+      $this.dialogPhoneVisible = true;
+      $this.phoneTitle = "给 " + row.name + " 分配英文电话可读权限";
+      $this.currentRoleID = row.id;
+      $this.currentRoleName = row.name;
+      $this.phoneType = 3;
+      if($this.enPhoneData.length == 0){
+        $this.getAllotedEnPhone();
+      }else{
+        $this.phoneData = $this.enPhoneData;
+      }
+      $this.getRoleHasPhone(3);
+    },
+    // 分配英文电话可写
+    allotSubEnPhoneWriteRole(row,index){
+      var $this = this;
+      $this.resetPhoneData();
+      $this.dialogPhoneVisible = true;
+      $this.phoneTitle = "给 " + row.name + " 分配英文电话可写权限";
+      $this.currentRoleID = row.id;
+      $this.currentRoleName = row.name;
+      $this.phoneType = 4;
+      if($this.enPhoneData.length == 0){
+        $this.getAllotedEnPhone();
+      }else{
+        $this.phoneData = $this.enPhoneData;
+      }
+      $this.getRoleHasPhone(4);
+    },
+    // 重置电话权限数据
+    resetPhoneData(){
+      var $this = this;
+      $this.currentRoleID = 0;
+      $this.currentRoleName = "";
+      $this.phoneData = [];
+      $this.phoneValue = [];
+      $this.phoneType = 0;
+      $this.isSavePhoneData = false;
+    },
+    // 获取可分配的中文电话
+    getAllotedChinaPhone(){
+      var $this = this;
+      $this.$store.dispatch('chinaphone/phoneListAction', null).then(response=>{
+        if(response){
+          if(response.status){
+            if(response.data && response.data.length>0){
+              let chinaPhone = [];
+              response.data.forEach(function(item,index){
+                var itemData = {};
+                itemData.key = item.id;
+                itemData.label = item.phonenumber;
+                itemData.disabled = false;
+                chinaPhone.push(itemData);
+              });
+              $this.chinaPhoneData = [...chinaPhone];
+              $this.phoneData = [...chinaPhone];
+            }else{
+              $this.chinaPhoneData = [];
+              $this.phoneData = [];
+            }
+          }else{
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'error'
+            });
+          }
+        }
+      });
+    },
+    // 获取可分配的英文电话
+    getAllotedEnPhone(){
+      var $this = this;
+      $this.$store.dispatch('enphone/phoneListAction', null).then(response=>{
+        if(response){
+          if(response.status){
+            if(response.data && response.data.length>0){
+              let enPhone = [];
+              response.data.forEach(function(item,index){
+                var itemData = {};
+                itemData.key = item.id;
+                itemData.label = item.phonenumber;
+                itemData.disabled = false;
+                enPhone.push(itemData);
+              });
+              $this.enPhoneData = [...enPhone];
+              $this.phoneData = [...enPhone];
+            }else{
+              $this.enPhoneData = [];
+              $this.phoneData = [];
+            }
+          }else{
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'error'
+            });
+          }
+        }
+      });
+    },
+    // 获取当前角色已分配的电话
+    getRoleHasPhone(sid){
+      var $this = this;
+      var formData = {
+        rid:$this.currentRoleID,
+      }
+      var funName = getRoleChReadPhone;
+      if(sid == 2){
+        funName = getRoleChWritePhone;
+      }else if(sid == 3){
+        funName = getRoleEnReadPhone;
+      }else if(sid == 4){
+        funName = getRoleEnWritePhone;
+      }
+      funName(formData).then(response=>{
+        if(response.status){
+          if(response.data && response.data.length>0){
+            var ids = [];
+            response.data.forEach(function(item,index){
+              if(sid == 1 || sid == 2){
+                ids.push(item.chinaphone_id);
+              }else if(sid == 3 || sid == 4){
+                ids.push(item.enphone_id);
+              }
+            })
+            $this.phoneValue = ids;
+          }else{
+            $this.phoneValue = [];
+          }
+        }else{
+          $this.$message({
+            showClose: true,
+            message: response.info,
+            type: 'error'
+          });
+        }
+      });
+    },
+    // 电话权限分配保存
+    savePhoneData(){
+      var $this = this;
+      if(!$this.isSavePhoneData){
+        $this.isSavePhoneData=true;
+        var phoneData = {};
+        phoneData.role_id = $this.currentRoleID;
+        if($this.phoneType == 1 || $this.phoneType == 2){
+          phoneData.chinaphone_id = $this.phoneValue;
+        }else if($this.phoneType == 3 || $this.phoneType == 4){
+          phoneData.enphone_id = $this.phoneValue;
+        }
+        var funName = addRoleChReadPhone;
+        if($this.phoneType == 2){
+          funName = addRoleChWritePhone;
+        }else if($this.phoneType == 3){
+          funName = addRoleEnReadPhone;
+        }else if($this.phoneType == 4){
+          funName = addRoleEnWritePhone;
+        }
+        funName(phoneData).then(response=>{
+          if(response.status){
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'success'
+            });
+            $this.dialogPhoneVisible = false;
+            setTimeout(()=>{
+              $this.isSavePhoneData=false;
+            },1000);
+            $this.initData();
+          }else{
+            $this.$message({
+              showClose: true,
+              message: response.info,
+              type: 'error'
+            });
+            setTimeout(()=>{
+              $this.isSavePhoneData=false;
             },1000);
           }
         });

@@ -193,3 +193,75 @@ export function userCanAllotResourceAllPermit() {
     method: "POST",
   });
 }
+
+// 当前角色已分配的可读电话组别
+export function getRoleChReadPhone(data) {
+  return request({
+    url: "/hxindex/Role/hasreadchphone",
+    method: "POST",
+    data
+  });
+}
+
+// 当前角色已分配的可写电话组别
+export function getRoleChWritePhone(data) {
+  return request({
+    url: "/hxindex/Role/haswriterchphone",
+    method: "POST",
+    data
+  });
+}
+
+// 给角色分配的可写电话组别
+export function addRoleChReadPhone(data) {
+  return request({
+    url: "/hxindex/Role/subchinaphonereadrole",
+    method: "POST",
+    data
+  });
+}
+
+// 给角色分配的可读电话组别
+export function addRoleChWritePhone(data) {
+  return request({
+    url: "/hxindex/Role/subchinaphonewriterole",
+    method: "POST",
+    data
+  });
+}
+
+// 当前角色已分配的可读电话组别
+export function getRoleEnReadPhone(data) {
+  return request({
+    url: "/hxindex/Role/hasreadenphone",
+    method: "POST",
+    data
+  });
+}
+
+// 当前角色已分配的可写电话组别
+export function getRoleEnWritePhone(data) {
+  return request({
+    url: "/hxindex/Role/haswriterenphone",
+    method: "POST",
+    data
+  });
+}
+
+// 给角色分配的可写电话组别
+export function addRoleEnReadPhone(data) {
+  return request({
+    url: "/hxindex/Role/subenphonereadrole",
+    method: "POST",
+    data
+  });
+}
+
+// 给角色分配的可读电话组别
+export function addRoleEnWritePhone(data) {
+  return request({
+    url: "/hxindex/Role/subenphonewriterole",
+    method: "POST",
+    data
+  });
+}
