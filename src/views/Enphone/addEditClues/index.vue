@@ -218,6 +218,7 @@
                                         :http-request="httpZipRequest"
                                         :limit="1"
                                         :on-exceed="handleExceed"
+                                        :on-remove="handleRemove"
                                         :file-list="fileList">
                                         <el-button size="small" type="primary">点击上传</el-button>
                                         <div slot="tip" class="el-upload__tip">(上传文件大小需控制在50M以内)<em v-if="ID&&defaultInfo.custormfiles_time">(上传时间：{{defaultInfo.custormfiles_time}})</em></div>
@@ -1419,6 +1420,12 @@ export default {
     handleExceed(files, fileList) {
       var $this = this;
       $this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
+    },
+    handleRemove(file, fileList) {
+      var $this = this;
+      $this.fileList = [];
+      $this.formData.custormfiles="";
+      $this.formData.custormfilesname="";
     },
     // 意向分类点击事件
     producttypeClick(){
