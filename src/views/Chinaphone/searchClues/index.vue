@@ -115,9 +115,14 @@
                         @keyup.enter.native="searchResult" :class="searchData.province != '' ? 'el-xzstate' : ''" clearable>
                       </el-input>
                     </div>
-                    <div class="item-search" style="width:150px;">
-                      <el-input placeholder="来源平台/关键词" size="small" class="tips-input-2" v-model="searchData.search"
+                    <div class="item-search" style="width:156px;">
+                      <el-input placeholder="搜索引擎(模糊匹配)" size="small" class="tips-input-2" v-model="searchData.search"
                         @keyup.enter.native="searchResult" :class="searchData.search != '' ? 'el-xzstate' : ''" clearable>
+                      </el-input>
+                    </div>
+                    <div class="item-search" style="width:170px;">
+                      <el-input placeholder="搜索关键词(模糊匹配)" size="small" class="tips-input-2" v-model="searchData.searchword"
+                        @keyup.enter.native="searchResult" :class="searchData.searchword != '' ? 'el-xzstate' : ''" clearable>
                       </el-input>
                     </div>
                     <div class="item-search" style="width:120px;">
@@ -542,6 +547,7 @@ export default {
         effective: false,
         province: "",
         search: '',
+        searchword: '',
         anymessage: '',
         useridname: '',
         domain: '',
@@ -898,6 +904,7 @@ export default {
       searchData.messageid = $this.searchData.messageid;
       searchData.province = $this.searchData.province;
       searchData.search = $this.searchData.search;
+      searchData.searchword = $this.searchData.searchword;
       searchData.anymessage = $this.searchData.anymessage;
       searchData.useridname = $this.searchData.useridname;
       searchData.domain = $this.searchData.domain;
@@ -1041,6 +1048,7 @@ export default {
       $this.searchData.effective = false;
       $this.searchData.province = "";
       $this.searchData.search = "";
+      $this.searchData.searchword = "";
       $this.searchData.anymessage = "";
       $this.searchData.useridname = "";
       $this.searchData.domain = "";
@@ -1076,6 +1084,7 @@ export default {
       searchData.messageid = $this.searchData.messageid;
       searchData.province = $this.searchData.province;
       searchData.search = $this.searchData.search;
+      searchData.searchword = $this.searchData.searchword;
       searchData.anymessage = $this.searchData.anymessage;
       searchData.useridname = $this.searchData.useridname;
       searchData.domain = $this.searchData.domain;
