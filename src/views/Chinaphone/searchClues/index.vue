@@ -1389,6 +1389,9 @@ export default {
               levelList.push(itemData);
             });
             $this.levelList = levelList;
+            $this.$nextTick(function () {
+              $this.setHeight();
+            });
           } else {
             $this.$message({
               showClose: true,
